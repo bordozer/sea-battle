@@ -31,6 +31,7 @@
     "sweetalert2": "^9.10.12",
     "underscore": "^1.10.2",
     "url-loader": "^4.1.0",
+    "font-awesome-webpack": "git+https://github.com/jarecsni/font-awesome-webpack.git#440af2a2efe7ba1779d039556f04538e57bad4bb",
     "font-awesome-loader": "^1.0.2"
   },
   "dependencies": {
