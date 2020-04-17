@@ -3,10 +3,6 @@ spring:
     name: locatomia
   profiles:
     active: dev
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
 #  flyway:
 #    locations: classpath:db/migration/h2
 #    schemas: public
