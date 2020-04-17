@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: locatomia
+  profiles:
+    active: dev
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+#  flyway:
+#    locations: classpath:db/migration/h2
+#    schemas: public
+
+server:
+  port: 8082
+  servlet:
+    session:
+      timeout: 864000
+
+logging:
+  level:
+    root: info
+
+---
+spring:
+  profiles: dev

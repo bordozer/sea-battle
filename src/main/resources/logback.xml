@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="log.files.path" value="/var/log/bordozer/locatomia"/>
+    <property name="service.name" value="locatomia"/>
+    <property name="pattern" value="%-4r, %date{yyyy-MM-dd HH:mm:ss.SSS}, [%thread] %-5level, %logger{5} traceId=%X{traceId}, %m%n"/>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${log.files.path}/${service.name}.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-7d{yyyy-MM-dd HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+        <layout>
+            <Pattern>${pattern}</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--<appender name="WEB_REQUESTS_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${log.files.path}/${service.name}-web-requests.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-7d{yyyy-MM-dd HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+        <layout>
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %logger{5} traceId="%X{traceId}", %m%n</Pattern>
+        </layout>
+    </appender>
+
+    <logger name="com.bordozer.commons.web.WebLogger" level="INFO" additivity="false">
+        <appender-ref ref="WEB_REQUESTS_FILE"/>
+    </logger>-->
+
+    <root level="DEBUG">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>
