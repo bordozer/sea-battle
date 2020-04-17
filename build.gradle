@@ -24,12 +24,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+//	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 //	implementation 'org.springframework.boot:spring-boot-starter-jersey'
 
-	implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
-	implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.34'
-	implementation group: 'org.webjars', name: 'bootstrap', version: '4.4.1-1'
+//	implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
+//	implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.34'
+//	implementation group: 'org.webjars', name: 'bootstrap', version: '4.4.1-1'
 
 	implementation group: 'ch.qos.logback', name: 'logback-classic'
 	implementation group: 'org.slf4j', name: 'jul-to-slf4j'

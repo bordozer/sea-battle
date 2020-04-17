@@ -1,8 +1,7 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-const BUILD_DIR = './src/main/resources/static/built/';
-const getFilesFromDir = require("./src/main/webapp/js/config/files");
-const PAGE_DIR = path.join("./src/main/webapp/js/", "pages", path.sep);
+const getFilesFromDir = require("./src/config/files");
+const PAGE_DIR = path.join("./src", "pages", path.sep);
 
 const htmlPlugins = getFilesFromDir(PAGE_DIR, [".html"])
     .map(filePath => {
@@ -16,7 +15,7 @@ const htmlPlugins = getFilesFromDir(PAGE_DIR, [".html"])
 
 const entry = getFilesFromDir(PAGE_DIR, [".js"]).reduce((obj, filePath) => {
     const entryChunkName = filePath.replace(path.extname(filePath), "").replace(PAGE_DIR, "");
-    obj[entryChunkName] = BUILD_DIR + `${filePath}`;
+    obj[entryChunkName] = `./${filePath}`;
     return obj;
 }, {});
 
@@ -27,8 +26,7 @@ module.exports = {
     ],
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, BUILD_DIR)
-        // path: path.resolve(__dirname, './src/main/resources/static/built/')
+        path: path.resolve(__dirname, 'build')
     },
     resolve: {
         alias: {
