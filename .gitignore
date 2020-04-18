@@ -1,7 +1,6 @@
 HELP.md
 .gradle
 build/
-/src/main/webapp/build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -31,3 +30,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# webapp
+/src/main/webapp/build/
+/src/main/webapp/node_modules/
+
+# testing
+/coverage
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
