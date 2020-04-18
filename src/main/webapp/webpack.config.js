@@ -22,11 +22,12 @@ const htmlPlugins = getFilesFromDir(PAGE_DIR, [".html"])
         })
     });
 
-const entry = getFilesFromDir(PAGE_DIR, [".js"]).reduce((obj, filePath) => {
-    const entryChunkName = filePath.replace(path.extname(filePath), "").replace(PAGE_DIR, "");
-    obj[entryChunkName] = `./${filePath}`;
-    return obj;
-}, {});
+const entry = getFilesFromDir(PAGE_DIR, [".js"])
+    .reduce((obj, filePath) => {
+        const entryChunkName = filePath.replace(path.extname(filePath), "").replace(PAGE_DIR, "");
+        obj[entryChunkName] = `./${filePath}`;
+        return obj;
+    }, {});
 
 module.exports = (env, options) => {
     return {
@@ -47,7 +48,7 @@ module.exports = (env, options) => {
         module: {
             rules: [
                 {
-                    test: /\.js$/,
+                    test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     use: {
                         loader: "babel-loader",
@@ -83,7 +84,7 @@ module.exports = (env, options) => {
                         name: '[name].[ext]',
                     },
                 }
-             ]
+            ]
         },
         optimization: {
             splitChunks: {
