@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
-const SIZE = 12;
+const SIZE = 10;
 
 export default class BattlePage extends Component {
 
