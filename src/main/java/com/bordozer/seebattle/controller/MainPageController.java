@@ -1,4 +1,4 @@
-package com.bordozer.locatomia.controller;
+package com.bordozer.seebattle.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

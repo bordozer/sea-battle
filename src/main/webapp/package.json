@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production --progress --colors",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --mode development",
     "http": "http-server build -p3100",
     "watch": "webpack --watch -d --output-file target/classes/static/built/index.bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"

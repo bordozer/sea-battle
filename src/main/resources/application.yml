@@ -1,6 +1,6 @@
 spring:
   application:
-    name: locatomia
+    name: see-battle
   profiles:
     active: dev
 #  flyway:
