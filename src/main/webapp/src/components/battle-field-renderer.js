@@ -1,11 +1,20 @@
 import React from 'react';
 
+function renderLineHeader(x) {
+    const result = [];
+    result.push(
+        <div key={'hh-' + x} className="col-sm-1 text-center bg-warning border border-secondary">
+            {x}
+        </div>
+    );
+    return result;
+}
+
 function renderLineCells(x, cells) {
     const result = [];
     cells.forEach(cell => {
         result.push(
-            <div key={x + '_' + cell.x + '-' + cell.y}
-                 className="col-sm-1 border border-primary rounded text-center small">
+            <div key={x + '_' + cell.x + '-' + cell.y} className="col-sm-1 border border-primary rounded text-center small">
                 <button type="button" className="btn btn-light text-muted">{cell.xLabel + ':' + cell.yLabel}</button>
             </div>
         );
@@ -14,11 +23,13 @@ function renderLineCells(x, cells) {
 }
 
 function renderLine(x, cells) {
+    const lineHeader = renderLineHeader(x);
     const result = [];
-    const lineCells = renderLineCells(x, cells);
     result.push(
         <div key={'line-' + x} className="row">
-            {lineCells}
+            {lineHeader}
+            {renderLineCells(x, cells)}
+            {lineHeader}
         </div>
     );
     return result;
@@ -26,20 +37,26 @@ function renderLine(x, cells) {
 
 function hHeaders(cells) {
     const result = [];
+    result.push(
+        <div key="v-left" className="col-sm-1  bg-warning border border-secondary" />
+    );
     cells.forEach(cell => {
         result.push(
-            <div className="col-sm-1 text-center bg-warning border border-secondary">
+            <div key={'v-' + cell.x} className="col-sm-1 text-center bg-warning border border-secondary">
                 {cell.xLabel}
             </div>
         );
     })
+    result.push(
+        <div key="v-right" className="col-sm-1  bg-warning border border-secondary" />
+    );
     return result;
 }
 
-function hHeadersLine(cells) {
+function hHeadersLine(position, cells) {
     const result = [];
     result.push(
-        <div className="row">
+        <div key={'h-' + position} className="row">
             {hHeaders(cells[0])}
         </div>
     );
@@ -48,9 +65,8 @@ function hHeadersLine(cells) {
 
 const BattleCellsRenderer = (cells) => {
 
-    const hHeads = hHeadersLine(cells.cells);
-
     const renderedCells = [];
+
     for (let x = cells.cells.length - 1; x >= 0; x--) {
         renderedCells.push(renderLine(x, cells.cells[x]));
     }
@@ -58,9 +74,9 @@ const BattleCellsRenderer = (cells) => {
     return (
         <div className="row">
             <div className="col-sm-12">
-                {hHeads}
+                {hHeadersLine('top', cells.cells)}
                 {renderedCells}
-                {hHeads}
+                {hHeadersLine('bottom', cells.cells)}
             </div>
         </div>
     )

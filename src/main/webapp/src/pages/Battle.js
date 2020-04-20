@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-const SIZE = 9;
+const SIZE = 10;
 
 export default class BattlePage extends Component {
 
@@ -34,11 +34,11 @@ export default class BattlePage extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-sm-3" />
+                    <div className="col-sm-2" />
                     <div className="col-sm-8">
                         <BattleFieldRenderer cells={this.state.cells}/>
                     </div>
-                    <div className="col-sm-1" />
+                    <div className="col-sm-2" />
                 </div>
             </div>
         );
