@@ -1,9 +1,9 @@
 import React from 'react';
 
-function renderLineHeader(x) {
+function renderVHeader(x) {
     const result = [];
     result.push(
-        <div key={'hh-' + x} className="col-sm-1 text-center bg-warning border border-secondary">
+        <div key={'hh-' + x} className="col-sm-1 text-center align-middle bg-warning border border-secondary">
             {x}
         </div>
     );
@@ -22,23 +22,23 @@ function renderLineCells(x, cells) {
     return result;
 }
 
-function renderLine(x, cells) {
-    const lineHeader = renderLineHeader(x);
+function renderHLine(x, cells) {
+    const vHeader = renderVHeader(x);
     const result = [];
     result.push(
         <div key={'line-' + x} className="row">
-            {lineHeader}
+            {vHeader}
             {renderLineCells(x, cells)}
-            {lineHeader}
+            {vHeader}
         </div>
     );
     return result;
 }
 
-function hHeaders(cells) {
+function renderHHeader(cells) {
     const result = [];
     result.push(
-        <div key="v-left" className="col-sm-1  bg-warning border border-secondary" />
+        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary" />
     );
     cells.forEach(cell => {
         result.push(
@@ -48,16 +48,16 @@ function hHeaders(cells) {
         );
     })
     result.push(
-        <div key="v-right" className="col-sm-1  bg-warning border border-secondary" />
+        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary" />
     );
     return result;
 }
 
-function hHeadersLine(position, cells) {
+function renderHHeaders(position, cells) {
     const result = [];
     result.push(
         <div key={'h-' + position} className="row">
-            {hHeaders(cells[0])}
+            {renderHHeader(cells[0])}
         </div>
     );
     return result;
@@ -65,20 +65,23 @@ function hHeadersLine(position, cells) {
 
 const BattleCellsRenderer = (cells) => {
 
-    const renderedCells = [];
+    const cellsList = cells.cells;
 
-    for (let x = cells.cells.length - 1; x >= 0; x--) {
-        renderedCells.push(renderLine(x, cells.cells[x]));
+    const hLines = [];
+
+    for (let x = cellsList.length - 1; x >= 0; x--) {
+        hLines.push(renderHLine(x, cellsList[x]));
     }
 
     return (
         <div className="row">
             <div className="col-sm-12">
-                {hHeadersLine('top', cells.cells)}
-                {renderedCells}
-                {hHeadersLine('bottom', cells.cells)}
+                {renderHHeaders('top', cellsList)}
+                {hLines}
+                {renderHHeaders('bottom', cellsList)}
             </div>
         </div>
     )
 }
+
 export default BattleCellsRenderer;
