@@ -7,7 +7,7 @@ export default class MainPage extends Component {
             <div>
                 <div className="row">
                     <div className="col-sm-12">
-                        Main page
+                        Battle page
                     </div>
                 </div>
             </div>

@@ -1,12 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import 'src/commons-headers'
-
-import Menu from "components/Menu";
+import AppRouter from 'src/router';
 import MainPage from 'components/MainPage'
 
-ReactDOM.render(<Menu/>, document.getElementById("js-main-menu"));
+import 'src/commons-headers'
+
+// ReactDOM.render(<Menu/>, document.getElementById("js-main-menu"));
+ReactDOM.render(
+    <AppRouter />,
+    document.getElementById('js-main-menu')
+);
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,17 +19,9 @@ ReactDOM.render(
     document.getElementById('js-page-context')
 );
 
-// import Menu from "components/Menu";
-
 // import Swal from "sweetalert2";
 // Swal.fire(
 //     'Good job!',
 //     'You clicked the button!',
 //     'success'
 // );
-
-/*
-ReactDOM.render(
-    <h1>Hello, world again!</h1>,
-    document.getElementById('root')
-);*/
