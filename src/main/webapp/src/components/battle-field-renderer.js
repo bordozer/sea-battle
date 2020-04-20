@@ -28,7 +28,7 @@ const BattleCellsRenderer = (cells) => {
     let renderedCells = [];
 
     console.log('BattleCellsRenderer', cells.cells);
-    for (let x = 0; x < 10; x++) {
+    for (let x = 9; x >= 0; x--) {
         renderedCells.push(renderLine(x, cells.cells[x]));
     }
 

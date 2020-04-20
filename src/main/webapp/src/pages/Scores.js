@@ -7,7 +7,9 @@ export default class ScoresPage extends Component {
             <div>
                 <div className="row">
                     <div className="col-sm-12">
-                        Scores page
+                        <div className="col-sm-12 text-center text-muted">
+                            <h3>Scores page</h3>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,8 +6,8 @@ export default class MainPage extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-sm-12">
-                        Main page
+                    <div className="col-sm-12 text-center text-muted">
+                        <h3>Main page</h3>
                     </div>
                 </div>
             </div>

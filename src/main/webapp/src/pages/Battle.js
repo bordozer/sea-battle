@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
-const X_AXE = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
+const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const SIZE = 10;
 
 export default class BattlePage extends Component {
@@ -10,14 +10,14 @@ export default class BattlePage extends Component {
     cells = ({size}) => {
         const cellItems = [];
         // console.log('cellItems1', cellItems);
-        for (let y = 0; y < SIZE; y++) {
-            cellItems[y] = [];
-            for (let x = 0; x < SIZE; x++) {
-                cellItems[y][x] = {
-                    x: x,
-                    y: y,
-                    xLabel: X_AXE[x],
-                    yLabel: y + 1
+        for (let h = SIZE - 1; h >= 0; h--) {
+            cellItems[h] = [];
+            for (let v = SIZE - 1; v >= 0; v--) {
+                cellItems[h][v] = {
+                    x: v,
+                    y: h,
+                    xLabel: X_AXE[v],
+                    yLabel: h + 1
                 };
             }
         }
@@ -34,11 +34,11 @@ export default class BattlePage extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-sm-2"></div>
+                    <div className="col-sm-3" />
                     <div className="col-sm-8">
                         <BattleFieldRenderer cells={this.state.cells}/>
                     </div>
-                    <div className="col-sm-2"></div>
+                    <div className="col-sm-1" />
                 </div>
             </div>
         );
