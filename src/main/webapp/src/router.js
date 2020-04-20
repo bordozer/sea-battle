@@ -10,17 +10,18 @@ export default function AppRouter() {
     return (
         <Router>
             <div>
-                <ul>
-                    <li>
+
+                <div className="row">
+                    <div className="col-sm-4 text-center">
                         <Link to="/">Home</Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div className="col-sm-4 text-center">
                         <Link to="/battle">Battle!</Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div className="col-sm-4 text-center">
                         <Link to="/scores">Scores</Link>
-                    </li>
-                </ul>
+                    </div>
+                </div>
 
                 <hr/>
 
