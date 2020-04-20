@@ -1,9 +1,9 @@
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Switch, useRouteMatch} from "react-router-dom";
 
-import MainPage from 'components/MainPage'
-import BattlePage from 'components/Battle'
-import ScoresPage from 'components/Scores'
+import MainPage from 'src/pages/MainPage'
+import BattlePage from 'src/pages/Battle'
+import ScoresPage from 'src/pages/Scores'
 
 export default function AppRouter() {
 
