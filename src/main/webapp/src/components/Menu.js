@@ -4,9 +4,8 @@ export default class Menu extends Component {
     render() {
         return (
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/products/product-1.html">Product</a></li>
-                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/battle">New game</a></li>
+                <li><a href="/scores">Scores</a></li>
             </ul>
         );
     }

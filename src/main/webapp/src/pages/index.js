@@ -2,11 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import 'src/commons-headers'
-import App from 'components/App'
+
+import Menu from "components/Menu";
+import MainPage from 'components/MainPage'
+
+ReactDOM.render(<Menu/>, document.getElementById("js-main-menu"));
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <MainPage />
     </React.StrictMode>,
     document.getElementById('js-page-context')
 );
@@ -20,7 +24,7 @@ ReactDOM.render(
 //     'success'
 // );
 
-/*ReactDOM.render(<Menu/>, document.getElementById("menu"));
+/*
 ReactDOM.render(
     <h1>Hello, world again!</h1>,
     document.getElementById('root')
