@@ -15,14 +15,14 @@ export default function AppRouter() {
                     <div className="col-sm-4 text-center">
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
-                            to="/"
+                            to="/home"
                             label="Main page"
                         />
                     </div>
                     <div className="col-sm-4 text-center">
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
-                            to="/battle"
+                            to="/"
                             label="Battle"
                         />
                     </div>
@@ -38,13 +38,13 @@ export default function AppRouter() {
                 {}
 
                 <Switch>
-                    <Route exact path="/">
+                    <Route exact path="/home">
                         <MainPage/>
                     </Route>
-                    <Route path="/battle">
+                    <Route exact path="/">
                         <BattlePage/>
                     </Route>
-                    <Route path="/scores">
+                    <Route exact path="/scores">
                         <ScoresPage/>
                     </Route>
                 </Switch>
@@ -65,7 +65,7 @@ function OldSchoolMenuLink({label, to, activeOnlyWhenExact}) {
                 <Link
                     to={to}
                     style={{textDecoration: 'none'}}
-                    class={match ? "active text-danger" : "text-dark"}
+                    className={match ? "active text-danger" : "text-dark"}
                 >
                     {label}
                 </Link>

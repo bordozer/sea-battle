@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class MainPage extends Component {
+export default class ScoresPage extends Component {
 
     render() {
         return (
