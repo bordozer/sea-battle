@@ -43,28 +43,4 @@ export default function AppRouter() {
     );
 }
 
-function Home() {
-    return (
-        <div>
-            <h2>Home</h2>
-        </div>
-    );
-}
-
-function Battle() {
-    return (
-        <div>
-            <h2>Battle</h2>
-        </div>
-    );
-}
-
-function Scores() {
-    return (
-        <div>
-            <h2>Scores</h2>
-        </div>
-    );
-}
-
 
