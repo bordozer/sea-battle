@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch, useRouteMatch} from "react-router-dom";
 
 import MainPage from 'components/MainPage'
 import BattlePage from 'components/Battle'
@@ -11,19 +11,29 @@ export default function AppRouter() {
         <Router>
             <div>
 
-                <div className="row">
+                <div className="row bg-light">
                     <div className="col-sm-4 text-center">
-                        <Link to="/">Home</Link>
+                        <OldSchoolMenuLink
+                            activeOnlyWhenExact={true}
+                            to="/"
+                            label="Main page"
+                        />
                     </div>
                     <div className="col-sm-4 text-center">
-                        <Link to="/battle">Battle!</Link>
+                        <OldSchoolMenuLink
+                            activeOnlyWhenExact={true}
+                            to="/battle"
+                            label="Battle"
+                        />
                     </div>
                     <div className="col-sm-4 text-center">
-                        <Link to="/scores">Scores</Link>
+                        <OldSchoolMenuLink
+                            activeOnlyWhenExact={true}
+                            to="/scores"
+                            label="Scores"
+                        />
                     </div>
                 </div>
-
-                <hr/>
 
                 {}
 
@@ -40,6 +50,27 @@ export default function AppRouter() {
                 </Switch>
             </div>
         </Router>
+    );
+}
+
+function OldSchoolMenuLink({label, to, activeOnlyWhenExact}) {
+    let match = useRouteMatch({
+        path: to,
+        exact: activeOnlyWhenExact
+    });
+
+    return (
+        <div>
+            <h4>
+                <Link
+                    to={to}
+                    style={{textDecoration: 'none'}}
+                    class={match ? "active text-danger" : "text-dark"}
+                >
+                    {label}
+                </Link>
+            </h4>
+        </div>
     );
 }
 
