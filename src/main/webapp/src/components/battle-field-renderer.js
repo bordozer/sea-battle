@@ -10,7 +10,7 @@ function renderVHeader(x) {
     return result;
 }
 
-function renderLineCells(x, cells) {
+function renderHLineCells(x, cells) {
     const result = [];
     cells.forEach(cell => {
         result.push(
@@ -28,7 +28,7 @@ function renderHLine(x, cells) {
     result.push(
         <div key={'line-' + x} className="row">
             {vHeader}
-            {renderLineCells(x, cells)}
+            {renderHLineCells(x, cells)}
             {vHeader}
         </div>
     );
