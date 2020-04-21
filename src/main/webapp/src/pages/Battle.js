@@ -10,7 +10,7 @@ const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
-const BATTLE_FIELD_SIZE = 6;
+const BATTLE_FIELD_SIZE = 5;
 const SHIP_CELL_COUNT = 8;
 
 export default class BattlePage extends Component {
@@ -206,13 +206,12 @@ export default class BattlePage extends Component {
 
     randomizeShips = () => {
         const cells = this.initCells(BATTLE_FIELD_SIZE);
+        // console.log(cells);
         let shipsCount = SHIP_CELL_COUNT;
         while (shipsCount > 0) {
-            const coord = this.getRandomCoordinates();
-            if (!cells[coord.x][coord.y].isShip) {
-                cells[coord.x][coord.y].isShip = true;
-                shipsCount--;
-            }
+            const cell = this.getRandomNoShipCell(cells);
+            cell.isShip = true;
+            shipsCount--;
         }
         return cells;
     }
@@ -240,7 +239,29 @@ export default class BattlePage extends Component {
         return cells[number];
     }
 
+    getRandomNoShipCell = (cells) => {
+        const temp = [];
+        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+                if (!cells[x][y].isShip) {
+                    temp.push(cells[x][y]);
+                }
+            }
+        }
+        // console.log("-->", temp.length);
+        const number = Math.floor(Math.random() * temp.length);
+        return temp[number];
+    }
+
     randomizePlayersShips = () => {
+        if (BATTLE_FIELD_SIZE * BATTLE_FIELD_SIZE < SHIP_CELL_COUNT) {
+            Swal.fire(
+                'Wrong configuration!',
+                'There are not enough rooms for all ships',
+                'info'
+            );
+            return;
+        }
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         this.setState({
             playerCells: this.randomizeShips(),
@@ -317,12 +338,16 @@ export default class BattlePage extends Component {
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
-                    <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer
-                            cells={this.state.playerCells}
-                            options={playerOpts}
-                            onCellClick={this.playerCellSetup}
-                        />
+                    <div className="col-sm-5 border-right ">
+                        <div className="row pull-right">
+                            <div className="col-sm-12">
+                                <BattleFieldRenderer
+                                    cells={this.state.playerCells}
+                                    options={playerOpts}
+                                    onCellClick={this.playerCellSetup}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
@@ -335,9 +360,9 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-2"><h3>Ships: {this.state.remainsShip}</h3></div>
+                    <div className="col-sm-3"><h3>Ships: {this.state.remainsShip}</h3></div>
 
-                    <div className="col-sm-7 text-center btn-lg">
+                    <div className="col-sm-6 text-center btn-lg">
                         <button
                             className="bg-primary"
                             onClick={this.startBattle}
@@ -356,7 +381,6 @@ export default class BattlePage extends Component {
                             Reset
                         </button>
                     </div>
-
                     <div className="col-sm-3">
                         <div className="row">
                             <div className="col-sm-7 text-right">Player lost</div>

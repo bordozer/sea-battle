@@ -5,7 +5,7 @@ import _ from 'underscore'
 function renderVHeader(label) {
     const result = [];
     result.push(
-        <div key={'hh-' + label} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary">
+        <div key={'hh-' + label} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary cell-base">
             {label}
         </div>
     );
@@ -60,7 +60,7 @@ function renderCells(x, cells, onCellClick, options) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center align-middle cell-base " + cellCss(cell, options) + ' ' + getCellIcon(cell, options)}
+                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options) + ' ' + getCellIcon(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel}
             >
@@ -86,17 +86,17 @@ function renderHLine(x, cells, onCellClick, options) {
 function renderHHeader(cells) {
     const result = [];
     result.push(
-        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary" />
+        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary cell-base" />
     );
     cells.forEach(cell => {
         result.push(
-            <div key={'v-' + cell.x} className="col-sm-1 text-center text-light bg-secondary">
+            <div key={'v-' + cell.x} className="col-sm-1 text-center text-light bg-secondary cell-base">
                 {cell.xLabel}
             </div>
         );
     })
     result.push(
-        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary" />
+        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary cell-base" />
     );
     return result;
 }
