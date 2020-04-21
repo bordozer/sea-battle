@@ -54,7 +54,7 @@ export default class BattlePage extends Component {
         if (!isShipInCell && remainsShip === 0) {
             Swal.fire(
                 'No more rooms!',
-                'You set all ships.',
+                "You've set all ships.",
                 'info'
             );
             return;
@@ -99,7 +99,7 @@ export default class BattlePage extends Component {
             this.setState({
                 logs: this.state.logs
             });
-            return''
+            return ''
         }
 
         enemyCell.isHit = true;
@@ -156,8 +156,8 @@ export default class BattlePage extends Component {
 
     isWinShot = (cells) => {
         let killed = 0;
-        for(let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for(let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
                 const cell = cells[x][y];
                 if (cell.isShip && cell.isHit) {
                     killed++;
@@ -228,8 +228,8 @@ export default class BattlePage extends Component {
 
     getRandomNotHitCell = () => {
         const cells = [];
-        for(let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for(let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
                 if (!this.state.playerCells[x][y].isHit) {
                     cells.push(this.state.playerCells[x][y]);
                 }
@@ -284,6 +284,19 @@ export default class BattlePage extends Component {
         return result;
     }
 
+    calculateLost = (cells) => {
+        let result = 0;
+        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+                const cell = cells[x][y];
+                if (cell.isShip && cell.isHit) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
@@ -296,6 +309,10 @@ export default class BattlePage extends Component {
             isHiddenShips: true,
             isBattleStarted: battleStarted
         }
+
+        const playerLost = this.calculateLost(this.state.playerCells);
+        const enemyLost = this.calculateLost(this.state.enemyCells);
+
         return (
             <div>
                 <div className="row mt-10">
@@ -320,7 +337,7 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-2"><h3>Ships: {this.state.remainsShip}</h3></div>
 
-                    <div className="col-sm-8 text-center btn-lg">
+                    <div className="col-sm-7 text-center btn-lg">
                         <button
                             className="bg-primary"
                             onClick={this.startBattle}
@@ -340,7 +357,22 @@ export default class BattlePage extends Component {
                         </button>
                     </div>
 
-                    <div className="col-sm-2"/>
+                    <div className="col-sm-3">
+                        <div className="row">
+                            <div className="col-sm-7 text-right">Player lost</div>
+                            <div className="col-sm-1 text-danger">{playerLost}</div>
+                            <div className="col-sm-1">of</div>
+                            <div className="col-sm-1">{SHIP_CELL_COUNT}</div>
+                            <div className="col-sm-2"/>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-7 text-right">Enemy lost</div>
+                            <div className="col-sm-1 text-danger">{enemyLost}</div>
+                            <div className="col-sm-1">of</div>
+                            <div className="col-sm-1">{SHIP_CELL_COUNT}</div>
+                            <div className="col-sm-2"/>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="row mt-10">
