@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
 
+import Swal from "sweetalert2";
+
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-const SIZE = 10;
+const BATTLE_FIELD_SIZE = 10;
+const SHIP_CELL_COUNT = 3;
 const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
 
 export default class BattlePage extends Component {
 
-    cells = ({size}) => {
+    cells = (size) => {
         const cellItems = [];
         // console.log('cellItems1', cellItems);
-        for (let h = SIZE - 1; h >= 0; h--) {
+        for (let h = size - 1; h >= 0; h--) {
             cellItems[h] = [];
-            for (let v = SIZE - 1; v >= 0; v--) {
+            for (let v = size - 1; v >= 0; v--) {
                 cellItems[h][v] = {
                     x: v,
                     y: h,
@@ -30,8 +33,9 @@ export default class BattlePage extends Component {
     };
 
     state = {
-        'cells': this.cells(SIZE),
-        'step': STEP_SETUP
+        'cells': this.cells(BATTLE_FIELD_SIZE),
+        'step': STEP_SETUP,
+        'shipCells': SHIP_CELL_COUNT
     };
 
     startBattle = () => {
@@ -41,20 +45,40 @@ export default class BattlePage extends Component {
         console.log("The battle has began");
     }
 
-    cellShip = (cell) => {
+    ownBattleFieldCellClicked = (cell) => {
+        if (this.state.step !== STEP_SETUP) {
+            return;
+        }
+        console.log("ownBattleFieldCellClicked", cell);
+
+        const isShipInCell = cell.isShip;
+        const remainsShip = this.state.shipCells;
+        if (!isShipInCell && remainsShip === 0) {
+            Swal.fire(
+                'No more rooms!',
+                'You set all ships.',
+                'info'
+            );
+            return;
+        }
+
         const aCell = this.state.cells[cell.y][cell.x];
-        aCell.isShip = !aCell.isShip;
+        aCell.isShip = !isShipInCell;
         this.setState({
-            cells: this.state.cells
+            cells: this.state.cells,
+            shipCells: isShipInCell ? remainsShip + 1 : remainsShip - 1
         });
-        console.log("Set ship: cells", this.state.cells);
+        // console.log("ownBattleFieldCellClicked", this.state.cells);
     }
 
-    cellHit = (cell) => {
+    anotherPlayerBattleFieldCellClicked = (cell) => {
+        if (this.state.step !== STEP_BATTLE) {
+            return;
+        }
+        console.log("anotherPlayerBattleFieldCellClicked", cell);
         /*this.setState({
             step: 'BATTLE'
         });*/
-        console.log("Set hit", cell);
     }
 
     render() {
@@ -64,10 +88,10 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.cells} onCellClick={this.cellShip}/>
+                        <BattleFieldRenderer cells={this.state.cells} onCellClick={this.ownBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.cells} onCellClick={this.cellHit}/>
+                        <BattleFieldRenderer cells={this.state.cells} onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-1"/>
                 </div>

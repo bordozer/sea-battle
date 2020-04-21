@@ -15,7 +15,6 @@ function renderVHeader(label) {
 function renderCells(x, cells, onCellClick) {
     const result = [];
     cells.forEach(cell => {
-        console.log(cell);
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
                  className={"col-sm-1 border border-primary rounded text-center small " + (cell.isShip ? 'bg-primary text-light' : 'text-muted')}
