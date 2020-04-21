@@ -13,22 +13,12 @@ const STEP_BATTLE = 'STEP_BATTLE';
 export default class BattlePage extends Component {
 
     initCells = (size) => {
-        const playerCells = [];
-        const enemyCells = [];
-        // console.log('cellItems1', playerCells);
+        const cells = [];
+        // console.log('cellItems1', cells);
         for (let h = size - 1; h >= 0; h--) {
-            playerCells[h] = [];
-            enemyCells[h] = [];
+            cells[h] = [];
             for (let v = size - 1; v >= 0; v--) {
-                playerCells[h][v] = {
-                    x: v,
-                    y: h,
-                    xLabel: X_AXE[v],
-                    yLabel: h + 1,
-                    isShip: false,
-                    isHit: false
-                };
-                enemyCells[h][v] = {
+                cells[h][v] = {
                     x: v,
                     y: h,
                     xLabel: X_AXE[v],
@@ -38,17 +28,13 @@ export default class BattlePage extends Component {
                 };
             }
         }
-        // console.log('cellItems2', playerCells);
-        return {
-            playerCells: playerCells,
-            enemyCells: enemyCells,
-        }
+        // console.log('cellItems2', cells);
+        return cells;
     };
-    cells = this.initCells(BATTLE_FIELD_SIZE);
 
     state = {
-        'playerCells': this.cells.playerCells,
-        'enemyCells': this.cells.enemyCells,
+        'playerCells': this.initCells(BATTLE_FIELD_SIZE),
+        'enemyCells': this.initCells(BATTLE_FIELD_SIZE),
         'step': STEP_SETUP,
         'remainsShip': SHIP_CELL_COUNT,
         'logs': []
@@ -109,16 +95,9 @@ export default class BattlePage extends Component {
         }
         console.log("The battle has began");
 
-        // calculate enemyShips
-        let enemyShips = SHIP_CELL_COUNT;
-        while (enemyShips > 0) {
-            const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-            const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-            if (!this.state.enemyCells[x][y].isShip) {
-                this.state.enemyCells[x][y].isShip = true;
-                enemyShips--;
-            }
-        }
+        // randomize enemyShips
+        this.state.enemyCells = this.randomizeShips();
+
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
         this.state.logs.push('The first move: ' + (firstMove === 0 ? 'you' : 'enemy'));
@@ -133,11 +112,31 @@ export default class BattlePage extends Component {
         });
     }
 
-    resetBattle = () => {
+    randomizeShips = () => {
         const cells = this.initCells(BATTLE_FIELD_SIZE);
+        let shipsCount = SHIP_CELL_COUNT;
+        while (shipsCount > 0) {
+            const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+            const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+            if (!cells[x][y].isShip) {
+                cells[x][y].isShip = true;
+                shipsCount--;
+            }
+        }
+        return cells;
+    }
+
+    randomizePlayersShips = () => {
         this.setState({
-            playerCells: cells.playerCells,
-            enemyCells: cells.enemyCells,
+            playerCells: this.randomizeShips(),
+            remainsShip: 0
+        });
+    }
+
+    resetBattle = () => {
+        this.setState({
+            playerCells: this.initCells(BATTLE_FIELD_SIZE),
+            enemyCells: this.initCells(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
             remainsShip: SHIP_CELL_COUNT,
             logs: []
@@ -164,25 +163,24 @@ export default class BattlePage extends Component {
 
     render() {
         // console.log('BattlePage:', this.state);
-        console.log(this.state.logs);
+        // console.log(this.state.logs);
         return (
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.playerCells}
-                                             onCellClick={this.ownBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.ownBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.enemyCells}
-                                             onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-1"/>
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-4"><h3>Ships: {this.state.remainsShip}</h3></div>
-                    <div className="col-sm-4 text-center btn-lg">
+                    <div className="col-sm-2"><h3>Ships: {this.state.remainsShip}</h3></div>
+
+                    <div className="col-sm-8 text-center btn-lg">
                         <button
                             className="bg-primary"
                             onClick={this.startBattle}
@@ -191,12 +189,19 @@ export default class BattlePage extends Component {
                         </button>
                         <button
                             className="bg-primary"
+                            onClick={this.randomizePlayersShips}
+                            disabled={this.state.step !== STEP_SETUP}>
+                            Randomize ships
+                        </button>
+                        <button
+                            className="bg-primary"
                             onClick={this.resetBattle}
                             disabled={this.state.step !== STEP_BATTLE}>
                             Reset battle
                         </button>
                     </div>
-                    <div className="col-sm-4"/>
+
+                    <div className="col-sm-2"/>
                 </div>
 
                 <div className="row mt-10">
