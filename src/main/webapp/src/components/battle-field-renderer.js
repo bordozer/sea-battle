@@ -28,15 +28,32 @@ function cellCss(cell, isHiddenShips) {
     return '';
 }
 
+function getCellIcon(cell, isHiddenShips) {
+    if (!cell.isShip) {
+        return '';
+    }
+    const isMine = !isHiddenShips;
+    const isEnemy = isHiddenShips;
+    if (isMine && !cell.isHit) {
+        return 'fa fa-sliders';
+    }
+    if (isMine && cell.isHit) {
+        return ':o(';
+    }
+    if (isEnemy && cell.isHit) {
+        return ':=)';
+    }
+}
+
 function renderCells(x, cells, onCellClick, isHiddenShips) {
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center small cell-base " + cellCss(cell, isHiddenShips)}
+                 className={"col-sm-1 text-center small cell-base " + cellCss(cell, isHiddenShips) + ' ' + getCellIcon(cell, isHiddenShips)}
                  onClick={onCellClick.bind(this, cell)}
+                 title={cell.xLabel + '' + cell.yLabel}
             >
-                <span className="align-middle">{cell.xLabel + '' + cell.yLabel}</span>
             </div>
         );
     });
