@@ -224,10 +224,10 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.playerCellSetup}/>
+                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.playerCellSetup} isHiddenShips={false}/>
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.playerShot}/>
+                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.playerShot} isHiddenShips={true}/>
                     </div>
                     <div className="col-sm-1"/>
                 </div>

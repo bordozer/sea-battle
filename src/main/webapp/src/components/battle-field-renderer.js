@@ -12,8 +12,8 @@ function renderVHeader(label) {
     return result;
 }
 
-function cellCss(cell) {
-    if (cell.isShip && ! cell.isHit) {
+function cellCss(cell, isHiddenShips) {
+    if (!isHiddenShips && cell.isShip && ! cell.isHit) {
         return 'cell-ship';
     }
     if (cell.isShip && cell.isHit) {
@@ -28,12 +28,12 @@ function cellCss(cell) {
     return '';
 }
 
-function renderCells(x, cells, onCellClick) {
+function renderCells(x, cells, onCellClick, isHiddenShips) {
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 border border-primary rounded text-center small " + cellCss(cell)}
+                 className={"col-sm-1 text-center small cell-base " + cellCss(cell, isHiddenShips)}
                  onClick={onCellClick.bind(this, cell)}
             >
                 <span className="align-middle">{cell.xLabel + '' + cell.yLabel}</span>
@@ -43,13 +43,13 @@ function renderCells(x, cells, onCellClick) {
     return result;
 }
 
-function renderHLine(x, cells, onCellClick) {
+function renderHLine(x, cells, onCellClick, isHiddenShips) {
     const vHeader = renderVHeader(cells[0].yLabel);
     const result = [];
     result.push(
         <div key={'line-' + x} className="row">
             {vHeader}
-            {renderCells(x, cells, onCellClick)}
+            {renderCells(x, cells, onCellClick, isHiddenShips)}
             {vHeader}
         </div>
     );
@@ -84,13 +84,13 @@ function renderHHeaders(position, cells) {
     return result;
 }
 
-const BattleCellsRenderer = ({cells, onCellClick}) => {
+const BattleCellsRenderer = ({cells, onCellClick, isHiddenShips}) => {
 
     // console.log('battle-field-renderer', cells);
     const hLines = [];
 
     for (let x = cells.length - 1; x >= 0; x--) {
-        hLines.push(renderHLine(x, cells[x], onCellClick));
+        hLines.push(renderHLine(x, cells[x], onCellClick, isHiddenShips));
     }
 
     return (
