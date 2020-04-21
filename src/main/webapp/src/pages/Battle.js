@@ -5,10 +5,13 @@ import Swal from "sweetalert2";
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-const BATTLE_FIELD_SIZE = 10;
-const SHIP_CELL_COUNT = 16;
+
 const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
+const STEP_FINAL = 'STEP_FINAL';
+
+const BATTLE_FIELD_SIZE = 6;
+const SHIP_CELL_COUNT = 8;
 
 export default class BattlePage extends Component {
 
@@ -72,15 +75,23 @@ export default class BattlePage extends Component {
     }
 
     playerShot = (cell) => {
-        if (this.state.step !== STEP_BATTLE) {
+        if (this.state.step === STEP_SETUP) {
             Swal.fire(
-                'The battle is not started yet!',
+                'The battle is not started yet',
                 'Setup your ships and click START button.',
                 'info'
             );
             return;
         }
-
+        if (this.state.step === STEP_FINAL) {
+            Swal.fire(
+                'The battle is over now',
+                'This battle is over. But you can start another one.',
+                'info'
+            );
+            return;
+        }
+        let step = this.state.step;
         const enemyCells = this.state.enemyCells;
         const enemyCell = enemyCells[cell.y][cell.x];
         if (enemyCell.isHit) {
@@ -95,40 +106,68 @@ export default class BattlePage extends Component {
 
         if (!enemyCell.isShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
-            this.enemyShot();
+            if (this.enemyShot()) {
+                step = STEP_FINAL;
+            }
         }
 
         if (enemyCell.isShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
+            if (this.isWinShot(this.state.enemyCells)) {
+                Swal.fire(
+                    'You have won!',
+                    'You are just lucky bastard. Next time you will have no chance.',
+                    'info'
+                );
+                step = STEP_FINAL;
+            }
         }
 
         this.setState({
             enemyCells: this.state.enemyCells,
-            logs: this.state.logs
+            logs: this.state.logs,
+            step: step
         });
     }
 
     enemyShot = () => {
-        while (true) {
-            // TODO: check if it is the end of game
-            const shot = this.getRandomCoordinates();
-            const playerCell = this.state.playerCells[shot.x][shot.y];
-            if (playerCell.isHit) {
-                continue
-            }
+        const playerCell = this.getRandomNotHitCell();
 
-            playerCell.isHit = true;
-            if (playerCell.isShip) {
-                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
-                this.enemyShot();
+        playerCell.isHit = true;
+        if (playerCell.isShip) {
+            this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
+            if (this.isWinShot(this.state.playerCells)) {
+                Swal.fire(
+                    'Enemy has won!',
+                    'You are loser. Live with this.',
+                    'info'
+                );
+                return true;
             }
-
-            if (!playerCell.isShip) {
-                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (missed)'));
-            }
-
-            break;
+            return this.enemyShot();
         }
+
+        if (!playerCell.isShip) {
+            this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (missed)'));
+        }
+
+        return false;
+    }
+
+    isWinShot = (cells) => {
+        let killed = 0;
+        for(let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for(let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+                const cell = cells[x][y];
+                if (cell.isShip && cell.isHit) {
+                    killed++;
+                    if (killed === SHIP_CELL_COUNT) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     startBattle = () => {
@@ -149,15 +188,16 @@ export default class BattlePage extends Component {
         this.state.enemyCells = this.randomizeShips();
 
         // random - who's first shot
+        let isEnemyWin = false;
         const firstMove = Math.floor(Math.random() * Math.floor(2));
         this.state.logs.push(this.createLogRecord('The battle has began!'));
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         if (firstMove === 1) {
-            this.enemyShot();
+            isEnemyWin = this.enemyShot();
         }
 
         this.setState({
-            step: STEP_BATTLE,
+            step: isEnemyWin ? STEP_FINAL : STEP_BATTLE,
             playerCells: this.state.playerCells,
             enemyCells: this.state.enemyCells,
             logs: this.state.logs
@@ -184,6 +224,20 @@ export default class BattlePage extends Component {
             x: x,
             y: y
         }
+    }
+
+    getRandomNotHitCell = () => {
+        const cells = [];
+        for(let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for(let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+                if (!this.state.playerCells[x][y].isHit) {
+                    cells.push(this.state.playerCells[x][y]);
+                }
+            }
+        }
+        // console.log("-->", cells.length);
+        const number = Math.floor(Math.random() * Math.floor(cells.length));
+        return cells[number];
     }
 
     randomizePlayersShips = () => {
@@ -233,13 +287,14 @@ export default class BattlePage extends Component {
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
+        const battleStarted = this.state.step !== STEP_SETUP;
         const playerOpts = {
             isHiddenShips: false,
-            isBattleStarted: this.state.step === STEP_BATTLE
+            isBattleStarted: battleStarted
         }
         const enemyOpts = {
             isHiddenShips: true,
-            isBattleStarted: this.state.step === STEP_BATTLE
+            isBattleStarted: battleStarted
         }
         return (
             <div>
@@ -275,14 +330,13 @@ export default class BattlePage extends Component {
                         <button
                             className="bg-primary"
                             onClick={this.randomizePlayersShips}
-                            disabled={this.state.step !== STEP_SETUP}>
+                            disabled={(this.state.step === STEP_BATTLE) || (this.state.step === STEP_FINAL)}>
                             Randomize ships
                         </button>
                         <button
                             className="bg-primary"
-                            onClick={this.resetBattle}
-                            disabled={this.state.step !== STEP_BATTLE}>
-                            Reset battle
+                            onClick={this.resetBattle}>
+                            Reset
                         </button>
                     </div>
 
