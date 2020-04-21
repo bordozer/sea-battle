@@ -14,10 +14,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "ajv": "^6.12.2",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.2",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.2.0",
     "webpack": "^4.42.1",
@@ -31,6 +33,7 @@
     "sweetalert2": "^9.10.12",
     "underscore": "^1.10.2",
     "url-loader": "^4.1.0",
+    "font-awesome": "^4.7.0",
     "font-awesome-webpack": "git+https://github.com/jarecsni/font-awesome-webpack.git#440af2a2efe7ba1779d039556f04538e57bad4bb",
     "font-awesome-loader": "^1.0.2"
   },
