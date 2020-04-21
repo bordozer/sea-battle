@@ -111,7 +111,7 @@ export default class BattlePage extends Component {
 
         // calculate enemyShips
         let enemyShips = SHIP_CELL_COUNT;
-        while(enemyShips > 0) {
+        while (enemyShips > 0) {
             const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
             const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
             if (!this.state.enemyCells[x][y].isShip) {
@@ -122,6 +122,9 @@ export default class BattlePage extends Component {
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
         this.state.logs.push('The first move: ' + (firstMove === 0 ? 'you' : 'enemy'));
+        if (firstMove === 1) {
+            // enemy shot
+        }
 
         this.setState({
             step: STEP_BATTLE,
@@ -144,16 +147,18 @@ export default class BattlePage extends Component {
     renderLogs = () => {
         const result = [];
         let counter = 0;
-        this.state.logs.forEach(rec => {
-            result.push(
-                <div key={'log-row-' + counter} className="row">
-                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
-                        {rec}
+        this.state.logs
+            .reverse()
+            .forEach(rec => {
+                result.push(
+                    <div key={'log-row-' + counter} className="row">
+                        <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
+                            {rec}
+                        </div>
                     </div>
-                </div>
-            );
-            counter++;
-        });
+                );
+                counter++;
+            });
         return result;
     }
 
@@ -165,10 +170,12 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.ownBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.playerCells}
+                                             onCellClick={this.ownBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.enemyCells}
+                                             onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
                     </div>
                     <div className="col-sm-1"/>
                 </div>
