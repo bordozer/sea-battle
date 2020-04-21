@@ -50,7 +50,8 @@ export default class BattlePage extends Component {
         'playerCells': this.cells.playerCells,
         'enemyCells': this.cells.enemyCells,
         'step': STEP_SETUP,
-        'remainsShip': SHIP_CELL_COUNT
+        'remainsShip': SHIP_CELL_COUNT,
+        'logs': []
     };
 
     ownBattleFieldCellClicked = (cell) => {
@@ -72,9 +73,14 @@ export default class BattlePage extends Component {
 
         const aCell = this.state.playerCells[cell.y][cell.x];
         aCell.isShip = !isShipInCell;
+
+        const logs = this.state.logs;
+        logs.push("Set ship at " + cell.xLabel + ":" + cell.yLabel);
+
         this.setState({
             playerCells: this.state.playerCells,
-            remainsShip: isShipInCell ? remainsShip + 1 : remainsShip - 1
+            remainsShip: isShipInCell ? remainsShip + 1 : remainsShip - 1,
+            logs: logs
         });
         // console.log("ownBattleFieldCellClicked", this.state.playerCells);
     }
@@ -102,16 +108,56 @@ export default class BattlePage extends Component {
             return;
         }
         console.log("The battle has began");
-        this.setState({
-            step: STEP_BATTLE
-        });
+
         // calculate enemyShips
+        let enemyShips = SHIP_CELL_COUNT;
+        while(enemyShips > 0) {
+            const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+            const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+            if (!this.state.enemyCells[x][y].isShip) {
+                this.state.enemyCells[x][y].isShip = true;
+                enemyShips--;
+            }
+        }
         // random - who's first shot
-        //
+        const firstMove = Math.floor(Math.random() * Math.floor(2));
+
+        this.setState({
+            step: STEP_BATTLE,
+            enemyCells: this.state.enemyCells
+        });
+    }
+
+    resetBattle = () => {
+        const cells = this.initCells(BATTLE_FIELD_SIZE);
+        this.setState({
+            playerCells: cells.playerCells,
+            enemyCells: cells.enemyCells,
+            step: STEP_SETUP,
+            remainsShip: SHIP_CELL_COUNT,
+            logs: []
+        });
+    }
+
+    renderLogs = () => {
+        const result = [];
+        let counter = 0;
+        this.state.logs.forEach(rec => {
+            result.push(
+                <div key={'log-row-' + counter} className="row">
+                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
+                        {rec}
+                    </div>
+                </div>
+            );
+            counter++;
+        });
+        return result;
     }
 
     render() {
         // console.log('BattlePage:', this.state);
+        console.log(this.state.logs);
         return (
             <div>
                 <div className="row mt-10">
@@ -132,11 +178,24 @@ export default class BattlePage extends Component {
                             className="bg-primary"
                             onClick={this.startBattle}
                             disabled={this.state.remainsShip > 0 || this.state.step !== STEP_SETUP}>
-                            Start
+                            Start battle
+                        </button>
+                        <button
+                            className="bg-primary"
+                            onClick={this.resetBattle}
+                            disabled={this.state.step !== STEP_BATTLE}>
+                            Reset battle
                         </button>
                     </div>
                     <div className="col-sm-4"/>
                 </div>
+
+                <div className="row mt-10">
+                    <div className="col-sm-12">
+                        {this.renderLogs()}
+                    </div>
+                </div>
+
             </div>
         );
     }
