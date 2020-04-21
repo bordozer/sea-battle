@@ -35,15 +35,8 @@ export default class BattlePage extends Component {
     state = {
         'cells': this.cells(BATTLE_FIELD_SIZE),
         'step': STEP_SETUP,
-        'shipCells': SHIP_CELL_COUNT
+        'remainsShip': SHIP_CELL_COUNT
     };
-
-    startBattle = () => {
-        this.setState({
-            step: STEP_BATTLE
-        });
-        console.log("The battle has began");
-    }
 
     ownBattleFieldCellClicked = (cell) => {
         if (this.state.step !== STEP_SETUP) {
@@ -52,7 +45,7 @@ export default class BattlePage extends Component {
         console.log("ownBattleFieldCellClicked", cell);
 
         const isShipInCell = cell.isShip;
-        const remainsShip = this.state.shipCells;
+        const remainsShip = this.state.remainsShip;
         if (!isShipInCell && remainsShip === 0) {
             Swal.fire(
                 'No more rooms!',
@@ -66,7 +59,7 @@ export default class BattlePage extends Component {
         aCell.isShip = !isShipInCell;
         this.setState({
             cells: this.state.cells,
-            shipCells: isShipInCell ? remainsShip + 1 : remainsShip - 1
+            remainsShip: isShipInCell ? remainsShip + 1 : remainsShip - 1
         });
         // console.log("ownBattleFieldCellClicked", this.state.cells);
     }
@@ -79,6 +72,24 @@ export default class BattlePage extends Component {
         /*this.setState({
             step: 'BATTLE'
         });*/
+    }
+
+    startBattle = () => {
+        if (this.state.step !== STEP_SETUP) {
+            return;
+        }
+        if (this.state.remainsShip > 0) {
+            Swal.fire(
+                'Setup is not finished!',
+                'You need to set ' + this.state.remainsShip + ' more ships',
+                'info'
+            );
+            return;
+        }
+        console.log("The battle has began");
+        this.setState({
+            step: STEP_BATTLE
+        });
     }
 
     render() {
@@ -97,9 +108,14 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-4"/>
+                    <div className="col-sm-4"><h3>Remains ships: {this.state.remainsShip}</h3></div>
                     <div className="col-sm-4 text-center btn-lg">
-                        <button className="bg-primary" onClick={this.startBattle}>Start</button>
+                        <button
+                            className="bg-primary"
+                            onClick={this.startBattle}
+                            disabled={this.state.remainsShip > 0 || this.state.step !== STEP_SETUP}>
+                            Start
+                        </button>
                     </div>
                     <div className="col-sm-4"/>
                 </div>
