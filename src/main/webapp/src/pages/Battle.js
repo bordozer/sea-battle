@@ -73,6 +73,11 @@ export default class BattlePage extends Component {
 
     playerShot = (cell) => {
         if (this.state.step !== STEP_BATTLE) {
+            Swal.fire(
+                'The battle is not started yet!',
+                'Setup your ships and click START button.',
+                'info'
+            );
             return;
         }
 
@@ -144,7 +149,7 @@ export default class BattlePage extends Component {
         this.state.enemyCells = this.randomizeShips();
 
         // random - who's first shot
-        const firstMove = 1; //Math.floor(Math.random() * Math.floor(2)); // TODO
+        const firstMove = Math.floor(Math.random() * Math.floor(2));
         this.state.logs.push(this.createLogRecord('The battle has began!'));
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         if (firstMove === 1) {
