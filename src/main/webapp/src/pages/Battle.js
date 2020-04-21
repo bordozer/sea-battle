@@ -86,8 +86,16 @@ export default class BattlePage extends Component {
             return''
         }
 
-        this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel));
         enemyCell.isHit = true;
+
+        if (!enemyCell.isShip) {
+            this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
+            this.enemyShot();
+        }
+
+        if (enemyCell.isShip) {
+            this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
+        }
 
         this.setState({
             enemyCells: this.state.enemyCells,
@@ -99,20 +107,21 @@ export default class BattlePage extends Component {
         while (true) {
             // TODO: check if it is the end of game
             const shot = this.getRandomCoordinates();
-            const cell = this.state.playerCells[shot.x][shot.y];
-            if (cell.isHit) {
+            const playerCell = this.state.playerCells[shot.x][shot.y];
+            if (playerCell.isHit) {
                 continue
             }
 
-            this.state.logs.push(this.createLogRecord("Enemy's shot: " + cell.xLabel + ':' + cell.yLabel));
-            // console.log("enemyShot", cell);
+            playerCell.isHit = true;
+            if (playerCell.isShip) {
+                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
+                this.enemyShot();
+            }
 
-            cell.isHit = true;
+            if (!playerCell.isShip) {
+                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (missed)'));
+            }
 
-            /*this.setState({
-                playerCells: this.state.playerCells,
-                logs: this.state.logs
-            })*/
             break;
         }
     }
@@ -135,7 +144,7 @@ export default class BattlePage extends Component {
         this.state.enemyCells = this.randomizeShips();
 
         // random - who's first shot
-        const firstMove = Math.floor(Math.random() * Math.floor(2));
+        const firstMove = 1; //Math.floor(Math.random() * Math.floor(2)); // TODO
         this.state.logs.push(this.createLogRecord('The battle has began!'));
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         if (firstMove === 1) {
