@@ -35,13 +35,13 @@ function getCellIcon(cell, isHiddenShips) {
     const isMine = !isHiddenShips;
     const isEnemy = isHiddenShips;
     if (isMine && !cell.isHit) {
-        return 'fa fa-sliders';
+        return 'fa fa-anchor';
     }
     if (isMine && cell.isHit) {
-        return ':o(';
+        return 'fa fa-free-code-camp';
     }
     if (isEnemy && cell.isHit) {
-        return ':=)';
+        return 'fa fa-fire';
     }
 }
 
@@ -50,7 +50,7 @@ function renderCells(x, cells, onCellClick, isHiddenShips) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center small cell-base " + cellCss(cell, isHiddenShips) + ' ' + getCellIcon(cell, isHiddenShips)}
+                 className={"col-sm-1 text-center align-middle cell-base " + cellCss(cell, isHiddenShips) + ' ' + getCellIcon(cell, isHiddenShips)}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel}
             >
