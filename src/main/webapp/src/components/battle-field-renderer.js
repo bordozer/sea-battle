@@ -1,34 +1,40 @@
 import React from 'react';
 
-function renderVHeader(x) {
+import _ from 'underscore'
+
+function renderVHeader(label) {
     const result = [];
     result.push(
-        <div key={'hh-' + x} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary">
-            {x}
+        <div key={'hh-' + label} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary">
+            {label}
         </div>
     );
     return result;
 }
 
-function renderCells(x, cells) {
+function renderCells(x, cells, onCellClick) {
     const result = [];
     cells.forEach(cell => {
+        console.log(cell);
         result.push(
-            <div key={x + '_' + cell.x + '-' + cell.y} className="col-sm-1 border border-primary rounded text-center small text-muted">
-                {cell.xLabel + ':' + cell.yLabel}
+            <div key={x + '_' + cell.x + '-' + cell.y}
+                 className={"col-sm-1 border border-primary rounded text-center small " + (cell.isShip ? 'bg-primary text-light' : 'text-muted')}
+                 onClick={onCellClick.bind(this, cell)}
+            >
+                <span className="align-middle">{cell.xLabel + ':' + cell.yLabel}</span>
             </div>
         );
     });
     return result;
 }
 
-function renderHLine(x, cells) {
-    const vHeader = renderVHeader(x);
+function renderHLine(x, cells, onCellClick) {
+    const vHeader = renderVHeader(cells[0].yLabel);
     const result = [];
     result.push(
         <div key={'line-' + x} className="row">
             {vHeader}
-            {renderCells(x, cells)}
+            {renderCells(x, cells, onCellClick)}
             {vHeader}
         </div>
     );
@@ -63,13 +69,13 @@ function renderHHeaders(position, cells) {
     return result;
 }
 
-const BattleCellsRenderer = ({cells}) => {
+const BattleCellsRenderer = ({cells, onCellClick}) => {
 
     // console.log('battle-field-renderer', cells);
     const hLines = [];
 
     for (let x = cells.length - 1; x >= 0; x--) {
-        hLines.push(renderHLine(x, cells[x]));
+        hLines.push(renderHLine(x, cells[x], onCellClick));
     }
 
     return (
