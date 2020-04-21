@@ -12,12 +12,28 @@ function renderVHeader(label) {
     return result;
 }
 
+function cellCss(cell) {
+    if (cell.isShip && ! cell.isHit) {
+        return 'cell-ship';
+    }
+    if (cell.isShip && cell.isHit) {
+        return 'cell-ship-hit';
+    }
+    if (!cell.isShip && !cell.isHit) {
+        return 'cell-no-ship';
+    }
+    if (!cell.isShip && cell.isHit) {
+        return 'cell-no-ship-hit';
+    }
+    return '';
+}
+
 function renderCells(x, cells, onCellClick) {
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 border border-primary rounded text-center small " + (cell.isShip ? 'cell-ship' : 'cell-no-ship')}
+                 className={"col-sm-1 border border-primary rounded text-center small " + cellCss(cell)}
                  onClick={onCellClick.bind(this, cell)}
             >
                 <span className="align-middle">{cell.xLabel + '' + cell.yLabel}</span>

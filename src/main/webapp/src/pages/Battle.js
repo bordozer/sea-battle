@@ -75,10 +75,46 @@ export default class BattlePage extends Component {
         if (this.state.step !== STEP_BATTLE) {
             return;
         }
-        console.log("anotherPlayerBattleFieldCellClicked", cell);
-        /*this.setState({
-            step: 'BATTLE'
-        });*/
+
+        const enemyCells = this.state.enemyCells;
+        const enemyCell = enemyCells[cell.y][cell.x];
+        if (enemyCell.isHit) {
+            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + ':' + cell.yLabel + ' has already been hit. Chose another one.'));
+            this.setState({
+                logs: this.state.logs
+            });
+            return''
+        }
+
+        this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel));
+        enemyCell.isHit = true;
+
+        this.setState({
+            enemyCells: this.state.enemyCells,
+            logs: this.state.logs
+        });
+    }
+
+    enemyShot = () => {
+        while (true) {
+            // TODO: check if it is the end of game
+            const shot = this.getRandomCoordinates();
+            const cell = this.state.playerCells[shot.x][shot.y];
+            if (cell.isHit) {
+                continue
+            }
+
+            this.state.logs.push(this.createLogRecord("Enemy's shot: " + cell.xLabel + ':' + cell.yLabel));
+            // console.log("enemyShot", cell);
+
+            cell.isHit = true;
+
+            /*this.setState({
+                playerCells: this.state.playerCells,
+                logs: this.state.logs
+            })*/
+            break;
+        }
     }
 
     startBattle = () => {
@@ -103,11 +139,12 @@ export default class BattlePage extends Component {
         this.state.logs.push(this.createLogRecord('The battle has began!'));
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         if (firstMove === 1) {
-            // enemy shot
+            this.enemyShot();
         }
 
         this.setState({
             step: STEP_BATTLE,
+            playerCells: this.state.playerCells,
             enemyCells: this.state.enemyCells,
             logs: this.state.logs
         });
