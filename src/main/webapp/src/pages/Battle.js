@@ -44,7 +44,7 @@ export default class BattlePage extends Component {
         if (this.state.step !== STEP_SETUP) {
             return;
         }
-        console.log("ownBattleFieldCellClicked", cell);
+        console.log("playerCellSetup", cell);
 
         const isShipInCell = cell.isShip;
         const remainsShip = this.state.remainsShip;
@@ -61,14 +61,14 @@ export default class BattlePage extends Component {
         aCell.isShip = !isShipInCell;
 
         const logs = this.state.logs;
-        logs.push("Set ship at " + cell.xLabel + ":" + cell.yLabel);
+        logs.push(this.createLogRecord("Set ship at " + cell.xLabel + ":" + cell.yLabel));
 
         this.setState({
             playerCells: this.state.playerCells,
             remainsShip: isShipInCell ? remainsShip + 1 : remainsShip - 1,
             logs: logs
         });
-        // console.log("ownBattleFieldCellClicked", this.state.playerCells);
+        // console.log("playerCellSetup", this.state.playerCells);
     }
 
     playerShot = (cell) => {
@@ -100,7 +100,8 @@ export default class BattlePage extends Component {
 
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
-        this.state.logs.push('The first move: ' + (firstMove === 0 ? 'you' : 'enemy'));
+        this.state.logs.push(this.createLogRecord('The battle has began!'));
+        this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         if (firstMove === 1) {
             // enemy shot
         }
@@ -127,9 +128,11 @@ export default class BattlePage extends Component {
     }
 
     randomizePlayersShips = () => {
+        this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         this.setState({
             playerCells: this.randomizeShips(),
-            remainsShip: 0
+            remainsShip: 0,
+            logs: this.state.logs
         });
     }
 
@@ -143,6 +146,13 @@ export default class BattlePage extends Component {
         });
     }
 
+    createLogRecord = (text) => {
+        return {
+            time: new Date(),
+            text: text
+        }
+    }
+
     renderLogs = () => {
         const result = [];
         let counter = 0;
@@ -152,7 +162,7 @@ export default class BattlePage extends Component {
                 result.push(
                     <div key={'log-row-' + counter} className="row">
                         <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
-                            {rec}
+                            {rec.text}
                         </div>
                     </div>
                 );
@@ -163,7 +173,7 @@ export default class BattlePage extends Component {
 
     render() {
         // console.log('BattlePage:', this.state);
-        // console.log(this.state.logs);
+        console.log(this.state.logs);
         return (
             <div>
                 <div className="row mt-10">
