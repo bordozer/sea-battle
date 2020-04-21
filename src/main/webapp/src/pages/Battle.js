@@ -34,11 +34,14 @@ export default class BattlePage extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-sm-2" />
-                    <div className="col-sm-8">
+                    <div className="col-sm-1" />
+                    <div className="col-sm-5 border-right border-light">
                         <BattleFieldRenderer cells={this.state.cells}/>
                     </div>
-                    <div className="col-sm-2" />
+                    <div className="col-sm-5">
+                        <BattleFieldRenderer cells={this.state.cells}/>
+                    </div>
+                    <div className="col-sm-1" />
                 </div>
             </div>
         );

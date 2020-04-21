@@ -3,19 +3,19 @@ import React from 'react';
 function renderVHeader(x) {
     const result = [];
     result.push(
-        <div key={'hh-' + x} className="col-sm-1 text-center align-middle bg-warning border border-secondary">
+        <div key={'hh-' + x} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary">
             {x}
         </div>
     );
     return result;
 }
 
-function renderHLineCells(x, cells) {
+function renderCells(x, cells) {
     const result = [];
     cells.forEach(cell => {
         result.push(
-            <div key={x + '_' + cell.x + '-' + cell.y} className="col-sm-1 border border-primary rounded text-center small">
-                <button type="button" className="btn btn-light text-muted">{cell.xLabel + ':' + cell.yLabel}</button>
+            <div key={x + '_' + cell.x + '-' + cell.y} className="col-sm-1 border border-primary rounded text-center small text-muted">
+                {cell.xLabel + ':' + cell.yLabel}
             </div>
         );
     });
@@ -28,7 +28,7 @@ function renderHLine(x, cells) {
     result.push(
         <div key={'line-' + x} className="row">
             {vHeader}
-            {renderHLineCells(x, cells)}
+            {renderCells(x, cells)}
             {vHeader}
         </div>
     );
@@ -42,7 +42,7 @@ function renderHHeader(cells) {
     );
     cells.forEach(cell => {
         result.push(
-            <div key={'v-' + cell.x} className="col-sm-1 text-center bg-warning border border-secondary">
+            <div key={'v-' + cell.x} className="col-sm-1 text-center text-light bg-secondary">
                 {cell.xLabel}
             </div>
         );
