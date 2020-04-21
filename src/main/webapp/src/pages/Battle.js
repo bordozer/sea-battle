@@ -26,11 +26,12 @@ export default class BattlePage extends Component {
     };
 
     state = {
-        'cells': this.cells(SIZE)
+        'cells': this.cells(SIZE),
+        'step': 'SETUP'
     };
 
     render() {
-        // console.log('BattlePage:', this.state.cells);
+        // console.log('BattlePage:', this.state);
         return (
             <div>
                 <div className="row">

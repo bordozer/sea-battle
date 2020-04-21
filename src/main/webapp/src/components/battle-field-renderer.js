@@ -63,22 +63,21 @@ function renderHHeaders(position, cells) {
     return result;
 }
 
-const BattleCellsRenderer = (cells) => {
+const BattleCellsRenderer = ({cells}) => {
 
-    const cellsList = cells.cells;
-
+    // console.log('battle-field-renderer', cells);
     const hLines = [];
 
-    for (let x = cellsList.length - 1; x >= 0; x--) {
-        hLines.push(renderHLine(x, cellsList[x]));
+    for (let x = cells.length - 1; x >= 0; x--) {
+        hLines.push(renderHLine(x, cells[x]));
     }
 
     return (
         <div className="row">
             <div className="col-sm-12">
-                {renderHHeaders('top', cellsList)}
+                {renderHHeaders('top', cells)}
                 {hLines}
-                {renderHHeaders('bottom', cellsList)}
+                {renderHHeaders('bottom', cells)}
             </div>
         </div>
     )
