@@ -219,15 +219,31 @@ export default class BattlePage extends Component {
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
+        const playerOpts = {
+            isHiddenShips: false,
+            isBattleStarted: this.state.step === STEP_BATTLE
+        }
+        const enemyOpts = {
+            isHiddenShips: true,
+            isBattleStarted: this.state.step === STEP_BATTLE
+        }
         return (
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.playerCellSetup} isHiddenShips={false}/>
+                        <BattleFieldRenderer
+                            cells={this.state.playerCells}
+                            options={playerOpts}
+                            onCellClick={this.playerCellSetup}
+                        />
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.playerShot} isHiddenShips={true}/>
+                        <BattleFieldRenderer
+                            cells={this.state.enemyCells}
+                            options={enemyOpts}
+                            onCellClick={this.playerShot}
+                        />
                     </div>
                     <div className="col-sm-1"/>
                 </div>

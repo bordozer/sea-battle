@@ -18,12 +18,12 @@ body {
 .cell-base {
     padding-top: 12px;
     color: silver;
+    background-color: azure;
     font-size: 24px;
     border: 1px solid silver;
     border-radius: 4px;
     height: 40px;
 }
-
 .cell-ship {
     color: white;
     background-color: cadetblue;
@@ -39,6 +39,9 @@ body {
 .cell-no-ship {
 }
 .cell-no-ship-hit {
-    background-image: radial-gradient(circle, burlywood, white, white);
-    background-color: aliceblue;
+    /*background-image: radial-gradient(circle, burlywood, white, white);*/
+    /*background-color: aliceblue;*/
+}
+.cell-disabled {
+    background-color: ghostwhite;
 }

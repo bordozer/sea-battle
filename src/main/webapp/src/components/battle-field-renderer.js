@@ -12,7 +12,11 @@ function renderVHeader(label) {
     return result;
 }
 
-function cellCss(cell, isHiddenShips) {
+function cellCss(cell, options) {
+    const isHiddenShips = options.isHiddenShips;
+    if (isHiddenShips && !options.isBattleStarted) {
+        return 'cell-disabled';
+    }
     if (!isHiddenShips && cell.isShip && ! cell.isHit) {
         return 'cell-ship';
     }
@@ -28,29 +32,35 @@ function cellCss(cell, isHiddenShips) {
     return '';
 }
 
-function getCellIcon(cell, isHiddenShips) {
-    if (!cell.isShip) {
-        return '';
+function getCellIcon(cell, options) {
+    const isMine = !options.isHiddenShips;
+    const isEnemy = options.isHiddenShips;
+
+    if (isEnemy && !options.isBattleStarted) {
+        return 'fa fa-hourglass-o';
     }
-    const isMine = !isHiddenShips;
-    const isEnemy = isHiddenShips;
-    if (isMine && !cell.isHit) {
-        return 'fa fa-anchor';
+
+    if (!cell.isShip && cell.isHit) {
+        return 'fa fa-bullseye'; // missed
     }
-    if (isMine && cell.isHit) {
-        return 'fa fa-free-code-camp';
+    if (isMine && cell.isShip && !cell.isHit) {
+        return 'fa fa-anchor'; // my ship
     }
-    if (isEnemy && cell.isHit) {
-        return 'fa fa-fire';
+    if (isMine && cell.isShip && cell.isHit) {
+        return 'fa fa-free-code-camp'; // my killed ship
     }
+    if (isEnemy && cell.isShip && cell.isHit) {
+        return 'fa fa-fire'; // enemy killed ship
+    }
+    return '';
 }
 
-function renderCells(x, cells, onCellClick, isHiddenShips) {
+function renderCells(x, cells, onCellClick, options) {
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center align-middle cell-base " + cellCss(cell, isHiddenShips) + ' ' + getCellIcon(cell, isHiddenShips)}
+                 className={"col-sm-1 text-center align-middle cell-base " + cellCss(cell, options) + ' ' + getCellIcon(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel}
             >
@@ -60,13 +70,13 @@ function renderCells(x, cells, onCellClick, isHiddenShips) {
     return result;
 }
 
-function renderHLine(x, cells, onCellClick, isHiddenShips) {
+function renderHLine(x, cells, onCellClick, options) {
     const vHeader = renderVHeader(cells[0].yLabel);
     const result = [];
     result.push(
         <div key={'line-' + x} className="row">
             {vHeader}
-            {renderCells(x, cells, onCellClick, isHiddenShips)}
+            {renderCells(x, cells, onCellClick, options)}
             {vHeader}
         </div>
     );
@@ -101,13 +111,13 @@ function renderHHeaders(position, cells) {
     return result;
 }
 
-const BattleCellsRenderer = ({cells, onCellClick, isHiddenShips}) => {
+const BattleCellsRenderer = ({cells, onCellClick, options}) => {
 
     // console.log('battle-field-renderer', cells);
     const hLines = [];
 
     for (let x = cells.length - 1; x >= 0; x--) {
-        hLines.push(renderHLine(x, cells[x], onCellClick, isHiddenShips));
+        hLines.push(renderHLine(x, cells[x], onCellClick, options));
     }
 
     return (
