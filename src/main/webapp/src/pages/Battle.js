@@ -121,10 +121,12 @@ export default class BattlePage extends Component {
         }
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
+        this.state.logs.push('The first move: ' + (firstMove === 0 ? 'you' : 'enemy'));
 
         this.setState({
             step: STEP_BATTLE,
-            enemyCells: this.state.enemyCells
+            enemyCells: this.state.enemyCells,
+            logs: this.state.logs
         });
     }
 
