@@ -6,7 +6,7 @@ import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const BATTLE_FIELD_SIZE = 10;
-const SHIP_CELL_COUNT = 3;
+const SHIP_CELL_COUNT = 16;
 const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
 
@@ -40,7 +40,7 @@ export default class BattlePage extends Component {
         'logs': []
     };
 
-    ownBattleFieldCellClicked = (cell) => {
+    playerCellSetup = (cell) => {
         if (this.state.step !== STEP_SETUP) {
             return;
         }
@@ -71,7 +71,7 @@ export default class BattlePage extends Component {
         // console.log("ownBattleFieldCellClicked", this.state.playerCells);
     }
 
-    anotherPlayerBattleFieldCellClicked = (cell) => {
+    playerShot = (cell) => {
         if (this.state.step !== STEP_BATTLE) {
             return;
         }
@@ -169,10 +169,10 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 border-right border-light">
-                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.ownBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.playerCells} onCellClick={this.playerCellSetup}/>
                     </div>
                     <div className="col-sm-5">
-                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.anotherPlayerBattleFieldCellClicked}/>
+                        <BattleFieldRenderer cells={this.state.enemyCells} onCellClick={this.playerShot}/>
                     </div>
                     <div className="col-sm-1"/>
                 </div>
