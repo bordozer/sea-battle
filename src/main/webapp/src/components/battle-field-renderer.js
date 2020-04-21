@@ -17,10 +17,10 @@ function renderCells(x, cells, onCellClick) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 border border-primary rounded text-center small " + (cell.isShip ? 'bg-primary text-light' : 'text-muted')}
+                 className={"col-sm-1 border border-primary rounded text-center small " + (cell.isShip ? 'cell-ship' : 'cell-no-ship')}
                  onClick={onCellClick.bind(this, cell)}
             >
-                <span className="align-middle">{cell.xLabel + ':' + cell.yLabel}</span>
+                <span className="align-middle">{cell.xLabel + '' + cell.yLabel}</span>
             </div>
         );
     });

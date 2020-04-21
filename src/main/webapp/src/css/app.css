@@ -14,3 +14,16 @@ body {
 .mb-10 {
     margin-bottom: 10px !important;
 }
+
+.cell-ship {
+    color: yellow;
+    font-size: 14px;
+    /*border: 2px solid red;*/
+    background-color: cadetblue;
+    box-shadow: 2px 2px grey;
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+.cell-no-ship {
+    font-size: 14px;
+    color: silver;
+}

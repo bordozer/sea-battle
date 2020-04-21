@@ -117,14 +117,22 @@ export default class BattlePage extends Component {
         const cells = this.initCells(BATTLE_FIELD_SIZE);
         let shipsCount = SHIP_CELL_COUNT;
         while (shipsCount > 0) {
-            const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-            const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-            if (!cells[x][y].isShip) {
-                cells[x][y].isShip = true;
+            const coord = this.getRandomCoordinates();
+            if (!cells[coord.x][coord.y].isShip) {
+                cells[coord.x][coord.y].isShip = true;
                 shipsCount--;
             }
         }
         return cells;
+    }
+
+    getRandomCoordinates = () => {
+        const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+        const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
+        return {
+            x: x,
+            y: y
+        }
     }
 
     randomizePlayersShips = () => {
@@ -173,7 +181,7 @@ export default class BattlePage extends Component {
 
     render() {
         // console.log('BattlePage:', this.state);
-        console.log(this.state.logs);
+        // console.log(this.state.logs);
         return (
             <div>
                 <div className="row mt-10">
