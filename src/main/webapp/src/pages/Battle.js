@@ -10,8 +10,8 @@ const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
-const BATTLE_FIELD_SIZE = 5;
-const SHIP_CELL_COUNT = 8;
+const BATTLE_FIELD_SIZE = 8;
+const SHIP_CELL_COUNT = 12;
 
 export default class BattlePage extends Component {
 

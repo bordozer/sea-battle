@@ -1,6 +1,6 @@
 spring:
   application:
-    name: see-battle
+    name: sea-battle
   profiles:
     active: dev
 #  flyway:

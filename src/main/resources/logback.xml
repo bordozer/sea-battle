@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="log.files.path" value="/var/log/bordozer/see-battle"/>
-    <property name="service.name" value="see-battle"/>
+    <property name="log.files.path" value="/var/log/bordozer/sea-battle"/>
+    <property name="service.name" value="sea-battle"/>
     <property name="pattern" value="%-4r, %date{yyyy-MM-dd HH:mm:ss.SSS}, [%thread] %-5level, %logger{5} traceId=%X{traceId}, %m%n"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
