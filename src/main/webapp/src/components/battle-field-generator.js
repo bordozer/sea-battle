@@ -39,7 +39,7 @@ export const initBattleField = (size) => {
     return cells;
 }
 
-export const generateRandomShips = (battleFieldSize, cellsCount) => {
+export const generateRandomBattleField = (battleFieldSize, cellsCount) => {
     const cells = initBattleField(battleFieldSize);
     let shipsCount = cellsCount;
     while (shipsCount > 0) {

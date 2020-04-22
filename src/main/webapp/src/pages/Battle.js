@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {generateRandomShips, initBattleField} from 'components/battle-field-generator'
+import {generateRandomBattleField, initBattleField} from 'components/battle-field-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const WELCOME_MESSAGE = {
@@ -173,7 +173,7 @@ export default class BattlePage extends Component {
         console.log("The battle has began");
 
         // randomize enemyShips
-        this.state.enemyCells = this.randomizeShips();
+        this.state.enemyCells = this.randomizeBattleField();
 
         // random - who's first shot
         let isEnemyWin = false;
@@ -192,8 +192,8 @@ export default class BattlePage extends Component {
         });
     }
 
-    randomizeShips = () => {
-        return generateRandomShips(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
+    randomizeBattleField = () => {
+        return generateRandomBattleField(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
     }
 
     getRandomNotHitCell = () => {
@@ -221,7 +221,7 @@ export default class BattlePage extends Component {
         }
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         this.setState({
-            playerCells: this.randomizeShips(),
+            playerCells: this.randomizeBattleField(),
             remainsShip: 0,
             logs: this.state.logs
         });
