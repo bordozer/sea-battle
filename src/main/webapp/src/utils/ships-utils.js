@@ -2,18 +2,18 @@ import React from 'react';
 
 import _ from "underscore";
 
-import {randomInt, randomElement} from 'src/utils/random-utils'
+import {randomElement, randomInt} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
-        {name: 'Ship 1.1', size: 1, cells: [], damage: 0},
+        // {name: 'Ship 1.1', size: 1, cells: [], damage: 0},
         // {name: 'Ship 1.2', size: 1, cells: [], damage: 0},
         // {name: 'Ship 1.3', size: 1, cells: [], damage: 0},
         // {name: 'Ship 1.4', size: 1, cells: [], damage: 0},
         // {name: 'Ship 2.1', size: 2, cells: [], damage: 0},
         // {name: 'Ship 2.2', size: 2, cells: [], damage: 0},
         // {name: 'Ship 2.3', size: 2, cells: [], damage: 0},
-        // {name: 'Ship 3.1', size: 3, cells: [], damage: 0},
+        {name: 'Ship 3.1', size: 3, cells: [], damage: 0},
         // {name: 'Ship 3.2', size: 3, cells: [], damage: 0},
         // {name: 'Ship 4.1', size: 4, cells: [], damage: 0}
     ]
@@ -33,7 +33,7 @@ function _getFreeCells(cells) {
     return arr;
 }
 
-function _splitUnbroken(cells) {
+function _getFreeRooms(cells) {
     const result = [];
 
     let temp = [];
@@ -53,12 +53,12 @@ function _splitUnbroken(cells) {
     if (temp.length > 0) {
         result.push(temp);
     }
-    // console.log("_splitUnbroken", result);
+    // console.log("_getFreeRooms", result);
     return result;
 }
 
 function _hPlacementStrategy(shipSize, cells) {
-    const result = [];
+    const freeRooms = [];
     const freeCells = _getFreeCells(cells);
     // console.log('freeCells', freeCells);
 
@@ -70,14 +70,14 @@ function _hPlacementStrategy(shipSize, cells) {
     Object.keys(freeCellsMap)
         .forEach(column => {
             const lineCells = freeCellsMap[column];
-            // console.log('lineCells', column, lineCells);
+            console.log('line', column, 'lineCells', lineCells);
 
-            const unbrokenList = _splitUnbroken(lineCells);
-            // console.log('unbrokenList', column, unbrokenList);
+            const lineFreeRooms = _getFreeRooms(lineCells);
+            console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
-            result.push(unbrokenList);
+            freeRooms.push(lineFreeRooms);
         });
-    return result;
+    return freeRooms;
 }
 
 function _vPlacementStrategy(shipSize, cells) {
@@ -92,14 +92,15 @@ export const generateShips = (cells) => {
         const shipSize = ship.size;
         // const placement = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
         // placement(shipSize, cells);
-        const rooms = _hPlacementStrategy(shipSize, cells);
-        // console.log('_hPlacementStrategy', rooms);
+        const freeRooms = _hPlacementStrategy(shipSize, cells);
+        console.log('freeRooms', freeRooms);
 
-        const candidateRooms = rooms.filter(place => {
-            return rooms.length >= shipSize;
+        const spaciousRooms = freeRooms.filter(room => {
+            return room.length >= shipSize;
         })
+        console.log('spaciousRooms', spaciousRooms);
 
-        const randomRoom = randomElement(candidateRooms)[0];
+        const randomRoom = randomElement(spaciousRooms)[0];
         console.log("randomRoom", randomRoom);
 
         const maxOffset = randomRoom.length - shipSize;
