@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {initBattleFieldCells, generateShips} from 'components/battle-field-generator'
+import {initBattleFieldCells} from 'components/battle-field-generator'
+import {generateShips} from 'components/ships-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const WELCOME_MESSAGE = {
