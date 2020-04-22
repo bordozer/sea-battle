@@ -18,31 +18,26 @@ function cellCss(cell, options) {
         return 'cell-disabled';
     }
     if (!cell.isShip && cell.isHit) {
-        return 'text-warning'; // missed
+        return 'cell-no-ship-hit text-warning'; // missed shot
     }
     if (!isHiddenShips && cell.isShip && !cell.isHit) {
-        return 'cell-ship';
+        return 'cell-ship'; // player's healthy ship
     }
-
     if (cell.isShip && cell.isHit && cell.ship.damage < cell.ship.size) {
         return 'cell-ship-wounded'; // wounded ship
     }
     if (cell.isShip && cell.isHit && cell.ship.damage === cell.ship.size) {
         return 'cell-ship-killed'; // killed ship
     }
-
     if (!cell.isShip && !cell.isHit) {
         return 'cell-no-ship';
-    }
-    if (!cell.isShip && cell.isHit) {
-        return 'cell-no-ship-hit';
     }
     return '';
 }
 
 function getCellIcon(cell, options) {
-    const isMine = !options.isHiddenShips;
     const isEnemy = options.isHiddenShips;
+    const isMine = !isEnemy;
 
     if (isEnemy && !options.isBattleStarted) {
         return 'fa fa-hourglass-o';
@@ -54,14 +49,11 @@ function getCellIcon(cell, options) {
     if (isMine && cell.isShip && !cell.isHit) {
         return 'fa fa-anchor'; // my ship
     }
-    if (!cell.isShip && cell.isBusy) {
+    if (!cell.isShip && !cell.isHit && cell.isBusy && cell.ship && cell.ship.damage === cell.ship.size) {
         return 'fa fa-genderless'; // player's of enemy's known ship neighbor cell
     }
-    if (isMine && cell.isShip && cell.isHit) {
-        return 'fa fa-times'; // my killed ship
-    }
-    if (isEnemy && cell.isShip && cell.isHit) {
-        return 'fa fa-times'; // enemy killed ship
+    if (cell.isShip && cell.isHit) {
+        return 'fa fa-times'; // hit ship section
     }
     return '';
 }

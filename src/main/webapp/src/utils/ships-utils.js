@@ -134,8 +134,13 @@ export const markNeighborCellsAsBusy = (cells, cell) => {
             if (!cells[i]) {
                 continue;
             }
-            if (cells[i][j] && !cells[i][j].isHit) {
-                cells[i][j].isBusy = true;
+            if (cells[i][j]) {
+                const neighborCell = cells[i][j];
+                if (neighborCell.isHit) {
+                    continue;
+                }
+                neighborCell.isBusy = true;
+                neighborCell.ship = cell.ship;
             }
         }
     }

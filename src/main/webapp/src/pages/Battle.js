@@ -88,11 +88,12 @@ export default class BattlePage extends Component {
             this.setState({
                 logs: this.state.logs
             });
-            return ''
+            return;
         }
 
         enemyCell.isHit = true;
 
+        // MISSED
         if (!enemyCell.isShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
             if (this.enemyShot()) {
@@ -100,7 +101,11 @@ export default class BattlePage extends Component {
             }
         }
 
+        // HIT a ship
         if (enemyCell.isShip) {
+            enemyCell.ship.damage++;
+            markNeighborCellsAsBusy(enemyCells, enemyCell);
+
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
             if (this.isWinShot(this.state.enemyCells)) {
                 Swal.fire(
@@ -286,7 +291,7 @@ export default class BattlePage extends Component {
             isBattleStarted: battleStarted
         }
         const enemyOpts = {
-            isHiddenShips: true,
+            isHiddenShips: false,
             isBattleStarted: battleStarted
         }
 
