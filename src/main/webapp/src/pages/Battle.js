@@ -338,7 +338,18 @@ export default class BattlePage extends Component {
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
-                    <div className="col-sm-5 border-right ">
+                    <div className="col-sm-5 text-center text-warning">
+                        <h4>You</h4>
+                    </div>
+                    <div className="col-sm-5 text-center text-warning">
+                        <h4>Enemy</h4>
+                    </div>
+                    <div className="col-sm-1"/>
+                </div>
+
+                <div className="row mt-10">
+                    <div className="col-sm-1"/>
+                    <div className="col-sm-5 border-right">
                         <div className="row pull-right">
                             <div className="col-sm-12">
                                 <BattleFieldRenderer
