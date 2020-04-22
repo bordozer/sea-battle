@@ -195,7 +195,7 @@ export default class BattlePage extends Component {
 
     randomizeBattleFieldWithShips = () => {
         const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
-        return generateShips(cells, SHIP_CELLS_LIMIT);
+        return generateShips(cells);
     }
 
     getRandomNotHitCell = () => {

@@ -13,6 +13,7 @@ export const initBattleFieldCells = (size) => {
                 xLabel: X_AXE[v],
                 yLabel: h + 1,
                 isShip: false,
+                isBusy: false,
                 isHit: false
             };
         }
