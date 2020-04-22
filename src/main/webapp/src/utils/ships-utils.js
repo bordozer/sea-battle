@@ -2,7 +2,7 @@ import React from 'react';
 
 import _ from "underscore";
 
-import {randomElement, randomInt} from 'src/utils/random-utils'
+import {randomBoolean, randomElement, randomInt} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
@@ -33,7 +33,7 @@ function _getFreeCells(cells) {
     return arr;
 }
 
-function _getFreeRooms(cells) {
+function _vPlacementStrategy(cells) {
     const result = [];
 
     let temp = [];
@@ -53,11 +53,15 @@ function _getFreeRooms(cells) {
     if (temp.length > 0) {
         result.push(temp);
     }
-    // console.log("_getFreeRooms", result);
+    // console.log("_vPlacementStrategy", result);
     return result;
 }
 
-function _hPlacementStrategy(shipSize, cells) {
+function _hPlacementStrategy(cells) {
+
+}
+
+function _getFreeRooms(shipSize, cells, placementStrategy) {
     const freeRooms = [];
     const freeCells = _getFreeCells(cells);
     // console.log('freeCells', freeCells);
@@ -72,7 +76,7 @@ function _hPlacementStrategy(shipSize, cells) {
             const lineCells = freeCellsMap[column];
             // console.log('line', column, 'lineCells', lineCells);
 
-            const lineFreeRooms = _getFreeRooms(lineCells);
+            const lineFreeRooms = placementStrategy(lineCells);
             // console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
             lineFreeRooms.forEach(lineFreeRoom => {
@@ -80,12 +84,6 @@ function _hPlacementStrategy(shipSize, cells) {
             })
         });
     return freeRooms;
-}
-
-function _vPlacementStrategy(shipSize, cells) {
-    const result = _getFreeCells(cells);
-    // console.log('=>', result);
-    return result;
 }
 
 export const markNeighborCellsAsBusy = (cells, cell) => {
@@ -105,9 +103,8 @@ export const generateShips = (cells) => {
     const ships = _initShips();
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        // const placement = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
-        // placement(shipSize, cells);
-        const freeRooms = _hPlacementStrategy(shipSize, cells);
+        const placementStrategy = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
+        const freeRooms = _getFreeRooms(shipSize, cells, placementStrategy);
         // console.log('freeRooms', freeRooms);
 
         const spaciousRooms = freeRooms.filter(room => {
