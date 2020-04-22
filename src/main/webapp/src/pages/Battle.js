@@ -2,10 +2,9 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {generate} from 'components/battle-field-generator'
+import {generate, initCells} from 'components/battle-field-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
-const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const WELCOME_MESSAGE = {
     time: new Date(),
     text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
@@ -21,29 +20,9 @@ const SHIP_CELL_COUNT = 12;
 
 export default class BattlePage extends Component {
 
-    initCells = (size) => {
-        const cells = [];
-        // console.log('cellItems1', cells);
-        for (let h = size - 1; h >= 0; h--) {
-            cells[h] = [];
-            for (let v = size - 1; v >= 0; v--) {
-                cells[h][v] = {
-                    x: v,
-                    y: h,
-                    xLabel: X_AXE[v],
-                    yLabel: h + 1,
-                    isShip: false,
-                    isHit: false
-                };
-            }
-        }
-        // console.log('cellItems2', cells);
-        return cells;
-    };
-
     state = {
-        'playerCells': this.initCells(BATTLE_FIELD_SIZE),
-        'enemyCells': this.initCells(BATTLE_FIELD_SIZE),
+        'playerCells': initCells(BATTLE_FIELD_SIZE),
+        'enemyCells': initCells(BATTLE_FIELD_SIZE),
         'step': STEP_SETUP,
         'remainsShip': SHIP_CELL_COUNT,
         'logs': [WELCOME_MESSAGE]
@@ -53,7 +32,7 @@ export default class BattlePage extends Component {
         if (this.state.step !== STEP_SETUP) {
             return;
         }
-        console.log("playerCellSetup", cell);
+        // console.log("playerCellSetup", cell);
 
         const isShipInCell = cell.isShip;
         const remainsShip = this.state.remainsShip;
@@ -211,18 +190,17 @@ export default class BattlePage extends Component {
     }
 
     randomizeShips = () => {
-        const cells = this.initCells(BATTLE_FIELD_SIZE);
-        return generate(cells, BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
+        return generate(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
     }
 
-    getRandomCoordinates = () => {
+    /*getRandomCoordinates = () => {
         const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
         const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
         return {
             x: x,
             y: y
         }
-    }
+    }*/
 
     getRandomNotHitCell = () => {
         const cells = [];
@@ -257,8 +235,8 @@ export default class BattlePage extends Component {
 
     resetBattle = () => {
         this.setState({
-            playerCells: this.initCells(BATTLE_FIELD_SIZE),
-            enemyCells: this.initCells(BATTLE_FIELD_SIZE),
+            playerCells: initCells(BATTLE_FIELD_SIZE),
+            enemyCells: initCells(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
             remainsShip: SHIP_CELL_COUNT,
             logs: [WELCOME_MESSAGE]
