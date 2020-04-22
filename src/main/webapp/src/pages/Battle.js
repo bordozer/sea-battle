@@ -38,7 +38,7 @@ export default class BattlePage extends Component {
         }
         // console.log("playerCellSetup", cell);
 
-        const isShipInCell = cell.isShip;
+        const isShipInCell = cell.ship;
         const remainsShip = this.state.remainsShip;
         if (!isShipInCell && remainsShip === 0) {
             Swal.fire(
@@ -50,7 +50,7 @@ export default class BattlePage extends Component {
         }
 
         const aCell = this.state.playerCells[cell.y][cell.x];
-        aCell.isShip = !isShipInCell;
+        aCell.ship = !isShipInCell;
 
         const logs = this.state.logs;
         logs.push(this.createLogRecord("Set ship at " + cell.xLabel + ":" + cell.yLabel));
@@ -83,8 +83,16 @@ export default class BattlePage extends Component {
         let step = this.state.step;
         const enemyCells = this.state.enemyCells;
         const enemyCell = enemyCells[cell.y][cell.x];
+
         if (enemyCell.isHit) {
             this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + ':' + cell.yLabel + ' has already been hit. Chose another one.'));
+            this.setState({
+                logs: this.state.logs
+            });
+            return;
+        }
+        if (enemyCell.isKilledShipNeighborCell) {
+            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + ':' + cell.yLabel + ' is a neighbor of killed ship. Chose another one.'));
             this.setState({
                 logs: this.state.logs
             });
@@ -164,7 +172,7 @@ export default class BattlePage extends Component {
         for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
             for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
                 const cell = cells[x][y];
-                if (cell.isShip && cell.isHit) {
+                if (cell.ship && cell.isHit) {
                     killed++;
                     if (killed === SHIP_CELLS_LIMIT) {
                         return true;
@@ -286,7 +294,7 @@ export default class BattlePage extends Component {
         for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
             for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
                 const cell = cells[x][y];
-                if (cell.isShip && cell.isHit) {
+                if (cell.ship && cell.isHit) {
                     result++;
                 }
             }
