@@ -6,16 +6,16 @@ import {randomElement, randomInt} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
-        // {name: 'Ship 1.1', size: 1, cells: [], damage: 0},
-        // {name: 'Ship 1.2', size: 1, cells: [], damage: 0},
-        // {name: 'Ship 1.3', size: 1, cells: [], damage: 0},
-        // {name: 'Ship 1.4', size: 1, cells: [], damage: 0},
-        // {name: 'Ship 2.1', size: 2, cells: [], damage: 0},
-        // {name: 'Ship 2.2', size: 2, cells: [], damage: 0},
-        // {name: 'Ship 2.3', size: 2, cells: [], damage: 0},
+        {name: 'Ship 1.1', size: 1, cells: [], damage: 0},
+        {name: 'Ship 1.2', size: 1, cells: [], damage: 0},
+        {name: 'Ship 1.3', size: 1, cells: [], damage: 0},
+        {name: 'Ship 1.4', size: 1, cells: [], damage: 0},
+        {name: 'Ship 2.1', size: 2, cells: [], damage: 0},
+        {name: 'Ship 2.2', size: 2, cells: [], damage: 0},
+        {name: 'Ship 2.3', size: 2, cells: [], damage: 0},
         {name: 'Ship 3.1', size: 3, cells: [], damage: 0},
-        // {name: 'Ship 3.2', size: 3, cells: [], damage: 0},
-        // {name: 'Ship 4.1', size: 4, cells: [], damage: 0}
+        {name: 'Ship 3.2', size: 3, cells: [], damage: 0},
+        {name: 'Ship 4.1', size: 4, cells: [], damage: 0}
     ]
 }
 
@@ -75,7 +75,9 @@ function _hPlacementStrategy(shipSize, cells) {
             const lineFreeRooms = _getFreeRooms(lineCells);
             console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
-            freeRooms.push(lineFreeRooms);
+            lineFreeRooms.forEach(lineFreeRoom => {
+                freeRooms.push(lineFreeRoom);
+            })
         });
     return freeRooms;
 }
@@ -94,13 +96,13 @@ export const generateShips = (cells) => {
         // placement(shipSize, cells);
         const freeRooms = _hPlacementStrategy(shipSize, cells);
         console.log('freeRooms', freeRooms);
-
+        // debugger;
         const spaciousRooms = freeRooms.filter(room => {
             return room.length >= shipSize;
         })
         console.log('spaciousRooms', spaciousRooms);
 
-        const randomRoom = randomElement(spaciousRooms)[0];
+        const randomRoom = randomElement(spaciousRooms);
         console.log("randomRoom", randomRoom);
 
         const maxOffset = randomRoom.length - shipSize;
@@ -113,6 +115,7 @@ export const generateShips = (cells) => {
         for (let i = shipStartIndex; i < shipStartIndex + shipSize; i++) {
             const cell = randomRoom[i];
             cell.isShip = true;
+            cell.ship = ship;
             console.log("set ship to", cell);
         }
     })

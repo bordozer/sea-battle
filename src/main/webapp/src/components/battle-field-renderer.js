@@ -62,7 +62,7 @@ function renderCells(x, cells, onCellClick, options) {
             <div key={x + '_' + cell.x + '-' + cell.y}
                  className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options) + ' ' + getCellIcon(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
-                 title={cell.xLabel + '' + cell.yLabel}
+                 title={cell.xLabel + '' + cell.yLabel + (cell.ship ? ' - ' + cell.ship.name : '')}
             >
             </div>
         );
