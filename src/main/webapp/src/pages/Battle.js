@@ -5,6 +5,11 @@ import Swal from "sweetalert2";
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+const WELCOME_MESSAGE = {
+    time: new Date(),
+    text: "Welcome! Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
+    type: 'warn'
+}
 
 const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
@@ -40,7 +45,7 @@ export default class BattlePage extends Component {
         'enemyCells': this.initCells(BATTLE_FIELD_SIZE),
         'step': STEP_SETUP,
         'remainsShip': SHIP_CELL_COUNT,
-        'logs': []
+        'logs': [WELCOME_MESSAGE]
     };
 
     playerCellSetup = (cell) => {
@@ -276,7 +281,7 @@ export default class BattlePage extends Component {
             enemyCells: this.initCells(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
             remainsShip: SHIP_CELL_COUNT,
-            logs: []
+            logs: [WELCOME_MESSAGE]
         });
     }
 
