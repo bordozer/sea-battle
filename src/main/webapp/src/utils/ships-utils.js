@@ -33,14 +33,13 @@ function _getFreeCells(cells) {
     return arr;
 }
 
-function _getFreeRoomsOfArray(cells) {
+function _getVFreeRoomsOfArray(cells) {
     const result = [];
-
     let temp = [];
     let column = cells[0].y;
 
-    for (let col = 1; col < cells.length; col++) {
-        const cell = cells[col];
+    for (let i = 1; i < cells.length; i++) {
+        const cell = cells[i];
         if (cell.y === column + 1) {
             temp.push(cell);
             column++;
@@ -53,39 +52,86 @@ function _getFreeRoomsOfArray(cells) {
     if (temp.length > 0) {
         result.push(temp);
     }
-    // console.log("_getFreeRoomsOfArray", result);
+
     return result;
 }
 
-function _getVFreeRooms(shipSize, cells) {
-    const freeRooms = [];
+function _getHFreeRoomsOfArray(cells) {
+    const result = [];
+    let temp = [];
+
+    let line = cells[0].x;
+
+    for (let i = 1; i < cells.length; i++) {
+        const cell = cells[i];
+        if (cell.x === line + 1) {
+            temp.push(cell);
+            line++;
+        } else {
+            line = cell.x;
+            result.push(temp);
+            temp = [];
+        }
+    }
+    if (temp.length > 0) {
+        result.push(temp);
+    }
+
+    return result;
+}
+
+function _getVFreeRooms(cells) {
+    const result = [];
     const freeCells = _getFreeCells(cells);
     // console.log('freeCells', freeCells);
 
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
         return cell.x;
     });
-    // console.log('freeCellsMap', freeCellsMap);
+    console.log('freeCellsMap', freeCellsMap);
+
+    Object.keys(freeCellsMap)
+        .forEach(column => {
+            const columnCells = freeCellsMap[column];
+            // console.log('line', column, 'columnCells', columnCells);
+
+            const columnFreeRooms = _getVFreeRoomsOfArray(columnCells);
+            // console.log('line', column, 'columnFreeRooms', columnFreeRooms);
+
+            columnFreeRooms.forEach(columnFreeRoom => {
+                result.push(columnFreeRoom);
+            })
+        });
+    return result;
+}
+
+function _getHFreeRooms(cells) {
+    const result = [];
+    const freeCells = _getFreeCells(cells);
+    const freeCellsMap = _.groupBy(freeCells, function (cell) {
+        return cell.y;
+    });
+    console.log('freeCellsMap', freeCellsMap);
 
     Object.keys(freeCellsMap)
         .forEach(column => {
             const lineCells = freeCellsMap[column];
-            // console.log('line', column, 'lineCells', lineCells);
+            console.log('line', column, 'lineCells', lineCells);
 
-            const lineFreeRooms = _getFreeRoomsOfArray(lineCells);
+            const lineFreeRooms = _getHFreeRoomsOfArray(lineCells);
             // console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
             lineFreeRooms.forEach(lineFreeRoom => {
-                freeRooms.push(lineFreeRoom);
+                result.push(lineFreeRoom);
             })
         });
-    return freeRooms;
+    return result;
 }
 
 export const markNeighborCellsAsBusy = (cells, cell) => {
     for (let i = cell.y - 1; i <= cell.y + 1; i++) {
         for (let j = cell.x - 1; j <= cell.x + 1; j++) {
-            if (! cells[i]) {
+            if (!cells[i]) {
                 continue;
             }
             if (cells[i][j]) {
@@ -99,8 +145,8 @@ export const generateShips = (cells) => {
     const ships = _initShips();
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const placementStrategy = randomBoolean() ? _getHFreeRooms: _getVFreeRooms;
-        const freeRooms = placementStrategy(shipSize, cells);
+        const placementStrategy = randomBoolean() ? _getHFreeRooms : _getVFreeRooms;
+        const freeRooms = placementStrategy(cells);
         // console.log('freeRooms', freeRooms);
 
         const spaciousRooms = freeRooms.filter(room => {
