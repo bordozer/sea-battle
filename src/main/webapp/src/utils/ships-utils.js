@@ -53,7 +53,7 @@ function _splitUnbroken(cells) {
     if (temp.length > 0) {
         result.push(temp);
     }
-    console.log("_splitUnbroken", result);
+    // console.log("_splitUnbroken", result);
     return result;
 }
 
@@ -70,10 +70,10 @@ function _hPlacementStrategy(shipSize, cells) {
     Object.keys(freeCellsMap)
         .forEach(column => {
             const lineCells = freeCellsMap[column];
-            console.log('lineCells', column, lineCells);
+            // console.log('lineCells', column, lineCells);
 
             const unbrokenList = _splitUnbroken(lineCells);
-            console.log('unbrokenList', column, unbrokenList);
+            // console.log('unbrokenList', column, unbrokenList);
 
             result.push(unbrokenList);
         });
@@ -93,13 +93,13 @@ export const generateShips = (cells) => {
         // const placement = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
         // placement(shipSize, cells);
         const rooms = _hPlacementStrategy(shipSize, cells);
-        console.log('_hPlacementStrategy', rooms);
+        // console.log('_hPlacementStrategy', rooms);
 
         const candidateRooms = rooms.filter(place => {
             return rooms.length >= shipSize;
         })
 
-        const randomRoom = randomElement(candidateRooms);
+        const randomRoom = randomElement(candidateRooms)[0];
         console.log("randomRoom", randomRoom);
 
         const maxOffset = randomRoom.length - shipSize;
@@ -110,7 +110,7 @@ export const generateShips = (cells) => {
         console.log("ship is going to be at ", shipStartIndex + '-' + (shipStartIndex + shipSize));
 
         for (let i = shipStartIndex; i < shipStartIndex + shipSize; i++) {
-            const cell = randomRoom[0][i];
+            const cell = randomRoom[i];
             cell.isShip = true;
             console.log("set ship to", cell);
         }
