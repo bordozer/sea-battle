@@ -15,17 +15,20 @@ const STEP_SETUP = 'STEP_SETUP';
 const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
-const BATTLE_FIELD_SIZE = 8;
-const SHIP_CELL_COUNT = 12;
+const BATTLE_FIELD_SIZE = 10;
+const SHIP_CELL_COUNT = 16;
 
 export default class BattlePage extends Component {
 
     state = {
-        'playerCells': initBattleField(BATTLE_FIELD_SIZE),
-        'enemyCells': initBattleField(BATTLE_FIELD_SIZE),
-        'step': STEP_SETUP,
-        'remainsShip': SHIP_CELL_COUNT,
-        'logs': [WELCOME_MESSAGE]
+        playerCells: initBattleField(BATTLE_FIELD_SIZE),
+        enemyCells: initBattleField(BATTLE_FIELD_SIZE),
+        step: STEP_SETUP,
+        remainsShip: SHIP_CELL_COUNT,
+        logs: [WELCOME_MESSAGE],
+        config: {
+            battleFieldSize: 10
+        }
     };
 
     playerCellSetup = (cell) => {
@@ -302,26 +305,21 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-1"/>
-                    <div className="col-sm-5 border-right">
-                        <div className="row pull-right">
-                            <div className="col-sm-12">
+                    <div className="col-sm-6 border-right">
+
                                 <BattleFieldRenderer
                                     cells={this.state.playerCells}
                                     options={playerOpts}
                                     onCellClick={this.playerCellSetup}
                                 />
-                            </div>
-                        </div>
                     </div>
-                    <div className="col-sm-5">
+                    <div className="col-sm-6">
                         <BattleFieldRenderer
                             cells={this.state.enemyCells}
                             options={enemyOpts}
                             onCellClick={this.playerShot}
                         />
                     </div>
-                    <div className="col-sm-1"/>
                 </div>
 
                 <div className="row mt-10">

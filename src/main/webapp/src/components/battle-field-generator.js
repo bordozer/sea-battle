@@ -1,6 +1,11 @@
 import React from 'react';
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+const SHIPS = {
+    1: 4,
+    2: 3,
+    3: 2
+}
 
 function _getRandomNoShipCell(cells, battleFieldSize) {
     const temp = [];
@@ -11,7 +16,6 @@ function _getRandomNoShipCell(cells, battleFieldSize) {
             }
         }
     }
-    // console.log("-->", temp.length);
     const number = Math.floor(Math.random() * temp.length);
     return temp[number];
 }
