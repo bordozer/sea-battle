@@ -1,14 +1,21 @@
 import React from 'react';
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-const SHIPS = {
-    1: 4,
-    2: 3,
-    3: 2,
-    4: 1
-}
+const SHIPS = [
+    {name: 'Ship 1.1', size: 1},
+    {name: 'Ship 1.2', size: 1},
+    {name: 'Ship 1.3', size: 1},
+    {name: 'Ship 1.4', size: 1},
+    {name: 'Ship 2.1', size: 2},
+    {name: 'Ship 2.2', size: 2},
+    {name: 'Ship 2.3', size: 2},
+    {name: 'Ship 3.1', size: 3},
+    {name: 'Ship 3.2', size: 3},
+    {name: 'Ship 4.1', size: 4},
+]
 
-function _getRandomNoShipCell(cells, battleFieldSize) {
+function _getRandomNoShipCell(cells) {
+    const battleFieldSize = cells.length;
     const temp = [];
     for (let x = 0; x < battleFieldSize; x++) {
         for (let y = 0; y < battleFieldSize; y++) {
@@ -21,7 +28,7 @@ function _getRandomNoShipCell(cells, battleFieldSize) {
     return temp[number];
 }
 
-export const initBattleField = (size) => {
+export const initBattleFieldCells = (size) => {
     const cells = [];
     for (let h = size - 1; h >= 0; h--) {
         cells[h] = [];
@@ -39,11 +46,10 @@ export const initBattleField = (size) => {
     return cells;
 }
 
-export const generateRandomBattleField = (battleFieldSize, cellsCount) => {
-    const cells = initBattleField(battleFieldSize);
+export const generateShips = (cells, cellsCount) => {
     let shipsCount = cellsCount;
     while (shipsCount > 0) {
-        const cell = _getRandomNoShipCell(cells, battleFieldSize);
+        const cell = _getRandomNoShipCell(cells);
         cell.isShip = true;
         shipsCount--;
     }

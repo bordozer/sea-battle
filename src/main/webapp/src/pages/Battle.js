@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {generateRandomBattleField, initBattleField} from 'components/battle-field-generator'
+import {initBattleFieldCells, generateShips} from 'components/battle-field-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const WELCOME_MESSAGE = {
@@ -21,8 +21,8 @@ const SHIP_CELL_COUNT = 20;
 export default class BattlePage extends Component {
 
     state = {
-        playerCells: initBattleField(BATTLE_FIELD_SIZE),
-        enemyCells: initBattleField(BATTLE_FIELD_SIZE),
+        playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+        enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         step: STEP_SETUP,
         remainsShip: SHIP_CELL_COUNT,
         logs: [WELCOME_MESSAGE],
@@ -173,7 +173,7 @@ export default class BattlePage extends Component {
         console.log("The battle has began");
 
         // randomize enemyShips
-        this.state.enemyCells = this.randomizeBattleField();
+        this.state.enemyCells = this.randomizeBattleFieldWithShips();
 
         // random - who's first shot
         let isEnemyWin = false;
@@ -192,8 +192,9 @@ export default class BattlePage extends Component {
         });
     }
 
-    randomizeBattleField = () => {
-        return generateRandomBattleField(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
+    randomizeBattleFieldWithShips = () => {
+        const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
+        return generateShips(cells, SHIP_CELL_COUNT);
     }
 
     getRandomNotHitCell = () => {
@@ -221,7 +222,7 @@ export default class BattlePage extends Component {
         }
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         this.setState({
-            playerCells: this.randomizeBattleField(),
+            playerCells: this.randomizeBattleFieldWithShips(),
             remainsShip: 0,
             logs: this.state.logs
         });
@@ -229,8 +230,8 @@ export default class BattlePage extends Component {
 
     resetBattle = () => {
         this.setState({
-            playerCells: initBattleField(BATTLE_FIELD_SIZE),
-            enemyCells: initBattleField(BATTLE_FIELD_SIZE),
+            playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
             remainsShip: SHIP_CELL_COUNT,
             logs: [WELCOME_MESSAGE]
