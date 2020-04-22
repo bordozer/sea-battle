@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
+import {generate} from 'components/battle-field-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
@@ -211,14 +212,7 @@ export default class BattlePage extends Component {
 
     randomizeShips = () => {
         const cells = this.initCells(BATTLE_FIELD_SIZE);
-        // console.log(cells);
-        let shipsCount = SHIP_CELL_COUNT;
-        while (shipsCount > 0) {
-            const cell = this.getRandomNoShipCell(cells);
-            cell.isShip = true;
-            shipsCount--;
-        }
-        return cells;
+        return generate(cells, BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
     }
 
     getRandomCoordinates = () => {
@@ -242,20 +236,6 @@ export default class BattlePage extends Component {
         // console.log("-->", cells.length);
         const number = Math.floor(Math.random() * Math.floor(cells.length));
         return cells[number];
-    }
-
-    getRandomNoShipCell = (cells) => {
-        const temp = [];
-        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                if (!cells[x][y].isShip) {
-                    temp.push(cells[x][y]);
-                }
-            }
-        }
-        // console.log("-->", temp.length);
-        const number = Math.floor(Math.random() * temp.length);
-        return temp[number];
     }
 
     randomizePlayersShips = () => {
