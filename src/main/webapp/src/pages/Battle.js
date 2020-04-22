@@ -7,8 +7,8 @@ import BattleFieldRenderer from 'components/battle-field-renderer'
 const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const WELCOME_MESSAGE = {
     time: new Date(),
-    text: "Welcome! Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
-    type: 'warn'
+    text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
+    type: 'info'
 }
 
 const STEP_SETUP = 'STEP_SETUP';

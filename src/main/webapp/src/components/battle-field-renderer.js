@@ -41,16 +41,16 @@ function getCellIcon(cell, options) {
     }
 
     if (!cell.isShip && cell.isHit) {
-        return 'fa fa-bullseye'; // missed
+        return 'fa fa-crosshairs'; // missed
     }
     if (isMine && cell.isShip && !cell.isHit) {
         return 'fa fa-anchor'; // my ship
     }
     if (isMine && cell.isShip && cell.isHit) {
-        return 'fa fa-free-code-camp'; // my killed ship
+        return 'fa fa-times'; // my killed ship
     }
     if (isEnemy && cell.isShip && cell.isHit) {
-        return 'fa fa-fire'; // enemy killed ship
+        return 'fa fa-times'; // enemy killed ship
     }
     return '';
 }
