@@ -17,7 +17,7 @@ function cellCss(cell, options) {
     if (isHiddenShips && !options.isBattleStarted) {
         return 'cell-disabled';
     }
-    if (!isHiddenShips && cell.isShip && ! cell.isHit) {
+    if (!isHiddenShips && cell.isShip && !cell.isHit) {
         return 'cell-ship';
     }
     if (cell.isShip && cell.isHit) {
@@ -45,6 +45,9 @@ function getCellIcon(cell, options) {
     }
     if (isMine && cell.isShip && !cell.isHit) {
         return 'fa fa-anchor'; // my ship
+    }
+    if (isMine && !cell.isShip && cell.isBusy) {
+        return 'fa fa-genderless '; // ship Neighbor cell
     }
     if (isMine && cell.isShip && cell.isHit) {
         return 'fa fa-times'; // my killed ship
@@ -86,7 +89,7 @@ function renderHLine(x, cells, onCellClick, options) {
 function renderHHeader(cells) {
     const result = [];
     result.push(
-        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary cell-base" />
+        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary cell-base"/>
     );
     cells.forEach(cell => {
         result.push(
@@ -96,7 +99,7 @@ function renderHHeader(cells) {
         );
     })
     result.push(
-        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary cell-base" />
+        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary cell-base"/>
     );
     return result;
 }

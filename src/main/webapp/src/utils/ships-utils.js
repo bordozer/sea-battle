@@ -10,12 +10,12 @@ function _initShips() {
         {name: 'Ship 1.2', size: 1, cells: [], damage: 0},
         {name: 'Ship 1.3', size: 1, cells: [], damage: 0},
         {name: 'Ship 1.4', size: 1, cells: [], damage: 0},
-        {name: 'Ship 2.1', size: 2, cells: [], damage: 0},
-        {name: 'Ship 2.2', size: 2, cells: [], damage: 0},
-        {name: 'Ship 2.3', size: 2, cells: [], damage: 0},
-        {name: 'Ship 3.1', size: 3, cells: [], damage: 0},
-        {name: 'Ship 3.2', size: 3, cells: [], damage: 0},
-        {name: 'Ship 4.1', size: 4, cells: [], damage: 0}
+        // {name: 'Ship 2.1', size: 2, cells: [], damage: 0},
+        // {name: 'Ship 2.2', size: 2, cells: [], damage: 0},
+        // {name: 'Ship 2.3', size: 2, cells: [], damage: 0},
+        // {name: 'Ship 3.1', size: 3, cells: [], damage: 0},
+        // {name: 'Ship 3.2', size: 3, cells: [], damage: 0},
+        // {name: 'Ship 4.1', size: 4, cells: [], damage: 0}
     ]
 }
 
@@ -70,10 +70,10 @@ function _hPlacementStrategy(shipSize, cells) {
     Object.keys(freeCellsMap)
         .forEach(column => {
             const lineCells = freeCellsMap[column];
-            console.log('line', column, 'lineCells', lineCells);
+            // console.log('line', column, 'lineCells', lineCells);
 
             const lineFreeRooms = _getFreeRooms(lineCells);
-            console.log('line', column, 'lineFreeRooms', lineFreeRooms);
+            // console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
             lineFreeRooms.forEach(lineFreeRoom => {
                 freeRooms.push(lineFreeRoom);
@@ -84,8 +84,21 @@ function _hPlacementStrategy(shipSize, cells) {
 
 function _vPlacementStrategy(shipSize, cells) {
     const result = _getFreeCells(cells);
-    console.log('=>', result);
+    // console.log('=>', result);
     return result;
+}
+
+export const markNeighborCellsAsBusy = (cells, cell) => {
+    for (let i = cell.y - 1; i <= cell.y + 1; i++) {
+        for (let j = cell.x - 1; j <= cell.x + 1; j++) {
+            if (! cells[i]) {
+                continue;
+            }
+            if (cells[i][j]) {
+                cells[i][j].isBusy = true;
+            }
+        }
+    }
 }
 
 export const generateShips = (cells) => {
@@ -95,28 +108,28 @@ export const generateShips = (cells) => {
         // const placement = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
         // placement(shipSize, cells);
         const freeRooms = _hPlacementStrategy(shipSize, cells);
-        console.log('freeRooms', freeRooms);
-        // debugger;
+        // console.log('freeRooms', freeRooms);
+
         const spaciousRooms = freeRooms.filter(room => {
             return room.length >= shipSize;
         })
-        console.log('spaciousRooms', spaciousRooms);
+        // console.log('spaciousRooms', spaciousRooms);
 
         const randomRoom = randomElement(spaciousRooms);
-        console.log("randomRoom", randomRoom);
+        // console.log("randomRoom", randomRoom);
 
         const maxOffset = randomRoom.length - shipSize;
-        console.log("maxOffset", maxOffset);
+        // console.log("maxOffset", maxOffset);
 
         const shipStartIndex = randomInt(maxOffset);
-        console.log("shipStartIndex", shipStartIndex);
-        console.log("ship is going to be at ", shipStartIndex + '-' + (shipStartIndex + shipSize));
+        // console.log("shipStartIndex", shipStartIndex);
+        // console.log("ship is going to be at ", shipStartIndex + '-' + (shipStartIndex + shipSize));
 
         for (let i = shipStartIndex; i < shipStartIndex + shipSize; i++) {
             const cell = randomRoom[i];
             cell.isShip = true;
             cell.ship = ship;
-            console.log("set ship to", cell);
+            markNeighborCellsAsBusy(cells, cell);
         }
     })
     return cells;
