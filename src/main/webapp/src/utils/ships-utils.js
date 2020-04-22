@@ -134,7 +134,7 @@ export const markNeighborCellsAsBusy = (cells, cell) => {
             if (!cells[i]) {
                 continue;
             }
-            if (cells[i][j]) {
+            if (cells[i][j] && !cells[i][j].isHit) {
                 cells[i][j].isBusy = true;
             }
         }

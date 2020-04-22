@@ -23,9 +23,14 @@ function cellCss(cell, options) {
     if (!isHiddenShips && cell.isShip && !cell.isHit) {
         return 'cell-ship';
     }
-    if (cell.isShip && cell.isHit) {
-        return 'cell-ship-hit';
+
+    if (cell.isShip && cell.isHit && cell.ship.damage < cell.ship.size) {
+        return 'cell-ship-wounded'; // wounded ship
     }
+    if (cell.isShip && cell.isHit && cell.ship.damage === cell.ship.size) {
+        return 'cell-ship-killed'; // killed ship
+    }
+
     if (!cell.isShip && !cell.isHit) {
         return 'cell-no-ship';
     }
@@ -49,8 +54,8 @@ function getCellIcon(cell, options) {
     if (isMine && cell.isShip && !cell.isHit) {
         return 'fa fa-anchor'; // my ship
     }
-    if (isMine && !cell.isShip && cell.isBusy) {
-        return 'fa fa-genderless '; // ship Neighbor cell
+    if (!cell.isShip && cell.isBusy) {
+        return 'fa fa-genderless'; // player's of enemy's known ship neighbor cell
     }
     if (isMine && cell.isShip && cell.isHit) {
         return 'fa fa-times'; // my killed ship
