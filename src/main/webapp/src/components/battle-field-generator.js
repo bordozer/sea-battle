@@ -4,7 +4,8 @@ const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const SHIPS = {
     1: 4,
     2: 3,
-    3: 2
+    3: 2,
+    4: 1
 }
 
 function _getRandomNoShipCell(cells, battleFieldSize) {
