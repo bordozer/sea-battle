@@ -12,10 +12,10 @@ export const initBattleFieldCells = (size) => {
                 y: h,
                 xLabel: X_AXE[v],
                 yLabel: h + 1,
-                isShip: false,
                 ship: null,
-                isBusy: false,
-                isHit: false
+                isHit: false,
+                isShipNeighbor: false,
+                isKilledShipNeighborCell: false
             };
         }
     }

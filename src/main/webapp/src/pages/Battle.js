@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
-import {generateShips, markNeighborCellsAsBusy} from 'src/utils/ships-utils'
+import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const WELCOME_MESSAGE = {
@@ -93,18 +93,22 @@ export default class BattlePage extends Component {
 
         enemyCell.isHit = true;
 
+        const enemyShip = enemyCell.ship;
+
         // MISSED
-        if (!enemyCell.isShip) {
+        if (!enemyShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
             if (this.enemyShot()) {
                 step = STEP_FINAL;
             }
         }
 
-        // HIT a ship
-        if (enemyCell.isShip) {
-            enemyCell.ship.damage++;
-            markNeighborCellsAsBusy(enemyCells, enemyCell);
+        // HIT a enemyShip
+        if (enemyShip) {
+            enemyShip.damage++;
+            if (enemyShip.damage === enemyShip.size) {
+                markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
+            }
 
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
             if (this.isWinShot(this.state.enemyCells)) {
@@ -125,12 +129,19 @@ export default class BattlePage extends Component {
     }
 
     enemyShot = () => {
-        const playerCell = this.getRandomNotHitCell();
+        const playerCells = this.state.playerCells;
+        const playerCell = this.getRandomCellForHit(playerCells);
 
         playerCell.isHit = true;
-        if (playerCell.isShip) {
+        const playerShip = playerCell.ship;
+
+        if (playerShip) {
+            playerShip.damage++;
+            if (playerShip.damage === playerShip.size) {
+                markAllShipNeighborCellsAsKilled(playerShip, playerCells);
+            }
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
-            if (this.isWinShot(this.state.playerCells)) {
+            if (this.isWinShot(playerCells)) {
                 Swal.fire(
                     'Enemy has won!',
                     'You are loser. Live with this.',
@@ -141,7 +152,7 @@ export default class BattlePage extends Component {
             return this.enemyShot();
         }
 
-        if (!playerCell.isShip) {
+        if (!playerShip) {
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (missed)'));
         }
 
@@ -203,18 +214,19 @@ export default class BattlePage extends Component {
         return generateShips(cells);
     }
 
-    getRandomNotHitCell = () => {
-        const cells = [];
+    getRandomCellForHit = (cells) => {
+        const hitableCells = [];
         for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
             for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                if (!this.state.playerCells[x][y].isHit) {
-                    cells.push(this.state.playerCells[x][y]);
+                const cell = cells[x][y];
+                if (!cell.isHit && !cell.isKilledShipNeighborCell) {
+                    hitableCells.push(cell);
                 }
             }
         }
-        // console.log("-->", cells.length);
-        const number = Math.floor(Math.random() * Math.floor(cells.length));
-        return cells[number];
+        // console.log("-->", hitableCells.length);
+        const number = Math.floor(Math.random() * Math.floor(hitableCells.length));
+        return hitableCells[number];
     }
 
     randomizePlayersShips = () => {
@@ -291,7 +303,7 @@ export default class BattlePage extends Component {
             isBattleStarted: battleStarted
         }
         const enemyOpts = {
-            isHiddenShips: false,
+            isHiddenShips: true,
             isBattleStarted: battleStarted
         }
 
