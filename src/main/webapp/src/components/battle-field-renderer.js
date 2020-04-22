@@ -17,6 +17,9 @@ function cellCss(cell, options) {
     if (isHiddenShips && !options.isBattleStarted) {
         return 'cell-disabled';
     }
+    if (!cell.isShip && cell.isHit) {
+        return 'text-warning'; // missed
+    }
     if (!isHiddenShips && cell.isShip && !cell.isHit) {
         return 'cell-ship';
     }
