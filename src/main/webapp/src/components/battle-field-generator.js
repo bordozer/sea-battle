@@ -16,7 +16,7 @@ function _getRandomNoShipCell(cells, battleFieldSize) {
     return temp[number];
 }
 
-export const initCells = (size) => {
+export const initBattleField = (size) => {
     const cells = [];
     for (let h = size - 1; h >= 0; h--) {
         cells[h] = [];
@@ -34,8 +34,8 @@ export const initCells = (size) => {
     return cells;
 }
 
-export const generate = (battleFieldSize, cellsCount) => {
-    const cells = initCells(battleFieldSize);
+export const generateRandomShips = (battleFieldSize, cellsCount) => {
+    const cells = initBattleField(battleFieldSize);
     let shipsCount = cellsCount;
     while (shipsCount > 0) {
         const cell = _getRandomNoShipCell(cells, battleFieldSize);

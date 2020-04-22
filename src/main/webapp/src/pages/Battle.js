@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {generate, initCells} from 'components/battle-field-generator'
+import {generateRandomShips, initBattleField} from 'components/battle-field-generator'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 
 const WELCOME_MESSAGE = {
@@ -21,8 +21,8 @@ const SHIP_CELL_COUNT = 12;
 export default class BattlePage extends Component {
 
     state = {
-        'playerCells': initCells(BATTLE_FIELD_SIZE),
-        'enemyCells': initCells(BATTLE_FIELD_SIZE),
+        'playerCells': initBattleField(BATTLE_FIELD_SIZE),
+        'enemyCells': initBattleField(BATTLE_FIELD_SIZE),
         'step': STEP_SETUP,
         'remainsShip': SHIP_CELL_COUNT,
         'logs': [WELCOME_MESSAGE]
@@ -190,17 +190,8 @@ export default class BattlePage extends Component {
     }
 
     randomizeShips = () => {
-        return generate(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
+        return generateRandomShips(BATTLE_FIELD_SIZE, SHIP_CELL_COUNT);
     }
-
-    /*getRandomCoordinates = () => {
-        const x = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-        const y = Math.floor(Math.random() * Math.floor(BATTLE_FIELD_SIZE));
-        return {
-            x: x,
-            y: y
-        }
-    }*/
 
     getRandomNotHitCell = () => {
         const cells = [];
@@ -235,8 +226,8 @@ export default class BattlePage extends Component {
 
     resetBattle = () => {
         this.setState({
-            playerCells: initCells(BATTLE_FIELD_SIZE),
-            enemyCells: initCells(BATTLE_FIELD_SIZE),
+            playerCells: initBattleField(BATTLE_FIELD_SIZE),
+            enemyCells: initBattleField(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
             remainsShip: SHIP_CELL_COUNT,
             logs: [WELCOME_MESSAGE]
