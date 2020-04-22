@@ -33,7 +33,7 @@ function _getFreeCells(cells) {
     return arr;
 }
 
-function _vPlacementStrategy(cells) {
+function _getFreeRoomsOfArray(cells) {
     const result = [];
 
     let temp = [];
@@ -53,15 +53,11 @@ function _vPlacementStrategy(cells) {
     if (temp.length > 0) {
         result.push(temp);
     }
-    // console.log("_vPlacementStrategy", result);
+    // console.log("_getFreeRoomsOfArray", result);
     return result;
 }
 
-function _hPlacementStrategy(cells) {
-
-}
-
-function _getFreeRooms(shipSize, cells, placementStrategy) {
+function _getVFreeRooms(shipSize, cells) {
     const freeRooms = [];
     const freeCells = _getFreeCells(cells);
     // console.log('freeCells', freeCells);
@@ -76,7 +72,7 @@ function _getFreeRooms(shipSize, cells, placementStrategy) {
             const lineCells = freeCellsMap[column];
             // console.log('line', column, 'lineCells', lineCells);
 
-            const lineFreeRooms = placementStrategy(lineCells);
+            const lineFreeRooms = _getFreeRoomsOfArray(lineCells);
             // console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
             lineFreeRooms.forEach(lineFreeRoom => {
@@ -103,8 +99,8 @@ export const generateShips = (cells) => {
     const ships = _initShips();
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const placementStrategy = randomBoolean() ? _hPlacementStrategy: _vPlacementStrategy;
-        const freeRooms = _getFreeRooms(shipSize, cells, placementStrategy);
+        const placementStrategy = randomBoolean() ? _getHFreeRooms: _getVFreeRooms;
+        const freeRooms = placementStrategy(shipSize, cells);
         // console.log('freeRooms', freeRooms);
 
         const spaciousRooms = freeRooms.filter(room => {
