@@ -46,8 +46,8 @@ export const initBattleFieldCells = (size) => {
     return cells;
 }
 
-export const generateShips = (cells, cellsCount) => {
-    let shipsCount = cellsCount;
+export const generateShips = (cells, cellsLimit) => {
+    let shipsCount = cellsLimit;
     while (shipsCount > 0) {
         const cell = _getRandomNoShipCell(cells);
         cell.isShip = true;

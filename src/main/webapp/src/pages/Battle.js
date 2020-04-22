@@ -16,7 +16,7 @@ const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
 const BATTLE_FIELD_SIZE = 10;
-const SHIP_CELL_COUNT = 20;
+const SHIP_CELLS_LIMIT = 20;
 
 export default class BattlePage extends Component {
 
@@ -24,7 +24,7 @@ export default class BattlePage extends Component {
         playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         step: STEP_SETUP,
-        remainsShip: SHIP_CELL_COUNT,
+        remainsShip: SHIP_CELLS_LIMIT,
         logs: [WELCOME_MESSAGE],
         config: {
             battleFieldSize: 10
@@ -149,7 +149,7 @@ export default class BattlePage extends Component {
                 const cell = cells[x][y];
                 if (cell.isShip && cell.isHit) {
                     killed++;
-                    if (killed === SHIP_CELL_COUNT) {
+                    if (killed === SHIP_CELLS_LIMIT) {
                         return true;
                     }
                 }
@@ -194,7 +194,7 @@ export default class BattlePage extends Component {
 
     randomizeBattleFieldWithShips = () => {
         const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
-        return generateShips(cells, SHIP_CELL_COUNT);
+        return generateShips(cells, SHIP_CELLS_LIMIT);
     }
 
     getRandomNotHitCell = () => {
@@ -212,7 +212,7 @@ export default class BattlePage extends Component {
     }
 
     randomizePlayersShips = () => {
-        if (BATTLE_FIELD_SIZE * BATTLE_FIELD_SIZE < SHIP_CELL_COUNT) {
+        if (BATTLE_FIELD_SIZE * BATTLE_FIELD_SIZE < SHIP_CELLS_LIMIT) {
             Swal.fire(
                 'Wrong configuration!',
                 'There are not enough rooms for all ships',
@@ -233,7 +233,7 @@ export default class BattlePage extends Component {
             playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             step: STEP_SETUP,
-            remainsShip: SHIP_CELL_COUNT,
+            remainsShip: SHIP_CELLS_LIMIT,
             logs: [WELCOME_MESSAGE]
         });
     }
@@ -350,14 +350,14 @@ export default class BattlePage extends Component {
                             <div className="col-sm-7 text-right">Player lost</div>
                             <div className="col-sm-1 text-danger">{playerLost}</div>
                             <div className="col-sm-1">of</div>
-                            <div className="col-sm-1">{SHIP_CELL_COUNT}</div>
+                            <div className="col-sm-1">{SHIP_CELLS_LIMIT}</div>
                             <div className="col-sm-2"/>
                         </div>
                         <div className="row">
                             <div className="col-sm-7 text-right">Enemy lost</div>
                             <div className="col-sm-1 text-danger">{enemyLost}</div>
                             <div className="col-sm-1">of</div>
-                            <div className="col-sm-1">{SHIP_CELL_COUNT}</div>
+                            <div className="col-sm-1">{SHIP_CELLS_LIMIT}</div>
                             <div className="col-sm-2"/>
                         </div>
                     </div>
