@@ -52,11 +52,16 @@ body {
 .cell-not-hittable {
     background-color: #dfefef;
 }
-.ship-stat-cell {
-    width: 10px;
-    height: 10px;
+.stat-cell {
+    width: 16px;
+    height: 16px;
     border-bottom-color: black;
-    background-color: thistle;
     float: left;
-    margin: 2px;
+    margin: 1px;
+}
+.stat-cell-ship {
+    background-color: cadetblue;
+}
+.stat-cell-ship-killed {
+    background-color: crimson;
 }
