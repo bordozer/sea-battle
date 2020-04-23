@@ -5,11 +5,8 @@ function _renderShip(ship) {
     for (let i = 1; i <= 4; i++) {
         const isShipCell = i <= ship.size;
         result.push(
-            <div
-                key={'ship-' + ship.id + '-' + i}
-                className={'col-sm-3 border-light' + (isShipCell ? ' bg-primary' : '')}
-            >
-                {isShipCell ? '.' : ''}
+            <div className={isShipCell ? 'ship-stat-cell' : ''}>
+                []
             </div>
         );
     }
@@ -22,7 +19,9 @@ const ShipStatisticsRenderer = ({ships}) => {
     ships.forEach(ship => {
         result.push(
             <div key={'ship-' + ship.id} className='row'>
-                {_renderShip(ship)}
+                <div key={'ship-' + ship.id + '-' + ship.size} className='col-sm-12'>
+                    {_renderShip(ship)}
+                </div>
             </div>)
     });
 

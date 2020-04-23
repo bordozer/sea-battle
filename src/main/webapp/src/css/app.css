@@ -52,3 +52,11 @@ body {
 .cell-not-hittable {
     background-color: #dfefef;
 }
+.ship-stat-cell {
+    width: 10px;
+    height: 10px;
+    border-bottom-color: black;
+    background-color: thistle;
+    float: left;
+    margin: 2px;
+}
