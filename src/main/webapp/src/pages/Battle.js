@@ -23,6 +23,8 @@ export default class BattlePage extends Component {
     state = {
         playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+        playerShips: [],
+        enemyShips: [],
         step: null,
         isReadyToStart: false,
         logs: [WELCOME_MESSAGE],
@@ -95,7 +97,7 @@ export default class BattlePage extends Component {
             }
 
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
-            if (this.isWinShot(this.state.enemyCells)) {
+            if (this.isWinShot(this.state.enemyShips)) {
                 Swal.fire(
                     'You have won!',
                     'You are just lucky bastard. Next time you will have no chance.',
@@ -125,7 +127,7 @@ export default class BattlePage extends Component {
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
             }
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
-            if (this.isWinShot(playerCells)) {
+            if (this.isWinShot(this.state.playerShips)) {
                 Swal.fire(
                     'Enemy has won!',
                     'You are loser. Live with this.',
@@ -155,7 +157,8 @@ export default class BattlePage extends Component {
         console.log("The battle has began");
 
         // randomize enemyShips
-        this.state.enemyCells = this.randomizeBattleFieldWithShips();
+        const gameData = this.randomizeBattleFieldWithShips();
+        // this.state.enemyCells = gameData.cells;
 
         // random - who's first shot
         let isEnemyWin = false;
@@ -168,8 +171,9 @@ export default class BattlePage extends Component {
 
         this.setState({
             step: isEnemyWin ? STEP_FINAL : STEP_BATTLE,
-            playerCells: this.state.playerCells,
-            enemyCells: this.state.enemyCells,
+            // playerCells: this.state.playerCells,
+            enemyCells: gameData.cells,
+            enemyShips: gameData.ships,
             logs: this.state.logs
         });
     }
@@ -196,8 +200,10 @@ export default class BattlePage extends Component {
 
     randomizePlayersShips = () => {
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
+        const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
-            playerCells: this.randomizeBattleFieldWithShips(),
+            playerCells: gameData.cells,
+            playerShips: gameData.ships,
             step: STEP_READY_TO_START,
             logs: this.state.logs
         });
@@ -207,6 +213,8 @@ export default class BattlePage extends Component {
         this.setState({
             playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            playerShips: [],
+            enemyShips: [],
             step: null,
             logs: [WELCOME_MESSAGE]
         });
@@ -237,34 +245,12 @@ export default class BattlePage extends Component {
         return result;
     }
 
-    isWinShot = (cells) => {
-        let killed = 0;
-        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                const cell = cells[x][y];
-                if (cell.ship && cell.isHit) {
-                    killed++;
-                    if (killed === 2) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    isWinShot = (ships) => {
+        const liveShips = ships.filter(ship => {
+            return ship.damage < ship.size;
+        });
+        return liveShips.length === 0;
     }
-
-    /*calculateLost = (cells) => {
-        let result = 0;
-        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                const cell = cells[x][y];
-                if (cell.ship && cell.isHit) {
-                    result++;
-                }
-            }
-        }
-        return result;
-    }*/
 
     render() {
         // console.log('BattlePage:', this.state);

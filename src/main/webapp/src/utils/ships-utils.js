@@ -190,5 +190,8 @@ export const generateShips = (cells) => {
             _setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
         }
     })
-    return cells;
+    return {
+        cells: cells,
+        ships: ships
+    };
 }
