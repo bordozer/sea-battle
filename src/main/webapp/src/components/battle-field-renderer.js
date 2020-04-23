@@ -15,46 +15,40 @@ function renderVHeader(label) {
 function cellCss(cell, options) {
     const isEnemy = options.isHiddenShips;
     const isMine = !isEnemy;
+    const result = [];
 
     if (isEnemy && !options.isBattleStarted) {
-        return 'cell-disabled';
+        result.push('cell-disabled');
+        result.push('fa fa-hourglass-o');
     }
+    // missed shot
     if (!cell.ship && cell.isHit) {
-        return 'cell-no-ship-hit'; // missed shot
+        result.push('cell-no-ship-hit');
+        result.push('fa fa-crosshairs');
     }
+    // player's healthy ship
     if (isMine && cell.ship && !cell.isHit) {
-        return 'cell-ship'; // player's healthy ship
+        result.push('cell-ship');
+        result.push('fa fa-anchor');
     }
+    // wounded ship
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
-        return 'cell-ship-wounded'; // wounded ship
+        result.push('cell-ship-wounded');
+        result.push('fa fa-times');
     }
+    // killed ship
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
-        return 'cell-ship-killed'; // killed ship
+        result.push('cell-ship-killed');
+        result.push('fa fa-times');
     }
-    return '';
-}
-
-function getCellIcon(cell, options) {
-    const isEnemy = options.isHiddenShips;
-    const isMine = !isEnemy;
-
-    if (isEnemy && !options.isBattleStarted) {
-        return 'fa fa-hourglass-o';
-    }
-
-    if (!cell.ship && cell.isHit) {
-        return 'fa fa-crosshairs'; // missed
-    }
-    if (isMine && cell.ship && !cell.isHit) {
-        return 'fa fa-anchor'; // my ship
-    }
+    // player's of enemy's known ship neighbor cell
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
-        return 'fa fa-genderless'; // player's of enemy's known ship neighbor cell
+        result.push('fa fa-genderless');
     }
-    if (cell.ship && cell.isHit) {
-        return 'fa fa-times'; // cell with wounded/killed ship section
+    if (!cell.ship && cell.isKilledShipNeighborCell) {
+        result.push('cell-killed-ship-neighbor');
     }
-    return '';
+    return result.join(' ');
 }
 
 function renderCells(x, cells, onCellClick, options) {
@@ -62,7 +56,7 @@ function renderCells(x, cells, onCellClick, options) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options) + ' ' + getCellIcon(cell, options)}
+                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (cell.ship ? ' - ' + cell.ship.name : '')}
             >

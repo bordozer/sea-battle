@@ -332,7 +332,8 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-6 border-right">
+                    <div className="col-sm-1"/>
+                    <div className="col-sm-5">
 
                                 <BattleFieldRenderer
                                     cells={this.state.playerCells}
@@ -340,13 +341,14 @@ export default class BattlePage extends Component {
                                     onCellClick={this.playerCellSetup}
                                 />
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-5">
                         <BattleFieldRenderer
                             cells={this.state.enemyCells}
                             options={enemyOpts}
                             onCellClick={this.playerShot}
                         />
                     </div>
+                    <div className="col-sm-1"/>
                 </div>
 
                 <div className="row mt-10">

@@ -169,6 +169,9 @@ export const generateShips = (cells) => {
         const spaciousRooms = freeRooms.filter(room => {
             return room.length >= shipSize;
         })
+        if (spaciousRooms.length === 0) {
+            generateShips();
+        }
         // console.log('spaciousRooms', spaciousRooms);
 
         const randomSpaciousRoom = randomElement(spaciousRooms);

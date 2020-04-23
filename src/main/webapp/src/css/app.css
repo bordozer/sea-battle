@@ -20,10 +20,10 @@ body {
 .cell-base {
     color: silver;
     background-color: azure;
-    font-size: 24px;
+    font-size: 20px;
     border: 1px solid silver;
     border-radius: 4px;
-    min-width: 50px;
+    min-width: 30px;
     height: 40px;
 }
 .cell-ship {
@@ -45,9 +45,10 @@ body {
 }
 .cell-no-ship-hit {
     color: black;
-    /*background-image: radial-gradient(circle, burlywood, white, white);*/
-    /*background-color: aliceblue;*/
 }
 .cell-disabled {
     background-color: ghostwhite;
+}
+.cell-killed-ship-neighbor {
+    background-color: #dfefef;
 }
