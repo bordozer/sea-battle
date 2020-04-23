@@ -12,20 +12,19 @@ const WELCOME_MESSAGE = {
     type: 'info'
 }
 
-const STEP_SETUP = 'STEP_SETUP';
+const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
 const BATTLE_FIELD_SIZE = 10;
-const SHIP_CELLS_LIMIT = 20;
 
 export default class BattlePage extends Component {
 
     state = {
         playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-        step: STEP_SETUP,
-        remainsShip: SHIP_CELLS_LIMIT,
+        step: null,
+        isReadyToStart: false,
         logs: [WELCOME_MESSAGE],
         config: {
             battleFieldSize: 10
@@ -33,38 +32,15 @@ export default class BattlePage extends Component {
     };
 
     playerCellSetup = (cell) => {
-        if (this.state.step !== STEP_SETUP) {
-            return;
-        }
-        // console.log("playerCellSetup", cell);
-
-        const isShipInCell = cell.ship;
-        const remainsShip = this.state.remainsShip;
-        if (!isShipInCell && remainsShip === 0) {
-            Swal.fire(
-                'No more rooms!',
-                "You've set all ships.",
-                'info'
-            );
-            return;
-        }
-
-        const aCell = this.state.playerCells[cell.y][cell.x];
-        aCell.ship = !isShipInCell;
-
-        const logs = this.state.logs;
-        logs.push(this.createLogRecord("Set ship at " + cell.xLabel + ":" + cell.yLabel));
-
-        this.setState({
-            playerCells: this.state.playerCells,
-            remainsShip: isShipInCell ? remainsShip + 1 : remainsShip - 1,
-            logs: logs
-        });
-        // console.log("playerCellSetup", this.state.playerCells);
+        Swal.fire(
+            'Manual ship setup is not supported yet',
+            "Click Randomize ships button.",
+            'info'
+        );
     }
 
     playerShot = (cell) => {
-        if (this.state.step === STEP_SETUP) {
+        if (this.state.step === STEP_READY_TO_START) {
             Swal.fire(
                 'The battle is not started yet',
                 'Setup your ships and click START button.',
@@ -174,7 +150,7 @@ export default class BattlePage extends Component {
                 const cell = cells[x][y];
                 if (cell.ship && cell.isHit) {
                     killed++;
-                    if (killed === SHIP_CELLS_LIMIT) {
+                    if (killed === 2) {
                         return true;
                     }
                 }
@@ -184,9 +160,6 @@ export default class BattlePage extends Component {
     }
 
     startBattle = () => {
-        if (this.state.step !== STEP_SETUP) {
-            return;
-        }
         if (this.state.remainsShip > 0) {
             Swal.fire(
                 'Setup is not finished!',
@@ -238,18 +211,10 @@ export default class BattlePage extends Component {
     }
 
     randomizePlayersShips = () => {
-        if (BATTLE_FIELD_SIZE * BATTLE_FIELD_SIZE < SHIP_CELLS_LIMIT) {
-            Swal.fire(
-                'Wrong configuration!',
-                'There are not enough rooms for all ships',
-                'info'
-            );
-            return;
-        }
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         this.setState({
             playerCells: this.randomizeBattleFieldWithShips(),
-            remainsShip: 0,
+            step: STEP_READY_TO_START,
             logs: this.state.logs
         });
     }
@@ -258,8 +223,7 @@ export default class BattlePage extends Component {
         this.setState({
             playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            step: STEP_SETUP,
-            remainsShip: SHIP_CELLS_LIMIT,
+            step: null,
             logs: [WELCOME_MESSAGE]
         });
     }
@@ -289,7 +253,7 @@ export default class BattlePage extends Component {
         return result;
     }
 
-    calculateLost = (cells) => {
+    /*calculateLost = (cells) => {
         let result = 0;
         for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
             for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
@@ -300,12 +264,12 @@ export default class BattlePage extends Component {
             }
         }
         return result;
-    }
+    }*/
 
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
-        const battleStarted = this.state.step !== STEP_SETUP;
+        const battleStarted = this.state.step !== STEP_READY_TO_START;
         const playerOpts = {
             isHiddenShips: false,
             isBattleStarted: battleStarted
@@ -314,9 +278,6 @@ export default class BattlePage extends Component {
             isHiddenShips: true,
             isBattleStarted: battleStarted
         }
-
-        const playerLost = this.calculateLost(this.state.playerCells);
-        const enemyLost = this.calculateLost(this.state.enemyCells);
 
         return (
             <div>
@@ -334,12 +295,11 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5">
-
-                                <BattleFieldRenderer
-                                    cells={this.state.playerCells}
-                                    options={playerOpts}
-                                    onCellClick={this.playerCellSetup}
-                                />
+                        <BattleFieldRenderer
+                            cells={this.state.playerCells}
+                            options={playerOpts}
+                            onCellClick={this.playerCellSetup}
+                        />
                     </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
@@ -352,13 +312,12 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-3"><h3>Ships: {this.state.remainsShip}</h3></div>
-
+                    <div className="col-sm-3"/>
                     <div className="col-sm-6 text-center btn-lg">
                         <button
                             className="bg-primary"
                             onClick={this.startBattle}
-                            disabled={this.state.remainsShip > 0 || this.state.step !== STEP_SETUP}>
+                            disabled={this.state.step !== STEP_READY_TO_START}>
                             Start battle
                         </button>
                         <button
@@ -373,22 +332,7 @@ export default class BattlePage extends Component {
                             Reset
                         </button>
                     </div>
-                    <div className="col-sm-3">
-                        <div className="row">
-                            <div className="col-sm-7 text-right">Player lost</div>
-                            <div className="col-sm-1 text-danger">{playerLost}</div>
-                            <div className="col-sm-1">of</div>
-                            <div className="col-sm-1">{SHIP_CELLS_LIMIT}</div>
-                            <div className="col-sm-2"/>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-7 text-right">Enemy lost</div>
-                            <div className="col-sm-1 text-danger">{enemyLost}</div>
-                            <div className="col-sm-1">of</div>
-                            <div className="col-sm-1">{SHIP_CELLS_LIMIT}</div>
-                            <div className="col-sm-2"/>
-                        </div>
-                    </div>
+                    <div className="col-sm-3"/>
                 </div>
 
                 <div className="row mt-10">

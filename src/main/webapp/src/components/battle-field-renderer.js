@@ -40,7 +40,7 @@ function cellCss(cell, options) {
     // player's of enemy's known ship neighbor cell
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
         result.push('cell-not-hittable');
-        result.push('fa fa-genderless');
+        // result.push('fa fa-genderless');
     }
     // missed shot
     if (!cell.ship && cell.isHit) {
