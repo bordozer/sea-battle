@@ -21,11 +21,7 @@ function cellCss(cell, options) {
         result.push('cell-disabled');
         result.push('fa fa-hourglass-o');
     }
-    // missed shot
-    if (!cell.ship && cell.isHit) {
-        result.push('cell-no-ship-hit');
-        result.push('fa fa-crosshairs');
-    }
+
     // player's healthy ship
     if (isMine && cell.ship && !cell.isHit) {
         result.push('cell-ship');
@@ -43,10 +39,14 @@ function cellCss(cell, options) {
     }
     // player's of enemy's known ship neighbor cell
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
+        result.push('cell-not-hittable');
         result.push('fa fa-genderless');
     }
-    if (!cell.ship && cell.isKilledShipNeighborCell) {
-        result.push('cell-killed-ship-neighbor');
+    // missed shot
+    if (!cell.ship && cell.isHit) {
+        result.push('cell-missed-hit');
+        result.push('cell-not-hittable');
+        result.push('fa fa-crosshairs');
     }
     return result.join(' ');
 }
@@ -60,6 +60,7 @@ function renderCells(x, cells, onCellClick, options) {
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (cell.ship ? ' - ' + cell.ship.name : '')}
             >
+                {/*{cell.ship ? 'x' : ''}*/}
             </div>
         );
     });
