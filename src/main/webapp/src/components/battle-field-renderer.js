@@ -17,7 +17,7 @@ function cellCss(cell, options) {
     const isMine = !isEnemy;
     const result = [];
 
-    if (isEnemy && !options.isBattleStarted) {
+    if (isEnemy && options.isSetupStep) {
         result.push('cell-disabled');
         result.push('fa fa-hourglass-o');
     }

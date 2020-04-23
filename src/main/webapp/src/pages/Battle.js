@@ -143,22 +143,6 @@ export default class BattlePage extends Component {
         return false;
     }
 
-    isWinShot = (cells) => {
-        let killed = 0;
-        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                const cell = cells[x][y];
-                if (cell.ship && cell.isHit) {
-                    killed++;
-                    if (killed === 2) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     startBattle = () => {
         if (this.state.remainsShip > 0) {
             Swal.fire(
@@ -253,6 +237,22 @@ export default class BattlePage extends Component {
         return result;
     }
 
+    isWinShot = (cells) => {
+        let killed = 0;
+        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
+            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
+                const cell = cells[x][y];
+                if (cell.ship && cell.isHit) {
+                    killed++;
+                    if (killed === 2) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     /*calculateLost = (cells) => {
         let result = 0;
         for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
@@ -269,14 +269,14 @@ export default class BattlePage extends Component {
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
-        const battleStarted = this.state.step !== STEP_READY_TO_START;
+        const isSetupStep = (this.state.step === null) || (this.state.step === STEP_READY_TO_START);
         const playerOpts = {
             isHiddenShips: false,
-            isBattleStarted: battleStarted
+            isSetupStep: isSetupStep
         }
         const enemyOpts = {
             isHiddenShips: true,
-            isBattleStarted: battleStarted
+            isSetupStep: isSetupStep
         }
 
         return (
