@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
 import BattleFieldRenderer from 'components/battle-field-renderer'
+import ShipStatisticsRenderer from 'components/ships-stat'
 
 const WELCOME_MESSAGE = {
     time: new Date(),
@@ -279,7 +280,9 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-1"/>
+                    <div className="col-sm-1">
+                        <ShipStatisticsRenderer ships={this.state.playerShips}/>
+                    </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
                             cells={this.state.playerCells}
@@ -294,7 +297,9 @@ export default class BattlePage extends Component {
                             onCellClick={this.playerShot}
                         />
                     </div>
-                    <div className="col-sm-1"/>
+                    <div className="col-sm-1">
+                        <ShipStatisticsRenderer ships={this.state.enemyShips}/>
+                    </div>
                 </div>
 
                 <div className="row mt-10">
