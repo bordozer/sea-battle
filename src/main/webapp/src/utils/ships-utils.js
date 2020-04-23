@@ -2,7 +2,7 @@ import React from 'react';
 
 import _ from "underscore";
 
-import {randomBoolean, randomElement, randomInt} from 'src/utils/random-utils'
+import {randomElement, randomInt} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
@@ -128,7 +128,7 @@ function _getHFreeRooms(cells) {
     return result;
 }
 
-function _setNeighborCellsProperty (cells, cell, property) {
+function _setNeighborCellsProperty(cells, cell, property) {
     for (let i = cell.y - 1; i <= cell.y + 1; i++) {
         if (!cells[i]) {
             continue;
@@ -162,15 +162,14 @@ export const generateShips = (cells) => {
     const ships = _initShips();
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const placementStrategy = randomBoolean() ? _getHFreeRooms : _getVFreeRooms;
-        const freeRooms = placementStrategy(cells);
+        const freeRooms = _getHFreeRooms(cells).concat(_getVFreeRooms(cells));
         // console.log('freeRooms', freeRooms);
 
         const spaciousRooms = freeRooms.filter(room => {
             return room.length >= shipSize;
         })
         if (spaciousRooms.length === 0) {
-            generateShips();
+            return generateShips();
         }
         // console.log('spaciousRooms', spaciousRooms);
 
