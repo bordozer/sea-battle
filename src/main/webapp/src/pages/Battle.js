@@ -281,7 +281,7 @@ export default class BattlePage extends Component {
 
                 <div className="row mt-10">
                     <div className="col-sm-1">
-                        <ShipStatisticsRenderer ships={this.state.playerShips}/>
+                        <ShipStatisticsRenderer ships={this.state.playerShips} isPlayer={true}/>
                     </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
@@ -298,7 +298,7 @@ export default class BattlePage extends Component {
                         />
                     </div>
                     <div className="col-sm-1">
-                        <ShipStatisticsRenderer ships={this.state.enemyShips}/>
+                        <ShipStatisticsRenderer ships={this.state.enemyShips} isPlayer={false}/>
                     </div>
                 </div>
 
