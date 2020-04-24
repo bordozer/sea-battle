@@ -112,7 +112,7 @@ export const getRecommendedShots = (cells, ships) => {
         const times = Math.floor(room.length / shipSize);
         if (times > 1) {
             const tmp = [];
-            for (let i = shipSize - 1; i < room.length; i += shipSize - 1) {
+            for (let i = shipSize - 1; i < room.length; i += shipSize) {
                 tmp.push(room[i]);
             }
             return tmp;
