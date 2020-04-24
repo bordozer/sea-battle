@@ -91,7 +91,7 @@ export default class BattlePage extends Component {
         // MISSED
         if (!enemyShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
-            const enemyMove = this.enemyShot(enemyLastShot, playerWoundedShipCells);
+            const enemyMove = this.enemyShot(playerWoundedShipCells);
             enemyLastShot = enemyMove.enemyLastShot;
             playerWoundedShipCells = enemyMove.playerWoundedShipCells;
             if (enemyMove.isEnemyWon) {
@@ -129,7 +129,7 @@ export default class BattlePage extends Component {
         });
     }
 
-    enemyShot = (enemyLastShot, playerWoundedShipCells) => {
+    enemyShot = (playerWoundedShipCells) => {
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
 
@@ -161,7 +161,7 @@ export default class BattlePage extends Component {
                     playerWoundedShipCells: woundedCells
                 };
             }
-            return this.enemyShot(hitPlayerCell, woundedCells);
+            return this.enemyShot(woundedCells);
         }
 
         if (!playerShip) {
@@ -196,10 +196,11 @@ export default class BattlePage extends Component {
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
         let enemyMove = {
             isEnemyWon: false,
-            enemyLastShot: null
+            enemyLastShot: null,
+            playerWoundedShipCells: []
         };
         if (firstMove === 1) {
-            enemyMove = this.enemyShot(null, []);
+            enemyMove = this.enemyShot([]);
         }
 
         this.setState({
@@ -207,14 +208,15 @@ export default class BattlePage extends Component {
             enemyCells: gameData.cells,
             enemyShips: gameData.ships,
             enemyLastShot: enemyMove.enemyLastShot,
+            playerWoundedShipCells: enemyMove.playerWoundedShipCells,
             logs: this.state.logs
         });
-    }
+    };
 
     randomizeBattleFieldWithShips = () => {
         const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
         return generateShips(cells);
-    }
+    };
 
     randomizePlayersShips = () => {
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));

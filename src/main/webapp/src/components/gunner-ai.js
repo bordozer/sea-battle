@@ -3,10 +3,6 @@ import React from 'react';
 import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
-const hittableCellsFilterFunction = function (cell) {
-    return !cell.isKilledShipNeighborCell && !cell.isHit;
-};
-
 function _getRandomFreeCell(cells) {
     const hitableCells = [];
     for (let x = 0; x < cells.length; x++) {
@@ -32,6 +28,10 @@ function getBiggestAliveShip(playerShips) {
         })[0];
 }
 
+function isHittableCell(cell) {
+    return cell && !cell.isKilledShipNeighborCell && !cell.isHit;
+}
+
 function _shotOnceWoundedShipAgain(cells, woundedCell) {
     console.log("_shotOnceWoundedShipAgain", woundedCell);
     const neighborCells = [];
@@ -49,7 +49,9 @@ function _shotOnceWoundedShipAgain(cells, woundedCell) {
         neighborCells.push(cells[woundedCell.y][woundedCell.x + 1]);
     }
 
-    const hittableNeighborCells = neighborCells.filter(cell => hittableCellsFilterFunction);
+    const hittableNeighborCells = neighborCells.filter(cell => {
+        return isHittableCell(cell);
+    });
     return randomElement(hittableNeighborCells);
 }
 
@@ -72,7 +74,9 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
             cells[firstWoundedCell.y - 1][firstWoundedCell.x],
             cells[lastWoundedCell.y + 1][lastWoundedCell.x]
         ];
-        return randomElement(targets.filter(cell => hittableCellsFilterFunction));
+        return randomElement(targets.filter(cell => {
+            return isHittableCell(cell);
+        }));
     }
 
     // horizontal ship
@@ -85,7 +89,9 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
         cells[firstWoundedCell.y][firstWoundedCell.x - 1],
         cells[lastWoundedCell.y][lastWoundedCell.x + 1]
     ];
-    return randomElement(targets.filter(cell => hittableCellsFilterFunction));
+    return randomElement(targets.filter(cell => {
+        return isHittableCell(cell);
+    }));
 }
 
 export const getRecommendedShots = (cells, ships) => {
