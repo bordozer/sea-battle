@@ -44,7 +44,7 @@ export default class BattlePage extends Component {
     }
 
     playerShot = (cell) => {
-        if (this.state.step === STEP_READY_TO_START) {
+        if ((this.state.step === null) || (this.state.step === STEP_READY_TO_START)) {
             Swal.fire(
                 'The battle is not started yet',
                 'Setup your ships and click START button.',

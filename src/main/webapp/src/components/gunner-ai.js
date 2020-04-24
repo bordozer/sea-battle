@@ -4,18 +4,18 @@ import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 function _getRandomFreeCell(cells) {
-    const hitableCells = [];
+    const hittableCells = [];
     for (let x = 0; x < cells.length; x++) {
         for (let y = 0; y < cells.length; y++) {
             const cell = cells[x][y];
             if (!cell.isHit && !cell.isKilledShipNeighborCell) {
-                hitableCells.push(cell);
+                hittableCells.push(cell);
             }
         }
     }
-    // console.log("-->", hitableCells.length);
-    const number = Math.floor(Math.random() * Math.floor(hitableCells.length));
-    return hitableCells[number];
+    // console.log("-->", hittableCells.length);
+    const number = Math.floor(Math.random() * Math.floor(hittableCells.length));
+    return hittableCells[number];
 }
 
 function getBiggestAliveShip(playerShips) {
@@ -33,7 +33,7 @@ function isHittableCell(cell) {
 }
 
 function _shotOnceWoundedShipAgain(cells, woundedCell) {
-    console.log("_shotOnceWoundedShipAgain", woundedCell);
+    // console.log("_shotOnceWoundedShipAgain", woundedCell);
     const neighborCells = [];
 
     if (cells[woundedCell.y - 1] && cells[woundedCell.y][woundedCell.x]) {
@@ -60,7 +60,7 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
         return _shotOnceWoundedShipAgain(cells, playerWoundedShipCells[0]);
     }
 
-    console.log("finishingOffWoundedShip", playerWoundedShipCells.length, 'cells');
+    // console.log("finishingOffWoundedShip", playerWoundedShipCells.length, 'cells');
     let firstWoundedCell = playerWoundedShipCells[0];
     let lastWoundedCell = playerWoundedShipCells[playerWoundedShipCells.length - 1];
     const isVerticalShip = firstWoundedCell.x === lastWoundedCell.x;
