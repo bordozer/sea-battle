@@ -38,7 +38,7 @@ function finishingOffWoundedShip(cells, lastShotCell) {
 
     // if (woundedShip.damage === 1) {
         const targets = cellWithNeighbors.filter(neighborCell => {
-            return neighborCell.isHit || neighborCell.isKilledShipNeighborCell;
+            return !neighborCell.isHit && !neighborCell.isKilledShipNeighborCell;
         });
         return randomElement(targets);
     // }
