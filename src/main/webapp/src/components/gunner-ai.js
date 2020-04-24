@@ -28,45 +28,38 @@ function getBiggestAliveShip(playerShips) {
         })[0];
 }
 
-function isShotWoundedShip(cell) {
-    return cell && cell.ship && cell.ship.damage < cell.ship.size;
-}
-
-function finishingOffWoundedShip(cells, lastShotCell) {
+function _shotOnceWoundedShipAgain(cells, woundedCell) {
+    console.log("_shotOnceWoundedShipAgain", woundedCell);
     const neighborCells = [];
-    if (cells[lastShotCell.y - 1] && cells[lastShotCell.y][lastShotCell.x]) {
-        neighborCells.push(cells[lastShotCell.y - 1][lastShotCell.x]);
+
+    if (cells[woundedCell.y - 1] && cells[woundedCell.y][woundedCell.x]) {
+        neighborCells.push(cells[woundedCell.y - 1][woundedCell.x]);
     }
-    if (cells[lastShotCell.y + 1] && cells[lastShotCell.y][lastShotCell.x]) {
-        neighborCells.push(cells[lastShotCell.y + 1][lastShotCell.x]);
+    if (cells[woundedCell.y + 1] && cells[woundedCell.y][woundedCell.x]) {
+        neighborCells.push(cells[woundedCell.y + 1][woundedCell.x]);
     }
-    if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x - 1]) {
-        neighborCells.push(cells[lastShotCell.y][lastShotCell.x - 1]);
+    if (cells[woundedCell.y] && cells[woundedCell.y][woundedCell.x - 1]) {
+        neighborCells.push(cells[woundedCell.y][woundedCell.x - 1]);
     }
-    if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x + 1]) {
-        neighborCells.push(cells[lastShotCell.y][lastShotCell.x + 1]);
+    if (cells[woundedCell.y] && cells[woundedCell.y][woundedCell.x + 1]) {
+        neighborCells.push(cells[woundedCell.y][woundedCell.x + 1]);
     }
 
     const hittableNeighborCells = neighborCells.filter(cell => {
-        return !cell.isKilledShipNeighborCell;
+        return !cell.isKilledShipNeighborCell && !cell.isHit;
     });
-
-    if (lastShotCell.ship.damage === 1) {
-        return randomElement(hittableNeighborCells.filter(cell => {
-            return !cell.isHit;
-        }));
-    }
-
-    hittableNeighborCells.filter(cell => {
-        return cell.ship && !cell.isHit;
-    })
     return randomElement(hittableNeighborCells);
 }
 
-export const getRecommendedShots = (cells, ships, lastShotCell) => {
-    if (isShotWoundedShip(lastShotCell)) {
-        return [];
+function finishingOffWoundedShip(cells, playerWoundedShipCells) {
+    if (playerWoundedShipCells.length === 1) {
+        return _shotOnceWoundedShipAgain(cells, playerWoundedShipCells[0]);
     }
+    console.log("finishingOffWoundedShip - STUB");
+    return _getRandomFreeCell(cells); // TODO: tempora=ry
+}
+
+export const getRecommendedShots = (cells, ships) => {
     const biggestAliveShip = getBiggestAliveShip(ships);
     if (!biggestAliveShip) {
         return [];
@@ -105,14 +98,14 @@ export const getRecommendedShots = (cells, ships, lastShotCell) => {
     return result;
 }
 
-export const getShot = (cells, ships, lastShotCell) => {
-    console.log("ENEMY last shot", lastShotCell);
-    if (isShotWoundedShip(lastShotCell)) {
-        console.log("WOUNDED");
-        return finishingOffWoundedShip(cells, lastShotCell);
+export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
+    console.log("Player's wounded ship cells", playerWoundedShipCells);
+    if (playerWoundedShipCells.length > 0) {
+        console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
+        return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    const recommendedShots = getRecommendedShots(cells, ships, lastShotCell);
+    const recommendedShots = getRecommendedShots(cells, ships);
     if (recommendedShots.length === 0) {
         return _getRandomFreeCell(cells);
     }

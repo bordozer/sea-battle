@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled, getSpaciousRooms} from 'src/utils/ships-utils'
-import {getShot, getRecommendedShots} from 'components/gunner-ai'
+import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import ShipStatisticsRenderer from 'components/ships-stat'
 
@@ -26,10 +26,10 @@ export default class BattlePage extends Component {
         playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         playerShips: [],
         playerLastShot: null,
+        playerWoundedShipCells: [],
         enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         enemyShips: [],
         enemyLastShot: null,
-        enemyIsHuntingForCell: null,
         step: null,
         isReadyToStart: false,
         logs: [WELCOME_MESSAGE],
@@ -65,7 +65,7 @@ export default class BattlePage extends Component {
         }
         let step = this.state.step;
         let enemyLastShot = this.state.enemyLastShot;
-        let enemyIsHuntingForCell = this.state.enemyIsHuntingForCell;
+        let playerWoundedShipCells = this.state.playerWoundedShipCells;
 
         const enemyCells = this.state.enemyCells;
         const enemyShips = this.state.enemyShips;
@@ -94,9 +94,9 @@ export default class BattlePage extends Component {
         // MISSED
         if (!enemyShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
-            const enemyMove = this.enemyShot(this.state.enemyLastShot, this.state.enemyIsHuntingForCell);
+            const enemyMove = this.enemyShot(enemyLastShot, playerWoundedShipCells);
             enemyLastShot = enemyMove.enemyLastShot;
-            enemyIsHuntingForCell = enemyMove.enemyIsHuntingForCell;
+            playerWoundedShipCells = enemyMove.playerWoundedShipCells;
             if (enemyMove.isEnemyWon) {
                 step = STEP_FINAL;
             }
@@ -121,37 +121,35 @@ export default class BattlePage extends Component {
                 step = STEP_FINAL;
             }
         }
-        // const recommendedShot = getShot(enemyCells, enemyShips);
-        // console.log("recommended for player shot", recommendedShot);
 
         this.setState({
             enemyCells: this.state.enemyCells,
             playerLastShot: cell,
             enemyLastShot: enemyLastShot,
-            enemyIsHuntingForCell: enemyIsHuntingForCell,
+            playerWoundedShipCells: playerWoundedShipCells,
             logs: this.state.logs,
             step: step
         });
     }
 
-    enemyShot = (enemyLastShot, enemyIsHuntingForCell) => {
+    enemyShot = (enemyLastShot, playerWoundedShipCells) => {
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
-        let isHuntingForCell = enemyIsHuntingForCell;
 
-        const hitPlayerCell = getShot(playerCells, playerShips, enemyIsHuntingForCell);
+        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerWoundedShipCells);
 
         hitPlayerCell.isHit = true;
         const playerShip = hitPlayerCell.ship;
+        let woundedCells = playerWoundedShipCells;
 
         if (playerShip) {
             playerShip.damage++;
             if (playerShip.damage === playerShip.size) {
-                isHuntingForCell = null;
+                woundedCells = [];
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (killed)'));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
             } else {
-                isHuntingForCell = hitPlayerCell;
+                woundedCells.push(hitPlayerCell);
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (wounded)'));
             }
             if (this.isWinShot(playerShips)) {
@@ -163,10 +161,10 @@ export default class BattlePage extends Component {
                 return {
                     isEnemyWon: true,
                     enemyLastShot: hitPlayerCell,
-                    enemyIsHuntingForCell: isHuntingForCell
+                    playerWoundedShipCells: woundedCells
                 };
             }
-            return this.enemyShot(hitPlayerCell, isHuntingForCell);
+            return this.enemyShot(hitPlayerCell, woundedCells);
         }
 
         if (!playerShip) {
@@ -176,7 +174,7 @@ export default class BattlePage extends Component {
         return {
             isEnemyWon: false,
             enemyLastShot: hitPlayerCell,
-            enemyIsHuntingForCell: isHuntingForCell
+            playerWoundedShipCells: woundedCells
         };
     }
 
@@ -204,7 +202,7 @@ export default class BattlePage extends Component {
             enemyLastShot: null
         };
         if (firstMove === 1) {
-            enemyMove = this.enemyShot(null, null);
+            enemyMove = this.enemyShot(null, []);
         }
 
         this.setState({
