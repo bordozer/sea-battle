@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getSpaciousRooms, getCellWithNeighbors} from 'src/utils/ships-utils'
+import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 function _getRandomFreeCell(cells) {
@@ -33,27 +33,33 @@ function isShotWoundedShip(cell) {
 }
 
 function finishingOffWoundedShip(cells, lastShotCell) {
-    const possibleShotCells = [];
+    const neighborCells = [];
     if (cells[lastShotCell.y - 1] && cells[lastShotCell.y][lastShotCell.x]) {
-        possibleShotCells.push(cells[lastShotCell.y - 1][lastShotCell.x]);
+        neighborCells.push(cells[lastShotCell.y - 1][lastShotCell.x]);
     }
     if (cells[lastShotCell.y + 1] && cells[lastShotCell.y][lastShotCell.x]) {
-        possibleShotCells.push(cells[lastShotCell.y + 1][lastShotCell.x]);
+        neighborCells.push(cells[lastShotCell.y + 1][lastShotCell.x]);
     }
     if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x - 1]) {
-        possibleShotCells.push(cells[lastShotCell.y][lastShotCell.x - 1]);
+        neighborCells.push(cells[lastShotCell.y][lastShotCell.x - 1]);
     }
     if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x + 1]) {
-        possibleShotCells.push(cells[lastShotCell.y][lastShotCell.x + 1]);
+        neighborCells.push(cells[lastShotCell.y][lastShotCell.x + 1]);
     }
 
-    // if (woundedShip.damage === 1) {
-        const targets = possibleShotCells.filter(cell => {
-            return !cell.isHit && !cell.isKilledShipNeighborCell;
-        });
-        return randomElement(targets);
-    // }
-    // return {};
+    const targets = neighborCells.filter(cell => {
+        return !cell.isKilledShipNeighborCell;
+    });
+    if (lastShotCell.ship.damage === 1) {
+        return randomElement(targets.filter(cell => {
+            return !cell.isHit;
+        }));
+    } else {
+        targets.filter(cell => {
+            return cell.ship && !cell.isHit;
+        })
+    }
+    return randomElement(targets);
 }
 
 export const getRecommendedShots = (cells, ships, lastShotCell) => {
