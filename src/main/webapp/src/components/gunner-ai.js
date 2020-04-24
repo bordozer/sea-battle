@@ -42,9 +42,18 @@ export const getRecommendedShots = (cells, ships) => {
         return cell.isHit || cell.isKilledShipNeighborCell
     });
 
-    const recommendedRoomShots = spaciousRooms.map(room => {
+    const recommendedRoomShots = spaciousRooms.flatMap(room => {
+        const times = Math.floor(room.length / shipSize);
+        if (times > 1) {
+            const tmp = [];
+            for (let i = shipSize - 1; i < room.length; i += shipSize - 1) {
+                tmp.push(room[i]);
+            }
+            return tmp;
+        }
         return room[Math.floor(room.length / 2)];
     });
+    console.log("recommendedRoomShots", recommendedRoomShots);
 
     const result = [];
     recommendedRoomShots.forEach(cell => {
@@ -64,23 +73,4 @@ export const getShot = (cells, ships) => {
         return _getRandomFreeCell(cells);
     }
     return randomElement(recommendedShots);
-    /*const biggestAliveShip = getBiggestAliveShip(ships);
-    // console.log('biggestAliveShip', biggestAliveShip);
-
-    const shipSize = biggestAliveShip.size;
-
-    if (shipSize === 1) {
-        return _getRandomFreeCell(cells);
-    }
-
-    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-        return cell.isHit || cell.isKilledShipNeighborCell
-    });
-    // console.log("spaciousRooms", spaciousRooms);
-    const randomRoom = randomElement(spaciousRooms);
-    // console.log("randomRoom", randomRoom);
-    if (!randomRoom || randomRoom.length === 0) {
-        return _getRandomFreeCell(cells); // we know all ships, no rooms for the last wan and if is wounded
-    }
-    return randomRoom[Math.floor(randomRoom.length / 2)];*/
 }

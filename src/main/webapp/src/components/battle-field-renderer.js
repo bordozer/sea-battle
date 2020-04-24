@@ -57,7 +57,7 @@ function cellCss(cell, options) {
         return c.x === cell.x && c.y === cell.y;
     }).length > 0;
     if (isRecommendedShot) {
-        result.push('cell-recommended-shot');
+        result.push('cell-recommended-shot fa fa-bullseye');
     }
     return result.join(' ');
 }

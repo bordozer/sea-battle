@@ -179,9 +179,7 @@ export const generateShips = (cells) => {
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function(cell) {
             return cell.ship || cell.isShipNeighbor;
         });
-        /*if (spaciousRooms.length === 0) {
-            return generateShips();
-        }*/
+
         const randomSpaciousRoom = randomElement(spaciousRooms);
 
         const maxOffset = randomSpaciousRoom.length - shipSize;
