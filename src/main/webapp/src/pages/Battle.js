@@ -103,10 +103,12 @@ export default class BattlePage extends Component {
         if (enemyShip) {
             enemyShip.damage++;
             if (enemyShip.damage === enemyShip.size) {
+                this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
                 markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
+            } else {
+                this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (wounded)'));
             }
 
-            this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
             if (this.isWinShot(enemyShips)) {
                 Swal.fire(
                     'You have won!',
@@ -132,7 +134,7 @@ export default class BattlePage extends Component {
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
 
-        const playerCell = getShot(playerCells, playerShips);
+        const playerCell = getShot(playerCells, playerShips, this.state.enemyLastShot);
 
         playerCell.isHit = true;
         const playerShip = playerCell.ship;
@@ -140,9 +142,11 @@ export default class BattlePage extends Component {
         if (playerShip) {
             playerShip.damage++;
             if (playerShip.damage === playerShip.size) {
+                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
+            } else {
+                this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (wounded)'));
             }
-            this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
             if (this.isWinShot(playerShips)) {
                 Swal.fire(
                     'Enemy has won!',
@@ -278,13 +282,13 @@ export default class BattlePage extends Component {
             isHiddenShips: false,
             isSetupStep: isSetupStep,
             lastShot: this.state.enemyLastShot,
-            recommendedShots: getRecommendedShots(this.state.playerCells, this.state.playerShips)
+            recommendedShots: getRecommendedShots(this.state.playerCells, this.state.playerShips, this.state.enemyLastShot)
         }
         const enemyBattleFieldOpts = {
             isHiddenShips: true,
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
-            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips)
+            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.playerLastShot)
         }
 
         return (

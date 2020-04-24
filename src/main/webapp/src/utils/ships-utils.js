@@ -131,17 +131,9 @@ function _getHFreeRooms(cells, busyFilter) {
 }
 
 function _setNeighborCellsProperty(cells, cell, property) {
-    for (let i = cell.y - 1; i <= cell.y + 1; i++) {
-        if (!cells[i]) {
-            continue;
-        }
-        for (let j = cell.x - 1; j <= cell.x + 1; j++) {
-            if (cells[i][j]) {
-                const neighborCell = cells[i][j];
-                neighborCell[property] = true;
-            }
-        }
-    }
+    getCellWithNeighbors(cells, cell).forEach(neighborCell => {
+        neighborCell[property] = true;
+    })
 }
 
 export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
@@ -153,6 +145,24 @@ export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
     return freeRooms.filter(room => {
         return room.length >= shipSize;
     })
+}
+
+export const getCellWithNeighbors = (cells, cell) => {
+    const result = [];
+    for (let i = cell.y - 1; i <= cell.y + 1; i++) {
+        if (!cells[i]) {
+            continue;
+        }
+        for (let j = cell.x - 1; j <= cell.x + 1; j++) {
+            if (i === cell.y && j === cell.x) {
+                continue;
+            }
+            if (cells[i][j]) {
+                result.push(cells[i][j]);
+            }
+        }
+    }
+    return result;
 }
 
 export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
@@ -176,7 +186,7 @@ export const generateShips = (cells) => {
 
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const spaciousRooms = getSpaciousRooms(cells, shipSize, function(cell) {
+        const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
             return cell.ship || cell.isShipNeighbor;
         });
 

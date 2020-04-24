@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getSpaciousRooms} from 'src/utils/ships-utils'
+import {getSpaciousRooms, getCellWithNeighbors} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 function _getRandomFreeCell(cells) {
@@ -28,7 +28,27 @@ function getBiggestAliveShip(playerShips) {
         })[0];
 }
 
-export const getRecommendedShots = (cells, ships) => {
+function isShotWoundedShip(cell) {
+    return cell && cell.ship && cell.ship.damage < cell.ship.size;
+}
+
+function finishingOffWoundedShip(cells, lastShotCell) {
+    // console.log("lastShotCell", finishingOffWoundedShip);
+    const cellWithNeighbors = getCellWithNeighbors(cells, lastShotCell);
+
+    // if (woundedShip.damage === 1) {
+        const targets = cellWithNeighbors.filter(neighborCell => {
+            return neighborCell.isHit || neighborCell.isKilledShipNeighborCell;
+        });
+        return randomElement(targets);
+    // }
+    // return {};
+}
+
+export const getRecommendedShots = (cells, ships, lastShotCell) => {
+    if (isShotWoundedShip(lastShotCell)) {
+        return [];
+    }
     const biggestAliveShip = getBiggestAliveShip(ships);
     if (!biggestAliveShip) {
         return [];
@@ -53,7 +73,7 @@ export const getRecommendedShots = (cells, ships) => {
         }
         return room[Math.floor(room.length / 2)];
     });
-    console.log("recommendedRoomShots", recommendedRoomShots);
+    // console.log("recommendedRoomShots", recommendedRoomShots);
 
     const result = [];
     recommendedRoomShots.forEach(cell => {
@@ -67,8 +87,14 @@ export const getRecommendedShots = (cells, ships) => {
     return result;
 }
 
-export const getShot = (cells, ships) => {
-    const recommendedShots = getRecommendedShots(cells, ships);
+export const getShot = (cells, ships, lastShotCell) => {
+    console.log("ENEMY last shot", lastShotCell);
+    if (isShotWoundedShip(lastShotCell)) {
+        console.log("WOUNDED");
+        return finishingOffWoundedShip(cells, lastShotCell);
+    }
+
+    const recommendedShots = getRecommendedShots(cells, ships, lastShotCell);
     if (recommendedShots.length === 0) {
         return _getRandomFreeCell(cells);
     }
