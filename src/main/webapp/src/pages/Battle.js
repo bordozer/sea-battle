@@ -276,11 +276,13 @@ export default class BattlePage extends Component {
         const isSetupStep = (this.state.step === null) || (this.state.step === STEP_READY_TO_START);
         const playerOpts = {
             isHiddenShips: false,
-            isSetupStep: isSetupStep
+            isSetupStep: isSetupStep,
+            lastShot: this.state.enemyLastShot
         }
         const enemyOpts = {
             isHiddenShips: true,
-            isSetupStep: isSetupStep
+            isSetupStep: isSetupStep,
+            lastShot: this.state.playerLastShot
         }
 
         return (

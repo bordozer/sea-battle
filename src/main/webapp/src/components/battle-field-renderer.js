@@ -48,6 +48,10 @@ function cellCss(cell, options) {
         result.push('cell-not-hittable');
         result.push('fa fa-crosshairs');
     }
+    const lastShot = options.lastShot;
+    if (lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y)) {
+        result.push('text-primary fa fa-circle');
+    }
     return result.join(' ');
 }
 
