@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled, getSpaciousRooms} from 'src/utils/ships-utils'
-import {getShot} from 'components/gunner-ai'
+import {getShot, getRecommendedShots} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import ShipStatisticsRenderer from 'components/ships-stat'
 
@@ -274,15 +274,17 @@ export default class BattlePage extends Component {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
         const isSetupStep = (this.state.step === null) || (this.state.step === STEP_READY_TO_START);
-        const playerOpts = {
+        const playerBattleFieldOpts = {
             isHiddenShips: false,
             isSetupStep: isSetupStep,
-            lastShot: this.state.enemyLastShot
+            lastShot: this.state.enemyLastShot,
+            recommendedShots: getRecommendedShots(this.state.playerCells, this.state.playerShips)
         }
-        const enemyOpts = {
+        const enemyBattleFieldOpts = {
             isHiddenShips: true,
             isSetupStep: isSetupStep,
-            lastShot: this.state.playerLastShot
+            lastShot: this.state.playerLastShot,
+            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips)
         }
 
         return (
@@ -305,14 +307,14 @@ export default class BattlePage extends Component {
                     <div className="col-sm-5">
                         <BattleFieldRenderer
                             cells={this.state.playerCells}
-                            options={playerOpts}
+                            options={playerBattleFieldOpts}
                             onCellClick={this.playerCellSetup}
                         />
                     </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
                             cells={this.state.enemyCells}
-                            options={enemyOpts}
+                            options={enemyBattleFieldOpts}
                             onCellClick={this.playerShot}
                         />
                     </div>

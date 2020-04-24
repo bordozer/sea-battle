@@ -28,23 +28,59 @@ function getBiggestAliveShip(playerShips) {
         })[0];
 }
 
-export const getShot = (cells, ships) => {
+export const getRecommendedShots = (cells, ships) => {
     const biggestAliveShip = getBiggestAliveShip(ships);
+    if (!biggestAliveShip) {
+        return [];
+    }
+    const shipSize = biggestAliveShip.size;
+
+    if (shipSize === 1) {
+        return [];
+    }
+    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        return cell.isHit || cell.isKilledShipNeighborCell
+    });
+
+    const recommendedRoomShots = spaciousRooms.map(room => {
+        return room[Math.floor(room.length / 2)];
+    });
+
+    const result = [];
+    recommendedRoomShots.forEach(cell => {
+        const len = result.filter(c => {
+            return c.x === cell.x && c.y === cell.y
+        }).length;
+        if (len === 0) {
+            result.push(cell);
+        }
+    })
+    return result;
+}
+
+export const getShot = (cells, ships) => {
+    const recommendedShots = getRecommendedShots(cells, ships);
+    if (recommendedShots.length === 0) {
+        return _getRandomFreeCell(cells);
+    }
+    return randomElement(recommendedShots);
+    /*const biggestAliveShip = getBiggestAliveShip(ships);
     // console.log('biggestAliveShip', biggestAliveShip);
 
     const shipSize = biggestAliveShip.size;
-    if (shipSize > 1) {
-        const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-            return cell.isHit || cell.isKilledShipNeighborCell
-        });
-        console.log("spaciousRooms", spaciousRooms);
-        const randomRoom = randomElement(spaciousRooms);
-        console.log("randomRoom", randomRoom);
-        if (!randomRoom || randomRoom.length === 0) {
-            return _getRandomFreeCell(cells); // we know all ships, no rooms for the last wan and if is wounded
-        }
-        return randomRoom[Math.floor(randomRoom.length / 2)];
+
+    if (shipSize === 1) {
+        return _getRandomFreeCell(cells);
     }
 
-    return _getRandomFreeCell(cells);
+    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        return cell.isHit || cell.isKilledShipNeighborCell
+    });
+    // console.log("spaciousRooms", spaciousRooms);
+    const randomRoom = randomElement(spaciousRooms);
+    // console.log("randomRoom", randomRoom);
+    if (!randomRoom || randomRoom.length === 0) {
+        return _getRandomFreeCell(cells); // we know all ships, no rooms for the last wan and if is wounded
+    }
+    return randomRoom[Math.floor(randomRoom.length / 2)];*/
 }

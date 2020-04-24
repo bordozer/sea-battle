@@ -52,6 +52,13 @@ function cellCss(cell, options) {
     if (lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y)) {
         result.push('text-primary fa fa-circle');
     }
+
+    const isRecommendedShot = options.recommendedShots.filter(c => {
+        return c.x === cell.x && c.y === cell.y;
+    }).length > 0;
+    if (isRecommendedShot) {
+        result.push('cell-recommended-shot');
+    }
     return result.join(' ');
 }
 

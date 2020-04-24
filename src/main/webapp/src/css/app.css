@@ -52,6 +52,9 @@ body {
 .cell-not-hittable {
     background-color: #dfefef;
 }
+.cell-recommended-shot {
+    background-color: #d0fafa;
+}
 .stat-cell {
     width: 16px;
     height: 16px;
