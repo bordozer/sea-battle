@@ -3,6 +3,10 @@ import React from 'react';
 import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
+const hittableCellsFilterFunction = function (cell) {
+    return !cell.isKilledShipNeighborCell && !cell.isHit;
+};
+
 function _getRandomFreeCell(cells) {
     const hitableCells = [];
     for (let x = 0; x < cells.length; x++) {
@@ -45,9 +49,7 @@ function _shotOnceWoundedShipAgain(cells, woundedCell) {
         neighborCells.push(cells[woundedCell.y][woundedCell.x + 1]);
     }
 
-    const hittableNeighborCells = neighborCells.filter(cell => {
-        return !cell.isKilledShipNeighborCell && !cell.isHit;
-    });
+    const hittableNeighborCells = neighborCells.filter(cell => hittableCellsFilterFunction);
     return randomElement(hittableNeighborCells);
 }
 
@@ -55,8 +57,35 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
     if (playerWoundedShipCells.length === 1) {
         return _shotOnceWoundedShipAgain(cells, playerWoundedShipCells[0]);
     }
-    console.log("finishingOffWoundedShip - STUB");
-    return _getRandomFreeCell(cells); // TODO: tempora=ry
+
+    console.log("finishingOffWoundedShip", playerWoundedShipCells.length, 'cells');
+    let firstWoundedCell = playerWoundedShipCells[0];
+    let lastWoundedCell = playerWoundedShipCells[playerWoundedShipCells.length - 1];
+    const isVerticalShip = firstWoundedCell.x === lastWoundedCell.x;
+    if (isVerticalShip) {
+        const sorted = playerWoundedShipCells.sort(function (cell1, cell2) {
+            return cell1.y - cell2.y;
+        });
+        firstWoundedCell = sorted[0];
+        lastWoundedCell = sorted[sorted.length - 1];
+        const targets = [
+            cells[firstWoundedCell.y - 1][firstWoundedCell.x],
+            cells[lastWoundedCell.y + 1][lastWoundedCell.x]
+        ];
+        return randomElement(targets.filter(cell => hittableCellsFilterFunction));
+    }
+
+    // horizontal ship
+    const sorted = playerWoundedShipCells.sort(function (cell1, cell2) {
+        return cell1.x - cell2.x;
+    });
+    firstWoundedCell = sorted[0];
+    lastWoundedCell = sorted[sorted.length - 1];
+    const targets = [
+        cells[firstWoundedCell.y][firstWoundedCell.x - 1],
+        cells[lastWoundedCell.y][lastWoundedCell.x + 1]
+    ];
+    return randomElement(targets.filter(cell => hittableCellsFilterFunction));
 }
 
 export const getRecommendedShots = (cells, ships) => {
@@ -94,14 +123,14 @@ export const getRecommendedShots = (cells, ships) => {
         if (len === 0) {
             result.push(cell);
         }
-    })
+    });
     return result;
-}
+};
 
 export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
-    console.log("Player's wounded ship cells", playerWoundedShipCells);
+    // console.log("Player's wounded ship cells", playerWoundedShipCells);
     if (playerWoundedShipCells.length > 0) {
-        console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
+        // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 

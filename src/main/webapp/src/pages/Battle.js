@@ -32,10 +32,7 @@ export default class BattlePage extends Component {
         enemyLastShot: null,
         step: null,
         isReadyToStart: false,
-        logs: [WELCOME_MESSAGE],
-        config: {
-            battleFieldSize: 10
-        }
+        logs: [WELCOME_MESSAGE]
     };
 
     playerCellSetup = (cell) => {
@@ -241,10 +238,12 @@ export default class BattlePage extends Component {
             playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             playerShips: [],
             playerLastShot: null,
+            playerWoundedShipCells: [],
             enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyShips: [],
             enemyLastShot: null,
             step: null,
+            isReadyToStart: false,
             logs: [WELCOME_MESSAGE]
         });
     }
@@ -289,7 +288,7 @@ export default class BattlePage extends Component {
             isHiddenShips: false,
             isSetupStep: isSetupStep,
             lastShot: this.state.enemyLastShot,
-            recommendedShots: getRecommendedShots(this.state.playerCells, this.state.playerShips, this.state.enemyLastShot)
+            recommendedShots: [] //getRecommendedShots(this.state.playerCells, this.state.playerShips, this.state.enemyLastShot)
         }
         const enemyBattleFieldOpts = {
             isHiddenShips: true,
