@@ -7,7 +7,7 @@ function _renderShip(ship, isPlayer) {
         const isKilled = ship.damage === ship.size;
         result.push(
             <div
-                key={'ship-stat-line-cell' + ship.id}
+                key={'ship-stat-line-cell-' + ship.id + '-' + i + '-' + (isPlayer ? '-player' : '-enemy')}
                 className={'stat-cell' + (isShip ? ' stat-cell-ship' : '') + (isShip && isKilled ? ' stat-cell-ship-killed' : '') + (isPlayer ? ' pull-right' : '')}>
                 &nbsp;
             </div>
@@ -17,7 +17,7 @@ function _renderShip(ship, isPlayer) {
 }
 
 const ShipStatisticsRenderer = ({ships, isPlayer}) => {
-    console.log(ships);
+    // console.log(ships);
     const result = [];
     ships.forEach(ship => {
         result.push(

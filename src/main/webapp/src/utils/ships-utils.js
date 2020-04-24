@@ -19,13 +19,13 @@ function _initShips() {
     ]
 }
 
-function _getFreeCells(cells) {
+function _getFreeCells(cells, filter) {
     const battleFieldSize = cells.length;
     const arr = []
     for (let x = 0; x < battleFieldSize; x++) {
         for (let y = 0; y < battleFieldSize; y++) {
             const cell = cells[x][y];
-            if (!cell.ship && !cell.isShipNeighbor) {
+            if (filter(cell)) {
                 arr.push(cell);
             }
         }
@@ -37,6 +37,7 @@ function _getVFreeRoomsOfArray(cells) {
     const result = [];
     let temp = [];
     let column = cells[0].y;
+    temp.push(cells[0]);
 
     for (let i = 1; i < cells.length; i++) {
         const cell = cells[i];
@@ -61,6 +62,7 @@ function _getHFreeRoomsOfArray(cells) {
     let temp = [];
 
     let line = cells[0].x;
+    temp.push(cells[0]);
 
     for (let i = 1; i < cells.length; i++) {
         const cell = cells[i];
@@ -80,9 +82,9 @@ function _getHFreeRoomsOfArray(cells) {
     return result;
 }
 
-function _getVFreeRooms(cells) {
+function _getVFreeRooms(cells, filter) {
     const result = [];
-    const freeCells = _getFreeCells(cells);
+    const freeCells = _getFreeCells(cells, filter);
     // console.log('freeCells', freeCells);
 
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
@@ -105,9 +107,9 @@ function _getVFreeRooms(cells) {
     return result;
 }
 
-function _getHFreeRooms(cells) {
+function _getHFreeRooms(cells, filter) {
     const result = [];
-    const freeCells = _getFreeCells(cells);
+    const freeCells = _getFreeCells(cells, filter);
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
         return cell.y;
     });
@@ -142,6 +144,17 @@ function _setNeighborCellsProperty(cells, cell, property) {
     }
 }
 
+export const getSpaciousRooms = (cells, shipSize, filter) => {
+    const hFreeRooms = _getHFreeRooms(cells, filter);
+    // console.log("hFreeRooms", hFreeRooms);
+    const vFreeRooms = _getVFreeRooms(cells, filter);
+    // console.log("vFreeRooms", vFreeRooms);
+    const freeRooms = hFreeRooms.concat(vFreeRooms);
+    return freeRooms.filter(room => {
+        return room.length >= shipSize;
+    })
+}
+
 export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
     const cellsWithShip = [];
     for (let i = 0; i < cells.length; i++) {
@@ -160,21 +173,16 @@ export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
 
 export const generateShips = (cells) => {
     const ships = _initShips();
+
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const freeRooms = _getHFreeRooms(cells).concat(_getVFreeRooms(cells));
-        // console.log('freeRooms', freeRooms);
-
-        const spaciousRooms = freeRooms.filter(room => {
-            return room.length >= shipSize;
-        })
-        if (spaciousRooms.length === 0) {
+        const spaciousRooms = getSpaciousRooms(cells, shipSize, function(cell) {
+            return !cell.ship && !cell.isShipNeighbor;
+        });
+        /*if (spaciousRooms.length === 0) {
             return generateShips();
-        }
-        // console.log('spaciousRooms', spaciousRooms);
-
+        }*/
         const randomSpaciousRoom = randomElement(spaciousRooms);
-        // console.log("randomSpaciousRoom", randomSpaciousRoom);
 
         const maxOffset = randomSpaciousRoom.length - shipSize;
         // console.log("maxOffset", maxOffset);

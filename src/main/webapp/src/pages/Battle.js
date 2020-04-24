@@ -3,7 +3,8 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
-import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
+import {generateShips, markAllShipNeighborCellsAsKilled, getSpaciousRooms} from 'src/utils/ships-utils'
+import {getShot} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import ShipStatisticsRenderer from 'components/ships-stat'
 
@@ -61,6 +62,8 @@ export default class BattlePage extends Component {
         }
         let step = this.state.step;
         const enemyCells = this.state.enemyCells;
+        const enemyShips = this.state.enemyShips;
+
         const enemyCell = enemyCells[cell.y][cell.x];
 
         if (enemyCell.isHit) {
@@ -98,7 +101,7 @@ export default class BattlePage extends Component {
             }
 
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
-            if (this.isWinShot(this.state.enemyShips)) {
+            if (this.isWinShot(enemyShips)) {
                 Swal.fire(
                     'You have won!',
                     'You are just lucky bastard. Next time you will have no chance.',
@@ -107,6 +110,8 @@ export default class BattlePage extends Component {
                 step = STEP_FINAL;
             }
         }
+        // const recommendedShot = getShot(enemyCells, enemyShips);
+        // console.log("recommended for player shot", recommendedShot);
 
         this.setState({
             enemyCells: this.state.enemyCells,
@@ -117,7 +122,9 @@ export default class BattlePage extends Component {
 
     enemyShot = () => {
         const playerCells = this.state.playerCells;
-        const playerCell = this.getRandomCellForHit(playerCells);
+        const playerShips = this.state.playerShips;
+
+        const playerCell = getShot(playerCells, playerShips);
 
         playerCell.isHit = true;
         const playerShip = playerCell.ship;
@@ -128,7 +135,7 @@ export default class BattlePage extends Component {
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
             }
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (killed)'));
-            if (this.isWinShot(this.state.playerShips)) {
+            if (this.isWinShot(playerShips)) {
                 Swal.fire(
                     'Enemy has won!',
                     'You are loser. Live with this.',
@@ -155,7 +162,7 @@ export default class BattlePage extends Component {
             );
             return;
         }
-        console.log("The battle has began");
+        // console.log("The battle has began");
 
         // randomize enemyShips
         const gameData = this.randomizeBattleFieldWithShips();
@@ -184,21 +191,6 @@ export default class BattlePage extends Component {
         return generateShips(cells);
     }
 
-    getRandomCellForHit = (cells) => {
-        const hitableCells = [];
-        for (let x = 0; x < BATTLE_FIELD_SIZE; x++) {
-            for (let y = 0; y < BATTLE_FIELD_SIZE; y++) {
-                const cell = cells[x][y];
-                if (!cell.isHit && !cell.isKilledShipNeighborCell) {
-                    hitableCells.push(cell);
-                }
-            }
-        }
-        // console.log("-->", hitableCells.length);
-        const number = Math.floor(Math.random() * Math.floor(hitableCells.length));
-        return hitableCells[number];
-    }
-
     randomizePlayersShips = () => {
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         const gameData = this.randomizeBattleFieldWithShips();
@@ -208,6 +200,12 @@ export default class BattlePage extends Component {
             step: STEP_READY_TO_START,
             logs: this.state.logs
         });
+        // TODO: delete
+        /*console.log("=======================================================");
+        const rooms = getSpaciousRooms(gameData.cells, 4, function(cell) {
+            return !cell.ship && !cell.isShipNeighbor;
+        });
+        console.log("getSpaciousRooms", rooms);*/
     }
 
     resetBattle = () => {

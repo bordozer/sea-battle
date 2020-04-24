@@ -60,7 +60,7 @@ function renderCells(x, cells, onCellClick, options) {
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (cell.ship ? ' - ' + cell.ship.name : '')}
             >
-                {/*{cell.ship ? 'x' : ''}*/}
+                {cell.ship ? 'x' : ''}
             </div>
         );
     });
