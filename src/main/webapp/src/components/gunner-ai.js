@@ -33,12 +33,23 @@ function isShotWoundedShip(cell) {
 }
 
 function finishingOffWoundedShip(cells, lastShotCell) {
-    // console.log("lastShotCell", finishingOffWoundedShip);
-    const cellWithNeighbors = getCellWithNeighbors(cells, lastShotCell);
+    const possibleShotCells = [];
+    if (cells[lastShotCell.y - 1] && cells[lastShotCell.y][lastShotCell.x]) {
+        possibleShotCells.push(cells[lastShotCell.y - 1][lastShotCell.x]);
+    }
+    if (cells[lastShotCell.y + 1] && cells[lastShotCell.y][lastShotCell.x]) {
+        possibleShotCells.push(cells[lastShotCell.y + 1][lastShotCell.x]);
+    }
+    if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x - 1]) {
+        possibleShotCells.push(cells[lastShotCell.y][lastShotCell.x - 1]);
+    }
+    if (cells[lastShotCell.y] && cells[lastShotCell.y][lastShotCell.x + 1]) {
+        possibleShotCells.push(cells[lastShotCell.y][lastShotCell.x + 1]);
+    }
 
     // if (woundedShip.damage === 1) {
-        const targets = cellWithNeighbors.filter(neighborCell => {
-            return !neighborCell.isHit && !neighborCell.isKilledShipNeighborCell;
+        const targets = possibleShotCells.filter(cell => {
+            return !cell.isHit && !cell.isKilledShipNeighborCell;
         });
         return randomElement(targets);
     // }
