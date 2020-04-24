@@ -19,13 +19,13 @@ function _initShips() {
     ]
 }
 
-function _getFreeCells(cells, filter) {
+function _getFreeCells(cells, busyFilter) {
     const battleFieldSize = cells.length;
     const arr = []
     for (let x = 0; x < battleFieldSize; x++) {
         for (let y = 0; y < battleFieldSize; y++) {
             const cell = cells[x][y];
-            if (filter(cell)) {
+            if (!busyFilter(cell)) {
                 arr.push(cell);
             }
         }
@@ -82,9 +82,9 @@ function _getHFreeRoomsOfArray(cells) {
     return result;
 }
 
-function _getVFreeRooms(cells, filter) {
+function _getVFreeRooms(cells, busyFilter) {
     const result = [];
-    const freeCells = _getFreeCells(cells, filter);
+    const freeCells = _getFreeCells(cells, busyFilter);
     // console.log('freeCells', freeCells);
 
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
@@ -107,9 +107,9 @@ function _getVFreeRooms(cells, filter) {
     return result;
 }
 
-function _getHFreeRooms(cells, filter) {
+function _getHFreeRooms(cells, busyFilter) {
     const result = [];
-    const freeCells = _getFreeCells(cells, filter);
+    const freeCells = _getFreeCells(cells, busyFilter);
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
         return cell.y;
     });
@@ -144,10 +144,10 @@ function _setNeighborCellsProperty(cells, cell, property) {
     }
 }
 
-export const getSpaciousRooms = (cells, shipSize, filter) => {
-    const hFreeRooms = _getHFreeRooms(cells, filter);
+export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
+    const hFreeRooms = _getHFreeRooms(cells, busyFilter);
     // console.log("hFreeRooms", hFreeRooms);
-    const vFreeRooms = _getVFreeRooms(cells, filter);
+    const vFreeRooms = _getVFreeRooms(cells, busyFilter);
     // console.log("vFreeRooms", vFreeRooms);
     const freeRooms = hFreeRooms.concat(vFreeRooms);
     return freeRooms.filter(room => {
@@ -177,7 +177,7 @@ export const generateShips = (cells) => {
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function(cell) {
-            return !cell.ship && !cell.isShipNeighbor;
+            return cell.ship || cell.isShipNeighbor;
         });
         /*if (spaciousRooms.length === 0) {
             return generateShips();
