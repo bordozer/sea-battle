@@ -24,9 +24,11 @@ export default class BattlePage extends Component {
 
     state = {
         playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-        enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         playerShips: [],
+        playerLastShot: null,
+        enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
         enemyShips: [],
+        enemyLastShot: null,
         step: null,
         isReadyToStart: false,
         logs: [WELCOME_MESSAGE],
@@ -61,6 +63,8 @@ export default class BattlePage extends Component {
             return;
         }
         let step = this.state.step;
+        let enemyLastShot = this.state.enemyLastShot;
+
         const enemyCells = this.state.enemyCells;
         const enemyShips = this.state.enemyShips;
 
@@ -88,7 +92,9 @@ export default class BattlePage extends Component {
         // MISSED
         if (!enemyShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
-            if (this.enemyShot()) {
+            const enemyMove = this.enemyShot();
+            enemyLastShot = enemyMove.enemyLastShot;
+            if (enemyMove.isEnemyWon) {
                 step = STEP_FINAL;
             }
         }
@@ -116,7 +122,9 @@ export default class BattlePage extends Component {
         this.setState({
             enemyCells: this.state.enemyCells,
             logs: this.state.logs,
-            step: step
+            step: step,
+            playerLastShot: cell,
+            enemyLastShot: enemyLastShot
         });
     }
 
@@ -141,7 +149,10 @@ export default class BattlePage extends Component {
                     'You are loser. Live with this.',
                     'info'
                 );
-                return true;
+                return {
+                    isEnemyWon: true,
+                    enemyLastShot: playerCell
+                };
             }
             return this.enemyShot();
         }
@@ -150,7 +161,10 @@ export default class BattlePage extends Component {
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + playerCell.xLabel + ':' + playerCell.yLabel + ' (missed)'));
         }
 
-        return false;
+        return {
+            isEnemyWon: false,
+            enemyLastShot: playerCell
+        };
     }
 
     startBattle = () => {
@@ -169,19 +183,22 @@ export default class BattlePage extends Component {
         // this.state.enemyCells = gameData.cells;
 
         // random - who's first shot
-        let isEnemyWin = false;
         const firstMove = Math.floor(Math.random() * Math.floor(2));
         this.state.logs.push(this.createLogRecord('The battle has began!'));
         this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
+        let enemyMove = {
+            isEnemyWon: false,
+            enemyLastShot: null
+        };
         if (firstMove === 1) {
-            isEnemyWin = this.enemyShot();
+            enemyMove = this.enemyShot();
         }
 
         this.setState({
-            step: isEnemyWin ? STEP_FINAL : STEP_BATTLE,
-            // playerCells: this.state.playerCells,
+            step: enemyMove.isEnemyWon ? STEP_FINAL : STEP_BATTLE,
             enemyCells: gameData.cells,
             enemyShips: gameData.ships,
+            enemyLastShot: enemyMove.enemyLastShot,
             logs: this.state.logs
         });
     }
@@ -211,9 +228,11 @@ export default class BattlePage extends Component {
     resetBattle = () => {
         this.setState({
             playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             playerShips: [],
+            playerLastShot: null,
+            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyShips: [],
+            enemyLastShot: null,
             step: null,
             logs: [WELCOME_MESSAGE]
         });

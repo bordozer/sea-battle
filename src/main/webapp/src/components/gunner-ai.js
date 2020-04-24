@@ -35,9 +35,7 @@ export const getShot = (cells, ships) => {
     const shipSize = biggestAliveShip.size;
     if (shipSize > 1) {
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-            return cell.isHit
-                || cell.isKilledShipNeighborCell
-                || (cell.ship && cell.ship.damage === cell.ship.size)
+            return cell.isHit || cell.isKilledShipNeighborCell
         });
         console.log("spaciousRooms", spaciousRooms);
         const randomRoom = randomElement(spaciousRooms);
