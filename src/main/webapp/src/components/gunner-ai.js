@@ -47,19 +47,20 @@ function finishingOffWoundedShip(cells, lastShotCell) {
         neighborCells.push(cells[lastShotCell.y][lastShotCell.x + 1]);
     }
 
-    const targets = neighborCells.filter(cell => {
+    const hittableNeighborCells = neighborCells.filter(cell => {
         return !cell.isKilledShipNeighborCell;
     });
+
     if (lastShotCell.ship.damage === 1) {
-        return randomElement(targets.filter(cell => {
+        return randomElement(hittableNeighborCells.filter(cell => {
             return !cell.isHit;
         }));
-    } else {
-        targets.filter(cell => {
-            return cell.ship && !cell.isHit;
-        })
     }
-    return randomElement(targets);
+
+    hittableNeighborCells.filter(cell => {
+        return cell.ship && !cell.isHit;
+    })
+    return randomElement(hittableNeighborCells);
 }
 
 export const getRecommendedShots = (cells, ships, lastShotCell) => {
