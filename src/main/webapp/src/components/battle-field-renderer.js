@@ -40,7 +40,6 @@ function cellCss(cell, options) {
     // player's of enemy's known ship neighbor cell
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
         result.push('cell-not-hittable');
-        // result.push('fa fa-genderless');
     }
     // missed shot
     if (!cell.ship && cell.isHit) {
@@ -50,7 +49,8 @@ function cellCss(cell, options) {
     }
     const lastShot = options.lastShot;
     if (lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y)) {
-        result.push('text-primary fa fa-circle');
+        result.push('text-primary');
+        result.push('fa fa-certificate');
     }
 
     const isRecommendedShot = options.recommendedShots.filter(c => {
