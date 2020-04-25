@@ -41,16 +41,20 @@ function cellCss(cell, options) {
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
         result.push('cell-not-hittable');
     }
+
+    const lastShot = options.lastShot;
+    const isLastShoot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
+
     // missed shot
-    if (!cell.ship && cell.isHit) {
+    if (!isLastShoot && !cell.ship && cell.isHit) {
         result.push('cell-missed-hit');
         result.push('cell-not-hittable');
-        result.push('fa fa-crosshairs');
+        // result.push('fa fa-crosshairs');
+        result.push('fa fa-circle-o');
     }
-    const lastShot = options.lastShot;
-    if (lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y)) {
+    if (isLastShoot) {
         result.push('text-primary');
-        result.push('fa fa-certificate');
+        result.push('fa fa-crosshairs');
     }
 
     const isRecommendedShot = options.recommendedShots.filter(c => {
