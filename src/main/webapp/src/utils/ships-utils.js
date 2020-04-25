@@ -51,7 +51,7 @@ function _getVFreeRoomsOfArray(cells, shipSize) {
             i = offset++;
         }
     }
-    if (room.length > 0 && room.length === shipSize) {
+    if (room.length === shipSize) {
         result.push(room);
     }
 
@@ -76,7 +76,7 @@ function _getHFreeRoomsOfArray(cells, shipSize) {
             i = offset++;
         }
     }
-    if (room.length > 0 && room.length === shipSize) {
+    if (room.length === shipSize) {
         result.push(room);
     }
 

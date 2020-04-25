@@ -122,9 +122,13 @@ export const getRecommendedShots = (cells, ships, who) => {
     });
 
     const hFreeRooms = spaciousRooms.hFreeRooms;
-    // console.log("hFreeRooms", hFreeRooms);
+    if (who === 'player') {
+        console.log("hFreeRooms", hFreeRooms);
+    }
     const vFreeRooms = spaciousRooms.vFreeRooms;
-    // console.log("vFreeRooms", vFreeRooms);
+    if (who === 'player') {
+        console.log("vFreeRooms", vFreeRooms);
+    }
 
     const commonCells = [];
     hFreeRooms.forEach(hRoomCells => {
@@ -139,7 +143,7 @@ export const getRecommendedShots = (cells, ships, who) => {
         });
     });
     if (commonCells.length > 0 && who === 'player') {
-        // console.log("commonCells", commonCells);
+        console.log("commonCells", commonCells);
         return {
             shoots: commonCells,
             strategy: 'commons-room-cells'

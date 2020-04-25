@@ -57,7 +57,7 @@ function cellCss(cell, options) {
         result.push('fa fa-crosshairs');
     }
 
-    console.log("options", options);
+    // console.log("options", options);
     const recommendedShots = options.recommendedShots.shoots;
     const strategy = options.recommendedShots.strategy;
     const isRecommendedShot = recommendedShots.filter(c => {
@@ -67,9 +67,11 @@ function cellCss(cell, options) {
         result.push('cell-recommended-shot');
         if (strategy === 'commons-room-cells') {
             result.push('fa fa-bullseye');
-        }
-        if (strategy === 'room-middle-cells') {
+        } else if (strategy === 'room-middle-cells') {
             result.push('fa fa-dot-circle-o');
+        } else {
+            console.log("strategy", strategy);
+            result.push('fa fa-adjust');
         }
     }
     return result.join(' ');
