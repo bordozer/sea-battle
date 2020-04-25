@@ -118,7 +118,9 @@ export const getRecommendedShots = (cells, ships) => {
     });
 
     const hFreeRooms = spaciousRooms.hFreeRooms;
+    // console.log("hFreeRooms", hFreeRooms);
     const vFreeRooms = spaciousRooms.vFreeRooms;
+    // console.log("vFreeRooms", vFreeRooms);
 
     const commonCells = [];
     hFreeRooms.forEach(hRoomCells => {
@@ -133,7 +135,7 @@ export const getRecommendedShots = (cells, ships) => {
         });
     });
     if (commonCells.length > 0) {
-        console.log("commonCells", commonCells);
+        // console.log("commonCells", commonCells);
         return commonCells;
     }
 

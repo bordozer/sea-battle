@@ -8,6 +8,7 @@ export const initBattleFieldCells = (size) => {
         cells[h] = [];
         for (let v = size - 1; v >= 0; v--) {
             cells[h][v] = {
+                id: X_AXE[v] + '_' + (h + 1),
                 x: v,
                 y: h,
                 xLabel: X_AXE[v],
