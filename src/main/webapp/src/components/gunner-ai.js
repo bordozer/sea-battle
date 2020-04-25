@@ -3,6 +3,8 @@ import React from 'react';
 import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
+const FIRST_RANDOM_SHOOTS_COUNT = 10;
+
 function _getRandomFreeCell(cells) {
     const hittableCells = [];
     for (let x = 0; x < cells.length; x++) {
@@ -98,6 +100,10 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
 }
 
 export const getRecommendedShots = (cells, ships) => {
+    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
+        return [];
+    }
+
     const biggestAliveShip = getBiggestAliveShip(ships);
     if (!biggestAliveShip) {
         return [];
@@ -136,6 +142,19 @@ export const getRecommendedShots = (cells, ships) => {
     return result;
 };
 
+function _getUnhittableCellsCount(cells) {
+    let result = 0;
+    for (let i = 0; i < cells.length; i++) {
+        for (let j = 0; j < cells.length; j++) {
+            const cell = cells[i][j];
+            if (cell.isHit || cell.isKilledShipNeighborCell) {
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
 export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
     // console.log("Player's wounded ship cells", cells);
     if (playerWoundedShipCells.length > 0) {
@@ -143,17 +162,7 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    let hittedCells = 0;
-    for (let i = 0; i < cells.length; i++) {
-        for (let j = 0; j < cells.length; j++) {
-            const cell = cells[i][j];
-            if (cell.isHit || cell.isKilledShipNeighborCell) {
-                hittedCells++;
-            }
-        }
-    }
-    // console.log("hittedCells", hittedCells);
-    if (hittedCells < 10) {
+    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         // console.log("random shot 1");
         return _getRandomFreeCell(cells);
     }
