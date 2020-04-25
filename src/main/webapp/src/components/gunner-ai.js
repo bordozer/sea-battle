@@ -117,7 +117,29 @@ export const getRecommendedShots = (cells, ships) => {
         return cell.isHit || cell.isKilledShipNeighborCell
     });
 
-    const recommendedRoomShots = spaciousRooms.flatMap(room => {
+    const hFreeRooms = spaciousRooms.hFreeRooms;
+    const vFreeRooms = spaciousRooms.vFreeRooms;
+
+    const commonCells = [];
+    hFreeRooms.forEach(hRoomCells => {
+        hRoomCells.forEach(hRoomCell => {
+            vFreeRooms.forEach(vRoomCells => {
+                vRoomCells.forEach(vRoomCell => {
+                    if ((hRoomCell.x === vRoomCell.x) && (hRoomCell.y === vRoomCell.y)) {
+                        commonCells.push(hRoomCell);
+                    }
+                });
+            });
+        });
+    });
+    if (commonCells.length > 0) {
+        console.log("commonCells", commonCells);
+        return commonCells;
+    }
+
+    const hvSpaciousRooms = hFreeRooms.concat(vFreeRooms);
+
+    const recommendedRoomShots = hvSpaciousRooms.flatMap(room => {
         const times = Math.floor(room.length / shipSize);
         if (times > 1) {
             const tmp = [];

@@ -21,7 +21,7 @@ function _initShips() {
 
 function _getFreeCells(cells, busyFilter) {
     const battleFieldSize = cells.length;
-    const arr = []
+    const arr = [];
     for (let x = 0; x < battleFieldSize; x++) {
         for (let y = 0; y < battleFieldSize; y++) {
             const cell = cells[x][y];
@@ -33,56 +33,57 @@ function _getFreeCells(cells, busyFilter) {
     return arr;
 }
 
-function _getVFreeRoomsOfArray(cells) {
+function _getVFreeRoomsOfArray(cells, shipSize) {
     const result = [];
-    let temp = [];
-    let column = cells[0].y;
-    temp.push(cells[0]);
+    let room = [];
+    let offset = 0;
+    room.push(cells[0]);
 
     for (let i = 1; i < cells.length; i++) {
         const cell = cells[i];
-        if (cell.y === column + 1) {
-            temp.push(cell);
-            column++;
+        if (cell.y === cells[i - 1].y + 1 && room.length < shipSize) {
+            room.push(cell);
         } else {
-            column = cell.y;
-            result.push(temp);
-            temp = [];
+            if (room.length === shipSize) {
+                result.push(room);
+            }
+            room = [];
+            i = offset++;
         }
     }
-    if (temp.length > 0) {
-        result.push(temp);
+    if (room.length > 0 && room.length === shipSize) {
+        result.push(room);
     }
 
     return result;
 }
 
-function _getHFreeRoomsOfArray(cells) {
+function _getHFreeRoomsOfArray(cells, shipSize) {
     const result = [];
-    let temp = [];
-
-    let line = cells[0].x;
-    temp.push(cells[0]);
+    let room = [];
+    let offset = 0;
+    room.push(cells[0]);
 
     for (let i = 1; i < cells.length; i++) {
         const cell = cells[i];
-        if (cell.x === line + 1) {
-            temp.push(cell);
-            line++;
+        if (cell.x === cells[i - 1].x + 1 && room.length < shipSize) {
+            room.push(cell);
         } else {
-            line = cell.x;
-            result.push(temp);
-            temp = [];
+            if (room.length === shipSize) {
+                result.push(room);
+            }
+            room = [];
+            i = offset++;
         }
     }
-    if (temp.length > 0) {
-        result.push(temp);
+    if (room.length > 0 && room.length === shipSize) {
+        result.push(room);
     }
 
     return result;
 }
 
-function _getVFreeRooms(cells, busyFilter) {
+function _getVFreeRooms(cells, shipSize, busyFilter) {
     const result = [];
     const freeCells = _getFreeCells(cells, busyFilter);
     // console.log('freeCells', freeCells);
@@ -97,7 +98,7 @@ function _getVFreeRooms(cells, busyFilter) {
             const columnCells = freeCellsMap[column];
             // console.log('line', column, 'columnCells', columnCells);
 
-            const columnFreeRooms = _getVFreeRoomsOfArray(columnCells);
+            const columnFreeRooms = _getVFreeRoomsOfArray(columnCells, shipSize);
             // console.log('line', column, 'columnFreeRooms', columnFreeRooms);
 
             columnFreeRooms.forEach(columnFreeRoom => {
@@ -107,7 +108,7 @@ function _getVFreeRooms(cells, busyFilter) {
     return result;
 }
 
-function _getHFreeRooms(cells, busyFilter) {
+function _getHFreeRooms(cells, shipSize, busyFilter) {
     const result = [];
     const freeCells = _getFreeCells(cells, busyFilter);
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
@@ -120,7 +121,7 @@ function _getHFreeRooms(cells, busyFilter) {
             const lineCells = freeCellsMap[column];
             // console.log('line', column, 'lineCells', lineCells);
 
-            const lineFreeRooms = _getHFreeRoomsOfArray(lineCells);
+            const lineFreeRooms = _getHFreeRoomsOfArray(lineCells, shipSize);
             // console.log('line', column, 'lineFreeRooms', lineFreeRooms);
 
             lineFreeRooms.forEach(lineFreeRoom => {
@@ -137,15 +138,16 @@ function _setNeighborCellsProperty(cells, cell, property) {
 }
 
 export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
-    const hFreeRooms = _getHFreeRooms(cells, busyFilter);
+    const hFreeRooms = _getHFreeRooms(cells, shipSize, busyFilter);
     // console.log("hFreeRooms", hFreeRooms);
-    const vFreeRooms = _getVFreeRooms(cells, busyFilter);
+    const vFreeRooms = _getVFreeRooms(cells, shipSize, busyFilter);
     // console.log("vFreeRooms", vFreeRooms);
     const freeRooms = hFreeRooms.concat(vFreeRooms);
-    return freeRooms.filter(room => {
-        return room.length >= shipSize;
-    })
-}
+    return {
+        hFreeRooms: hFreeRooms,
+        vFreeRooms: vFreeRooms
+    }
+};
 
 export const getCellWithNeighbors = (cells, cell) => {
     const result = [];
@@ -163,7 +165,7 @@ export const getCellWithNeighbors = (cells, cell) => {
         }
     }
     return result;
-}
+};
 
 export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
     const cellsWithShip = [];
@@ -179,7 +181,7 @@ export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
     cellsWithShip.forEach(cell => {
         _setNeighborCellsProperty(cells, cell, 'isKilledShipNeighborCell');
     })
-}
+};
 
 export const generateShips = (cells) => {
     const ships = _initShips();
@@ -189,24 +191,32 @@ export const generateShips = (cells) => {
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
             return cell.ship || cell.isShipNeighbor;
         });
+        /*if (shipSize === 4) {
+            console.log("spaciousRooms.vFreeRooms", spaciousRooms.vFreeRooms);
+        }*/
 
-        const randomSpaciousRoom = randomElement(spaciousRooms);
-
-        const maxOffset = randomSpaciousRoom.length - shipSize;
-        // console.log("maxOffset", maxOffset);
-
-        const shipStartIndex = randomInt(maxOffset);
-        // console.log("shipStartIndex", shipStartIndex);
-        // console.log("ship is going to be at ", shipStartIndex + '-' + (shipStartIndex + shipSize));
-
-        for (let i = shipStartIndex; i < shipStartIndex + shipSize; i++) {
-            const cell = randomSpaciousRoom[i];
+        const hvSpaciousRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
+        /*if (shipSize === 4) {
+            console.log("hvSpaciousRooms", hvSpaciousRooms);
+        }*/
+        const randomSpaciousRoom = randomElement(hvSpaciousRooms);
+        /*if (randomSpaciousRoom.length < shipSize) {
+            console.log("TOO SMALL ROOM");
+            console.log("ship", ship);
+            console.log("spaciousRooms.hFreeRooms", spaciousRooms.hFreeRooms);
+            console.log("spaciousRooms.vFreeRooms", spaciousRooms.vFreeRooms);
+            console.log("randomSpaciousRoom", randomSpaciousRoom);
+        }*/
+        /*if (randomSpaciousRoom.length === 0) {
+            console.log("NO SPACIOUS ROOM");
+        }*/
+        randomSpaciousRoom.forEach(cell => {
             cell.ship = ship;
             _setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
-        }
-    })
+        });
+    });
     return {
         cells: cells,
         ships: ships
     };
-}
+};
