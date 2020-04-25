@@ -291,9 +291,9 @@ export default class BattlePage extends Component {
             isSetupStep: isSetupStep,
             lastShot: this.state.enemyLastShot,
             recommendedShots: [] //getRecommendedShots(this.state.playerCells, this.state.playerShips, this.state.enemyLastShot)
-        }
+        };
         const enemyBattleFieldOpts = {
-            isHiddenShips: true,
+            isHiddenShips: this.state.step !== STEP_FINAL,
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
             recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.playerLastShot)
