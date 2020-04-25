@@ -70,10 +70,13 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
         });
         firstWoundedCell = sorted[0];
         lastWoundedCell = sorted[sorted.length - 1];
-        const targets = [
-            cells[firstWoundedCell.y - 1][firstWoundedCell.x],
-            cells[lastWoundedCell.y + 1][lastWoundedCell.x]
-        ];
+        const targets = [];
+        if (cells[firstWoundedCell.y - 1]) {
+            targets.push(cells[firstWoundedCell.y - 1][firstWoundedCell.x]);
+        }
+        if (cells[lastWoundedCell.y + 1]) {
+            targets.push(cells[lastWoundedCell.y + 1][lastWoundedCell.x]);
+        }
         return randomElement(targets.filter(cell => {
             return isHittableCell(cell);
         }));
@@ -134,15 +137,32 @@ export const getRecommendedShots = (cells, ships) => {
 };
 
 export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
-    // console.log("Player's wounded ship cells", playerWoundedShipCells);
+    // console.log("Player's wounded ship cells", cells);
     if (playerWoundedShipCells.length > 0) {
         // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    const recommendedShots = getRecommendedShots(cells, ships);
-    if (recommendedShots.length === 0) {
+    let hittedCells = 0;
+    for (let i = 0; i < cells.length; i++) {
+        for (let j = 0; j < cells.length; j++) {
+            const cell = cells[i][j];
+            if (cell.isHit || cell.isKilledShipNeighborCell) {
+                hittedCells++;
+            }
+        }
+    }
+    // console.log("hittedCells", hittedCells);
+    if (hittedCells < 10) {
+        // console.log("random shot 1");
         return _getRandomFreeCell(cells);
     }
-    return randomElement(recommendedShots);
-}
+
+    const recommendedShots = getRecommendedShots(cells, ships);
+    if (recommendedShots.length !== 0) {
+        // console.log("recommendedShots");
+        return randomElement(recommendedShots);
+    }
+    // console.log("random shot 1");
+    return _getRandomFreeCell(cells);
+};

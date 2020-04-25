@@ -297,7 +297,7 @@ export default class BattlePage extends Component {
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
             recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.playerLastShot)
-        }
+        };
 
         return (
             <div>

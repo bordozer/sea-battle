@@ -20,4 +20,4 @@ export const initBattleFieldCells = (size) => {
         }
     }
     return cells;
-}
+};
