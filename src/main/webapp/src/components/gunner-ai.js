@@ -99,19 +99,23 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
     }));
 }
 
-export const getRecommendedShots = (cells, ships) => {
+export const getRecommendedShots = (cells, ships, who) => {
+    const noStrategy = {
+        shoots: [],
+        strategy: null
+    };
     if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        return [];
+        return noStrategy;
     }
 
     const biggestAliveShip = getBiggestAliveShip(ships);
     if (!biggestAliveShip) {
-        return [];
+        return noStrategy;
     }
     const shipSize = biggestAliveShip.size;
 
     if (shipSize === 1) {
-        return [];
+        return noStrategy;
     }
     const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
         return cell.isHit || cell.isKilledShipNeighborCell
@@ -127,16 +131,19 @@ export const getRecommendedShots = (cells, ships) => {
         hRoomCells.forEach(hRoomCell => {
             vFreeRooms.forEach(vRoomCells => {
                 vRoomCells.forEach(vRoomCell => {
-                    if ((hRoomCell.x === vRoomCell.x) && (hRoomCell.y === vRoomCell.y)) {
+                    if (hRoomCell.id === vRoomCell.id) {
                         commonCells.push(hRoomCell);
                     }
                 });
             });
         });
     });
-    if (commonCells.length > 0) {
+    if (commonCells.length > 0 && who === 'player') {
         // console.log("commonCells", commonCells);
-        return commonCells;
+        return {
+            shoots: commonCells,
+            strategy: 'commons-room-cells'
+        };
     }
 
     const hvSpaciousRooms = hFreeRooms.concat(vFreeRooms);
@@ -163,7 +170,11 @@ export const getRecommendedShots = (cells, ships) => {
             result.push(cell);
         }
     });
-    return result;
+    // console.log("recommendedRoomShots", result);
+    return {
+        shoots: result,
+        strategy: 'room-middle-cells'
+    };
 };
 
 function _getUnhittableCellsCount(cells) {
@@ -191,7 +202,7 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
         return _getRandomFreeCell(cells);
     }
 
-    const recommendedShots = getRecommendedShots(cells, ships);
+    const recommendedShots = getRecommendedShots(cells, ships, 'enemy').shoots;
     if (recommendedShots.length !== 0) {
         // console.log("recommendedShots");
         return randomElement(recommendedShots);

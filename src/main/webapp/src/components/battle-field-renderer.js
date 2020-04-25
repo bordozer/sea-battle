@@ -57,23 +57,33 @@ function cellCss(cell, options) {
         result.push('fa fa-crosshairs');
     }
 
-    const isRecommendedShot = options.recommendedShots.filter(c => {
+    console.log("options", options);
+    const recommendedShots = options.recommendedShots.shoots;
+    const strategy = options.recommendedShots.strategy;
+    const isRecommendedShot = recommendedShots.filter(c => {
         return c.x === cell.x && c.y === cell.y;
     }).length > 0;
     if (isRecommendedShot) {
-        result.push('cell-recommended-shot fa fa-bullseye');
+        result.push('cell-recommended-shot');
+        if (strategy === 'commons-room-cells') {
+            result.push('fa fa-bullseye');
+        }
+        if (strategy === 'room-middle-cells') {
+            result.push('fa fa-dot-circle-o');
+        }
     }
     return result.join(' ');
 }
 
 function renderCells(x, cells, onCellClick, options) {
+    const isPlayer = !options.isHiddenShips;
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
                  className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
-                 title={cell.xLabel + '' + cell.yLabel + (cell.ship ? ' - ' + cell.ship.name : '')}
+                 title={cell.xLabel + '' + cell.yLabel + (isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
                 {/*{cell.ship ? 'x' : ''}*/}
             </div>

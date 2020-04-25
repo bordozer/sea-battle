@@ -280,7 +280,7 @@ export default class BattlePage extends Component {
             return ship.damage < ship.size;
         });
         return liveShips.length === 0;
-    }
+    };
 
     render() {
         // console.log('BattlePage:', this.state);
@@ -290,13 +290,16 @@ export default class BattlePage extends Component {
             isHiddenShips: false,
             isSetupStep: isSetupStep,
             lastShot: this.state.enemyLastShot,
-            recommendedShots: [] //getRecommendedShots(this.state.playerCells, this.state.playerShips, this.state.enemyLastShot)
+            recommendedShots: {
+                shoots: [],
+                strategy: null
+            }
         };
         const enemyBattleFieldOpts = {
             isHiddenShips: this.state.step !== STEP_FINAL,
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
-            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.playerLastShot)
+            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, 'player')
         };
 
         return (
