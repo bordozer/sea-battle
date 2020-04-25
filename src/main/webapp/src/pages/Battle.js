@@ -113,7 +113,7 @@ export default class BattlePage extends Component {
                 Swal.fire(
                     'You have won!',
                     'You are just lucky bastard. Next time you will have no chance.',
-                    'info'
+                    'success'
                 );
                 step = STEP_FINAL;
             }
@@ -127,7 +127,7 @@ export default class BattlePage extends Component {
             logs: this.state.logs,
             step: step
         });
-    }
+    };
 
     enemyShot = (playerWoundedShipCells) => {
         const playerCells = this.state.playerCells;
@@ -153,7 +153,7 @@ export default class BattlePage extends Component {
                 Swal.fire(
                     'Enemy has won!',
                     'You are loser. Live with this.',
-                    'info'
+                    'error'
                 );
                 return {
                     isEnemyWon: true,
