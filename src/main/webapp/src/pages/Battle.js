@@ -256,7 +256,9 @@ export default class BattlePage extends Component {
         const result = [];
         let counter = 0;
         this.state.logs
-            .reverse()
+            .sort(function (log1, log2) {
+                return log2.time - log1.time;
+            })
             .forEach(rec => {
                 result.push(
                     <div key={'log-row-' + counter} className="row">
