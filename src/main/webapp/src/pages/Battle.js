@@ -34,6 +34,7 @@ export default class BattlePage extends Component {
         step: null,
         isReadyToStart: false,
         difficultyLevel: 2,
+        showShootHints: true,
         logs: [WELCOME_MESSAGE]
     };
 
@@ -239,6 +240,7 @@ export default class BattlePage extends Component {
             step: null,
             isReadyToStart: false,
             difficultyLevel: this.state.difficultyLevel,
+            showShootHints: this.state.showShootHints,
             logs: [WELCOME_MESSAGE]
         });
     };
@@ -283,6 +285,14 @@ export default class BattlePage extends Component {
         })
     };
 
+    onShowShootHintsChange = (e) => {
+        const isShowHints = e.target.checked;
+        // console.log("onShowShootHintsChange", isShowHints);
+        this.setState({
+            showShootHints: isShowHints
+        })
+    };
+
     render() {
         // console.log('BattlePage:', this.state);
         // console.log(this.state.logs);
@@ -300,7 +310,9 @@ export default class BattlePage extends Component {
             isHiddenShips: this.state.step !== STEP_FINAL,
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
-            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
+            recommendedShots: this.state.showShootHints
+                ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
+                : []
         };
 
         return (
@@ -344,7 +356,9 @@ export default class BattlePage extends Component {
 
                         <DifficultyLevelRenderer
                             level={this.state.difficultyLevel}
-                            onChange={this.onDifficultyLevelChanged}
+                            showShootHints={this.state.showShootHints}
+                            onDifficultyChange={this.onDifficultyLevelChanged}
+                            onShowShootHintsChange={this.onShowShootHintsChange}
                         />
 
                     </div>
