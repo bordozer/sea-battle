@@ -6,6 +6,7 @@ import {initBattleFieldCells} from 'src/utils/battle-field-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
+import DifficultyLevelRenderer from 'components/difficulty-level'
 import ShipStatisticsRenderer from 'components/ships-stat'
 
 const WELCOME_MESSAGE = {
@@ -274,8 +275,8 @@ export default class BattlePage extends Component {
         return liveShips.length === 0;
     };
 
-    onDifficultyLevelChanged = (e) => {
-        const level = parseInt(e.currentTarget.value);
+    onDifficultyLevelChanged = (level) => {
+        // const level = parseInt(e.currentTarget.value);
         // console.log("level", level);
         this.setState({
             difficultyLevel: level
@@ -341,32 +342,10 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-4">
 
-                        <div className="row mt-10">
-                            <div className="col-sm-3 small">
-                                Difficulty level:
-                            </div>
-                            <div className="col-sm-3">
-                                <input type="radio"
-                                       name="difficulty"
-                                       value='1'
-                                       checked={this.state.difficultyLevel === 1}
-                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">low</span>
-                            </div>
-                            <div className="col-sm-3">
-                                <input type="radio"
-                                       name="difficulty"
-                                       value='2'
-                                       checked={this.state.difficultyLevel === 2}
-                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">medium</span>
-                            </div>
-                            <div className="col-sm-3">
-                                <input type="radio"
-                                       name="difficulty"
-                                       value='3'
-                                       checked={this.state.difficultyLevel === 3}
-                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">high</span>
-                            </div>
-                        </div>
+                        <DifficultyLevelRenderer
+                            level={this.state.difficultyLevel}
+                            onChange={this.onDifficultyLevelChanged}
+                        />
 
                     </div>
                     <div className="col-sm-4 text-center btn-lg">

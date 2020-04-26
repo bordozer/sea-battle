@@ -153,6 +153,6 @@ const BattleCellsRenderer = ({cells, onCellClick, options}) => {
             </div>
         </div>
     )
-}
+};
 
 export default BattleCellsRenderer;
