@@ -134,7 +134,7 @@ export default class BattlePage extends Component {
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
 
-        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerWoundedShipCells);
+        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerWoundedShipCells, this.state.difficultyLevel);
 
         hitPlayerCell.isHit = true;
         const playerShip = hitPlayerCell.ship;
@@ -299,7 +299,7 @@ export default class BattlePage extends Component {
             isHiddenShips: this.state.step !== STEP_FINAL,
             isSetupStep: isSetupStep,
             lastShot: this.state.playerLastShot,
-            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, 'player')
+            recommendedShots: getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
         };
 
         return (

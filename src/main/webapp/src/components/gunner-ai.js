@@ -4,6 +4,10 @@ import {getSpaciousRooms} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
+const NO_STRATEGY = {
+    shoots: [],
+    strategy: null
+};
 
 function _getRandomFreeCell(cells) {
     const hittableCells = [];
@@ -99,37 +103,7 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
     }));
 }
 
-export const getRecommendedShots = (cells, ships, who) => {
-    const noStrategy = {
-        shoots: [],
-        strategy: null
-    };
-    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        return noStrategy;
-    }
-
-    const biggestAliveShip = getBiggestAliveShip(ships);
-    if (!biggestAliveShip) {
-        return noStrategy;
-    }
-    const shipSize = biggestAliveShip.size;
-
-    if (shipSize === 1) {
-        return noStrategy;
-    }
-    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-        return cell.isHit || cell.isKilledShipNeighborCell
-    });
-
-    const hFreeRooms = spaciousRooms.hFreeRooms;
-    /*if (who === 'player') {
-        console.log("hFreeRooms", hFreeRooms);
-    }*/
-    const vFreeRooms = spaciousRooms.vFreeRooms;
-    /*if (who === 'player') {
-        console.log("vFreeRooms", vFreeRooms);
-    }*/
-
+function getCrossRoomsShoots(hFreeRooms, vFreeRooms) {
     const map = {};
     hFreeRooms.forEach(hRoomCells => {
         hRoomCells.forEach(hRoomCell => {
@@ -160,8 +134,41 @@ export const getRecommendedShots = (cells, ships, who) => {
                 commonCells.push(map[cellId].cell);
             }
         });
+    return commonCells;
+}
 
-    if (commonCells.length > 0 && who === 'player') {
+export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
+    if (difficultyLevel === 1) {
+        return NO_STRATEGY;
+    }
+
+    const biggestAliveShip = getBiggestAliveShip(ships);
+    if (!biggestAliveShip) {
+        return NO_STRATEGY;
+    }
+
+    const shipSize = biggestAliveShip.size;
+    if (shipSize === 1) {
+        return NO_STRATEGY;
+    }
+
+    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
+        return NO_STRATEGY;
+    }
+
+    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        return cell.isHit || cell.isKilledShipNeighborCell
+    });
+    const hFreeRooms = spaciousRooms.hFreeRooms;
+    // console.log("hFreeRooms", hFreeRooms);
+    const vFreeRooms = spaciousRooms.vFreeRooms;
+    // console.log("vFreeRooms", vFreeRooms);
+
+    let commonCells = [];
+    if (difficultyLevel === 3) {
+        commonCells = getCrossRoomsShoots(hFreeRooms, vFreeRooms);
+    }
+    if (commonCells.length > 0) {
         // console.log("commonCells", commonCells);
         return {
             shoots: commonCells,
@@ -213,19 +220,19 @@ function _getUnhittableCellsCount(cells) {
     return result;
 }
 
-export const getEnemyShot = (cells, ships, playerWoundedShipCells) => {
+export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLevel) => {
     // console.log("Player's wounded ship cells", cells);
     if (playerWoundedShipCells.length > 0) {
         // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
+    if (difficultyLevel === 1 || _getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         // console.log("random shot 1");
         return _getRandomFreeCell(cells);
     }
 
-    const recommendedShots = getRecommendedShots(cells, ships, 'enemy').shoots;
+    const recommendedShots = getRecommendedShots(cells, ships, difficultyLevel, 'enemy').shoots;
     if (recommendedShots.length !== 0) {
         // console.log("recommendedShots");
         return randomElement(recommendedShots);
