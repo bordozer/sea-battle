@@ -168,9 +168,6 @@ export const generateShips = (cells) => {
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
             return cell.ship || cell.isShipNeighbor;
         });
-        if (shipSize === 4) {
-            console.log("spaciousRooms.vFreeRooms", spaciousRooms.vFreeRooms);
-        }
 
         const hvSpaciousRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
         /*if (shipSize === 4) {

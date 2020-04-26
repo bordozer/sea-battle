@@ -122,28 +122,47 @@ export const getRecommendedShots = (cells, ships, who) => {
     });
 
     const hFreeRooms = spaciousRooms.hFreeRooms;
-    if (who === 'player') {
+    /*if (who === 'player') {
         console.log("hFreeRooms", hFreeRooms);
-    }
+    }*/
     const vFreeRooms = spaciousRooms.vFreeRooms;
-    if (who === 'player') {
+    /*if (who === 'player') {
         console.log("vFreeRooms", vFreeRooms);
-    }
+    }*/
 
-    const commonCells = [];
+    const map = {};
     hFreeRooms.forEach(hRoomCells => {
         hRoomCells.forEach(hRoomCell => {
             vFreeRooms.forEach(vRoomCells => {
                 vRoomCells.forEach(vRoomCell => {
                     if (hRoomCell.id === vRoomCell.id) {
-                        commonCells.push(hRoomCell);
+                        map[hRoomCell.id] = {
+                            id: hRoomCell.id,
+                            count: map[hRoomCell.id] ? map[hRoomCell.id].count + 1 : 0,
+                            cell: hRoomCell
+                        }
                     }
                 });
             });
         });
     });
+    // console.log("map", map);
+    let commonCells = [];
+    let max = 0;
+    Object.keys(map)
+        .forEach(cellId => {
+            if (map[cellId].count > max) {
+                max = map[cellId].count;
+                commonCells = [];
+                commonCells.push(map[cellId].cell);
+            }
+            if (map[cellId].count === max) {
+                commonCells.push(map[cellId].cell);
+            }
+        });
+
     if (commonCells.length > 0 && who === 'player') {
-        console.log("commonCells", commonCells);
+        // console.log("commonCells", commonCells);
         return {
             shoots: commonCells,
             strategy: 'commons-room-cells'
