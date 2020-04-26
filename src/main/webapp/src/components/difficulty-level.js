@@ -7,20 +7,18 @@ const DifficultyLevelRenderer = ({level, onChange}) => {
             <div className="row mt-10">
                 <div className="col-sm-3 small"/>
                 <div className="col-sm-3 text-center small">
-                    <span className="text-muted">LOW</span>
+                    <span className="text-muted">EASY</span>
                 </div>
                 <div className="col-sm-3 text-center small">
                     <span className="text-success">MEDIUM</span>
                 </div>
                 <div className="col-sm-3 text-center small">
-                    <span className="text-danger">HIGH</span>
+                    <span className="text-danger">HARD</span>
                 </div>
             </div>
 
             <div className="row mt-10">
-                <div className="col-sm-3 small">
-                    Difficulty
-                </div>
+                <div className="col-sm-3 small" />
                 <div className="col-sm-3 text-center">
                     <input type="radio"
                            name="difficulty"
