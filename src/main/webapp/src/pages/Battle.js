@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
-import {generateShips, markAllShipNeighborCellsAsKilled, getSpaciousRooms} from 'src/utils/ships-utils'
+import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import ShipStatisticsRenderer from 'components/ships-stat'
@@ -12,7 +12,7 @@ const WELCOME_MESSAGE = {
     time: new Date(),
     text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
     type: 'info'
-}
+};
 
 const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
@@ -273,7 +273,7 @@ export default class BattlePage extends Component {
                 counter++;
             });
         return result;
-    }
+    };
 
     isWinShot = (ships) => {
         const liveShips = ships.filter(ship => {
