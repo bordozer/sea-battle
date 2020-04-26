@@ -32,6 +32,7 @@ export default class BattlePage extends Component {
         enemyLastShot: null,
         step: null,
         isReadyToStart: false,
+        difficultyLevel: 2,
         logs: [WELCOME_MESSAGE]
     };
 
@@ -173,19 +174,9 @@ export default class BattlePage extends Component {
             enemyLastShot: hitPlayerCell,
             playerWoundedShipCells: woundedCells
         };
-    }
+    };
 
     startBattle = () => {
-        if (this.state.remainsShip > 0) {
-            Swal.fire(
-                'Setup is not finished!',
-                'You need to set ' + this.state.remainsShip + ' more ships',
-                'info'
-            );
-            return;
-        }
-        // console.log("The battle has began");
-
         // randomize enemyShips
         const gameData = this.randomizeBattleFieldWithShips();
         // this.state.enemyCells = gameData.cells;
@@ -233,7 +224,7 @@ export default class BattlePage extends Component {
             return !cell.ship && !cell.isShipNeighbor;
         });
         console.log("getSpaciousRooms", rooms);*/
-    }
+    };
 
     resetBattle = () => {
         this.setState({
@@ -246,16 +237,17 @@ export default class BattlePage extends Component {
             enemyLastShot: null,
             step: null,
             isReadyToStart: false,
+            difficultyLevel: this.state.difficultyLevel,
             logs: [WELCOME_MESSAGE]
         });
-    }
+    };
 
     createLogRecord = (text) => {
         return {
             time: new Date(),
             text: text
         }
-    }
+    };
 
     renderLogs = () => {
         const result = [];
@@ -280,6 +272,14 @@ export default class BattlePage extends Component {
             return ship.damage < ship.size;
         });
         return liveShips.length === 0;
+    };
+
+    onDifficultyLevelChanged = (e) => {
+        const level = parseInt(e.currentTarget.value);
+        // console.log("level", level);
+        this.setState({
+            difficultyLevel: level
+        })
     };
 
     render() {
@@ -307,7 +307,7 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-1"/>
                     <div className="col-sm-5 text-center text-warning">
-                        <h4>You</h4>
+                        <h4>Player</h4>
                     </div>
                     <div className="col-sm-5 text-center text-warning">
                         <h4>Enemy</h4>
@@ -339,8 +339,37 @@ export default class BattlePage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-3"/>
-                    <div className="col-sm-6 text-center btn-lg">
+                    <div className="col-sm-4">
+
+                        <div className="row mt-10">
+                            <div className="col-sm-3 small">
+                                Difficulty level:
+                            </div>
+                            <div className="col-sm-3">
+                                <input type="radio"
+                                       name="difficulty"
+                                       value='1'
+                                       checked={this.state.difficultyLevel === 1}
+                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">low</span>
+                            </div>
+                            <div className="col-sm-3">
+                                <input type="radio"
+                                       name="difficulty"
+                                       value='2'
+                                       checked={this.state.difficultyLevel === 2}
+                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">medium</span>
+                            </div>
+                            <div className="col-sm-3">
+                                <input type="radio"
+                                       name="difficulty"
+                                       value='3'
+                                       checked={this.state.difficultyLevel === 3}
+                                       onChange={this.onDifficultyLevelChanged}/> <span className="text-muted">high</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="col-sm-4 text-center btn-lg">
                         <button
                             className="bg-primary"
                             onClick={this.startBattle}
@@ -359,7 +388,7 @@ export default class BattlePage extends Component {
                             Reset
                         </button>
                     </div>
-                    <div className="col-sm-3"/>
+                    <div className="col-sm-4"/>
                 </div>
 
                 <div className="row mt-10">
