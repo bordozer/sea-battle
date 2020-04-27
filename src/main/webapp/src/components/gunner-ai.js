@@ -3,6 +3,7 @@ import React from 'react';
 import {getSpaciousRooms} from 'src/utils/ships-generator'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
 import {isHiddenCell, getRandomHiddenCells} from 'src/utils/cells-utils'
+import {aiLevel1Shot} from 'src/utils/ai-level1'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
@@ -194,15 +195,17 @@ function _getUnhittableCellsCount(cells) {
 }
 
 export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLevel) => {
-    // console.log("Player's wounded ship cells", cells);
     if (playerWoundedShipCells.length > 0) {
         // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    if (difficultyLevel === 1 || _getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        // console.log("random shot 1");
+    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         return randomElement(getRandomHiddenCells(cells));
+    }
+
+    if (difficultyLevel === 1) {
+        return aiLevel1Shot(cells);
     }
 
     const recommendedShots = getRecommendedShots(cells, ships, difficultyLevel, 'enemy').shoots;
