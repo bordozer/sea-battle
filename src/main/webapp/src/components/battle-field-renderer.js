@@ -27,6 +27,14 @@ function cellCss(cell, options) {
         result.push('fa fa-anchor');
     }
 
+    /*if (cell.ship && !cell.isHit) {
+        result.push('cell-ship');
+        // result.push('fa fa-smile-o');
+    }
+    if (cell.isShipNeighbor) {
+        result.push('fa fa-bug');
+    }*/
+
     // show enemy's healthy ships at the end
     if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
         result.push('cell-ship');
@@ -66,7 +74,6 @@ function cellCss(cell, options) {
         result.push('fa fa-crosshairs');
     }
 
-    // console.log("options", options);
     const recommendedShots = options.recommendedShots.shoots;
     const strategy = options.recommendedShots.strategy;
     const isRecommendedShot = recommendedShots.filter(c => {
@@ -78,9 +85,6 @@ function cellCss(cell, options) {
             result.push('fa fa-bullseye');
         } else if (strategy === 'room-middle-cells') {
             result.push('fa fa-dot-circle-o');
-        } else {
-            console.log("strategy", strategy);
-            result.push('fa fa-adjust');
         }
     }
     return result;
@@ -96,6 +100,7 @@ function renderCells(x, cells, onCellClick, options) {
                  title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
                 {/*{cell.ship ? 'x' : ''}*/}
+                {/*{cell.isShipNeighbor ? 'n' : ''}*/}
             </div>
         );
     });

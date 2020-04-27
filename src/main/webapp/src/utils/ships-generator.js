@@ -2,6 +2,7 @@ import React from 'react';
 
 import _ from "underscore";
 
+import {getCellsByFilter} from 'src/utils/cells-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 function _initShips() {
@@ -19,18 +20,8 @@ function _initShips() {
     ]
 }
 
-function _getFreeCells(cells, busyFilter) {
-    const battleFieldSize = cells.length;
-    const arr = [];
-    for (let x = 0; x < battleFieldSize; x++) {
-        for (let y = 0; y < battleFieldSize; y++) {
-            const cell = cells[x][y];
-            if (!busyFilter(cell)) {
-                arr.push(cell);
-            }
-        }
-    }
-    return arr;
+function isFreeForShipCell(cell) {
+    return !cell.ship && !cell.isShipNeighbor;
 }
 
 function _getVFreeRoomsOfArray(cells, shipSize, filter) {
@@ -56,10 +47,10 @@ function _getVFreeRoomsOfArray(cells, shipSize, filter) {
     return result;
 }
 
-function _getVFreeRooms(cells, shipSize, busyFilter) {
+function _getVFreeRooms(cells, shipSize, filter) {
     let result = [];
-    const freeCells = _getFreeCells(cells, busyFilter);
-    // console.log('freeCells', freeCells);
+    const freeCells = getCellsByFilter(cells, filter);
+    // console.log('_getVFreeRooms freeCells', freeCells);
 
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
         return cell.x;
@@ -83,9 +74,10 @@ function _getVFreeRooms(cells, shipSize, busyFilter) {
     return result;
 }
 
-function _getHFreeRooms(cells, shipSize, busyFilter) {
+function _getHFreeRooms(cells, shipSize, filter) {
     let result = [];
-    const freeCells = _getFreeCells(cells, busyFilter);
+    const freeCells = getCellsByFilter(cells, filter);
+    // console.log('_getHFreeRooms freeCells', freeCells);
     const freeCellsMap = _.groupBy(freeCells, function (cell) {
         return cell.y;
     });
@@ -109,15 +101,18 @@ function _getHFreeRooms(cells, shipSize, busyFilter) {
 }
 
 function _setNeighborCellsProperty(cells, cell, property) {
-    getCellWithNeighbors(cells, cell).forEach(neighborCell => {
+    const cellWithNeighbors = getCellWithNeighbors(cells, cell);
+    // console.log("cell", cell);
+    // console.log("cellWithNeighbors", cellWithNeighbors);
+    cellWithNeighbors.forEach(neighborCell => {
         neighborCell[property] = true;
     })
 }
 
-export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
-    const hFreeRooms = _getHFreeRooms(cells, shipSize, busyFilter);
+export const getSpaciousRooms = (cells, shipSize, filter) => {
+    const hFreeRooms = _getHFreeRooms(cells, shipSize, filter);
     // console.log("hFreeRooms", hFreeRooms);
-    const vFreeRooms = _getVFreeRooms(cells, shipSize, busyFilter);
+    const vFreeRooms = _getVFreeRooms(cells, shipSize, filter);
     // console.log("vFreeRooms", vFreeRooms);
     const freeRooms = hFreeRooms.concat(vFreeRooms);
     return {
@@ -126,18 +121,17 @@ export const getSpaciousRooms = (cells, shipSize, busyFilter) => {
     }
 };
 
-export const getCellWithNeighbors = (cells, cell) => {
+export const getCellWithNeighbors = (cells, shipCell) => {
     const result = [];
-    for (let i = cell.y - 1; i <= cell.y + 1; i++) {
-        if (!cells[i]) {
+    for (let y = shipCell.y - 1; y <= shipCell.y + 1; y++) {
+        if (!cells[y]) {
             continue;
         }
-        for (let j = cell.x - 1; j <= cell.x + 1; j++) {
-            if (i === cell.y && j === cell.x) {
-                continue;
-            }
-            if (cells[i][j]) {
-                result.push(cells[i][j]);
+        for (let x = shipCell.x - 1; x <= shipCell.x + 1; x++) {
+            const neighborCell = cells[y][x];
+            if (neighborCell && !neighborCell.ship) {
+                // console.log("cells[y][x]", neighborCell);
+                result.push(neighborCell);
             }
         }
     }
@@ -145,17 +139,17 @@ export const getCellWithNeighbors = (cells, cell) => {
 };
 
 export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
-    const cellsWithShip = [];
+    const killedShipCells = [];
     for (let i = 0; i < cells.length; i++) {
         for (let j = 0; j < cells.length; j++) {
             const cell = cells[i][j];
             if (cell.ship && cell.ship.id === ship.id) {
-                cellsWithShip.push(cell);
+                killedShipCells.push(cell);
             }
         }
     }
 
-    cellsWithShip.forEach(cell => {
+    killedShipCells.forEach(cell => {
         _setNeighborCellsProperty(cells, cell, 'isKilledShipNeighborCell');
     })
 };
@@ -165,27 +159,15 @@ export const generateShips = (cells) => {
 
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
-        const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-            return cell.ship || cell.isShipNeighbor;
-        });
 
+        const spaciousRooms = getSpaciousRooms(cells, shipSize, isFreeForShipCell);
         const hvSpaciousRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
-        /*if (shipSize === 4) {
-            console.log("hvSpaciousRooms", hvSpaciousRooms);
-        }*/
-        const randomSpaciousRoom = randomElement(hvSpaciousRooms);
-        /*if (randomSpaciousRoom.length < shipSize) {
-            console.log("TOO SMALL ROOM");
-            console.log("ship", ship);
-            console.log("spaciousRooms.hFreeRooms", spaciousRooms.hFreeRooms);
-            console.log("spaciousRooms.vFreeRooms", spaciousRooms.vFreeRooms);
-            console.log("randomSpaciousRoom", randomSpaciousRoom);
-        }*/
-        /*if (randomSpaciousRoom.length === 0) {
-            console.log("NO SPACIOUS ROOM");
-        }*/
-        randomSpaciousRoom.forEach(cell => {
+        const shipRoom = randomElement(hvSpaciousRooms);
+
+        shipRoom.forEach(cell => {
             cell.ship = ship;
+        });
+        shipRoom.forEach(cell => {
             _setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
         });
     });

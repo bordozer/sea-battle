@@ -7,7 +7,7 @@ import {randomElement} from 'src/utils/random-utils'
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
 const NO_STRATEGY = {
     shoots: [],
-    strategy: null
+    strategy: 'no-strategy'
 };
 
 function _getRandomFreeCell(cells) {
@@ -148,7 +148,7 @@ export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
     }
 
     const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-        return cell.isHit || cell.isKilledShipNeighborCell
+        return !cell.isHit && !cell.isKilledShipNeighborCell
     });
     const hFreeRooms = spaciousRooms.hFreeRooms;
     // console.log("hFreeRooms", hFreeRooms);
