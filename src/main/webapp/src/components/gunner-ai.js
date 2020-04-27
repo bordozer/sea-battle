@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {getSpaciousRooms} from 'src/utils/ships-generator'
+import {getBiggestAliveShip} from 'src/utils/ships-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
@@ -22,16 +23,6 @@ function _getRandomFreeCell(cells) {
     // console.log("-->", hittableCells.length);
     const number = Math.floor(Math.random() * Math.floor(hittableCells.length));
     return hittableCells[number];
-}
-
-function getBiggestAliveShip(playerShips) {
-    return playerShips
-        .filter(ship => {
-            return ship.damage === 0;
-        })
-        .sort(function (ship1, ship2) {
-            return ship2.size - ship1.size;
-        })[0];
 }
 
 function isHittableCell(cell) {
