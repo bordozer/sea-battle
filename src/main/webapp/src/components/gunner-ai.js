@@ -2,7 +2,7 @@ import React from 'react';
 
 import {getSpaciousRooms} from 'src/utils/ships-generator'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
-import {getCellsByFilter} from 'src/utils/cells-utils'
+import {isHiddenCell, getRandomHiddenCells} from 'src/utils/cells-utils'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
@@ -10,16 +10,6 @@ const NO_STRATEGY = {
     shoots: [],
     strategy: 'no-strategy'
 };
-
-function _getRandomFreeCells(cells) {
-    return getCellsByFilter(cells, function (cell) {
-        return !cell.isHit && !cell.isKilledShipNeighborCell;
-    });
-}
-
-function isHittableCell(cell) {
-    return cell && !cell.isKilledShipNeighborCell && !cell.isHit;
-}
 
 function _shotOnceWoundedShipAgain(cells, woundedCell) {
     // console.log("_shotOnceWoundedShipAgain", woundedCell);
@@ -39,7 +29,7 @@ function _shotOnceWoundedShipAgain(cells, woundedCell) {
     }
 
     const hittableNeighborCells = neighborCells.filter(cell => {
-        return isHittableCell(cell);
+        return isHiddenCell(cell);
     });
     return randomElement(hittableNeighborCells);
 }
@@ -67,7 +57,7 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
             targets.push(cells[lastWoundedCell.y + 1][lastWoundedCell.x]);
         }
         return randomElement(targets.filter(cell => {
-            return isHittableCell(cell);
+            return isHiddenCell(cell);
         }));
     }
 
@@ -82,7 +72,7 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
         cells[lastWoundedCell.y][lastWoundedCell.x + 1]
     ];
     return randomElement(targets.filter(cell => {
-        return isHittableCell(cell);
+        return isHiddenCell(cell);
     }));
 }
 
@@ -212,7 +202,7 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
 
     if (difficultyLevel === 1 || _getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         // console.log("random shot 1");
-        return randomElement(_getRandomFreeCells(cells));
+        return randomElement(getRandomHiddenCells(cells));
     }
 
     const recommendedShots = getRecommendedShots(cells, ships, difficultyLevel, 'enemy').shoots;
@@ -221,5 +211,5 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
         return randomElement(recommendedShots);
     }
     // console.log("random shot 1");
-    return randomElement(_getRandomFreeCells(cells));
+    return randomElement(getRandomHiddenCells(cells));
 };

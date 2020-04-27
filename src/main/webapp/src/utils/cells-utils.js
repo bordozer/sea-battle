@@ -12,3 +12,11 @@ export const getCellsByFilter = (cells, filter) => {
     }
     return result;
 }
+
+export const isHiddenCell = (cell) => {
+    return cell && !cell.isHit && !cell.isKilledShipNeighborCell;
+}
+
+export const getRandomHiddenCells = (cells) => {
+    return getCellsByFilter(cells, isHiddenCell);
+}
