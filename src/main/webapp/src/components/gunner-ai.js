@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getSpaciousRooms} from 'src/utils/ships-utils'
+import {getSpaciousRooms} from 'src/utils/ships-generator'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;

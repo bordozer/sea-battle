@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
-import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
+import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-generator'
 
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 
