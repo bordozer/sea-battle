@@ -32,7 +32,7 @@ function cellCss(cell, options) {
     // show enemy's healthy ships at the end
     if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
         result.push('cell-ship');
-        result.push('fa fa-anchor');
+        result.push('fa fa-smile-o');
     }
 
     // wounded ship

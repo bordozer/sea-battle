@@ -33,7 +33,7 @@ export default class BattlePage extends Component {
         enemyLastShot: null,
         step: null,
         isReadyToStart: false,
-        difficultyLevel: 2,
+        difficultyLevel: 3, /* 1, 2, 3*/
         showShootHints: true,
         logs: [WELCOME_MESSAGE]
     };
