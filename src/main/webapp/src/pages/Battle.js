@@ -274,7 +274,7 @@ export default class BattlePage extends Component {
                 shoots: [],
                 strategy: 'hits-are-disabled'
             };
-        // console.log("shootHints", shootHints);
+        console.log("shootHints", shootHints);
         const enemyBattleFieldOpts = {
             isPlayer: false,
             stage: this.state.step,

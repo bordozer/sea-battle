@@ -117,7 +117,7 @@ export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
         }
         console.log("Player hints: level3->2");
         return {
-            shoots: level2Shot(cells),
+            shoots: level2Shot(cells, ships),
             strategy: 'level2'
         };
     }
@@ -146,14 +146,14 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
     }
     if (difficultyLevel === 2) {
         console.log("Enemy shoot: level2");
-        cellsForShoot = level2Shot(cells);
+        cellsForShoot = level2Shot(cells, ships);
     }
     if (difficultyLevel === 3) {
         console.log("Enemy shoot: level3");
-        cellsForShoot = level3Shot(cells);
+        cellsForShoot = level3Shot(cells, ships);
         if (cellsForShoot.length === 0) {
             console.log("Enemy shoot: level3->2");
-            cellsForShoot = level2Shot(cells);
+            cellsForShoot = level2Shot(cells, ships);
         }
     }
     if (cellsForShoot.length === 0) {

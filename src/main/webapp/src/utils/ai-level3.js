@@ -49,18 +49,18 @@ export default class AiLevel3 extends Component {
             return [];
         }
 
-        const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        const shipRooms = getSpaciousRooms(cells, shipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
-        const hFreeRooms = spaciousRooms.hFreeRooms;
-        // console.log("hFreeRooms", hFreeRooms);
-        const vFreeRooms = spaciousRooms.vFreeRooms;
-        // console.log("vFreeRooms", vFreeRooms);
+        const hShipRooms = shipRooms.hFreeRooms;
+        // console.log("hShipRooms", hShipRooms);
+        const vShipRooms = shipRooms.vFreeRooms;
+        // console.log("vShipRooms", vShipRooms);
 
-        const commonCells = getCrossRoomsShoots(hFreeRooms, vFreeRooms);
-        if (commonCells.length > 0) {
-            // console.log("commonCells", commonCells);
-            return commonCells;
+        const vhCommonCells = getCrossRoomsShoots(hShipRooms, vShipRooms);
+        if (vhCommonCells.length > 0) {
+            // console.log("vhCommonCells", vhCommonCells);
+            return vhCommonCells;
         }
     }
 }

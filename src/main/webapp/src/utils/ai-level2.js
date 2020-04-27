@@ -17,14 +17,14 @@ export default class AiLevel2 extends Component {
         const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
-        const hFreeRooms = spaciousRooms.hFreeRooms;
-        // console.log("hFreeRooms", hFreeRooms);
-        const vFreeRooms = spaciousRooms.vFreeRooms;
-        // console.log("vFreeRooms", vFreeRooms);
+        const hShipRooms = spaciousRooms.hFreeRooms;
+        // console.log("hShipRooms", hShipRooms);
+        const vShipRooms = spaciousRooms.vFreeRooms;
+        // console.log("vShipRooms", vShipRooms);
 
-        const hvSpaciousRooms = hFreeRooms.concat(vFreeRooms);
+        const shipRooms = hShipRooms.concat(vShipRooms);
 
-        const recommendedRoomShots = hvSpaciousRooms.flatMap(room => {
+        const roomsMiddleCells = shipRooms.flatMap(room => {
             const times = Math.floor(room.length / shipSize);
             if (times > 1) {
                 const tmp = [];
@@ -35,10 +35,11 @@ export default class AiLevel2 extends Component {
             }
             return room[Math.floor(room.length / 2)];
         });
-        // console.log("recommendedRoomShots", recommendedRoomShots);
+        // console.log("roomsMiddleCells", roomsMiddleCells);
 
+        // filter out duplicates
         const result = [];
-        recommendedRoomShots.forEach(cell => {
+        roomsMiddleCells.forEach(cell => {
             const len = result.filter(c => {
                 return c.x === cell.x && c.y === cell.y
             }).length;
