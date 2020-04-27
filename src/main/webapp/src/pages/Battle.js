@@ -47,23 +47,16 @@ export default class BattlePage extends Component {
 
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
-        this.state.logs.push(this.createLogRecord('The battle has began!'));
-        this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
-        let enemyMove = {
-            isEnemyWon: false,
-            enemyLastShot: null,
-            playerWoundedShipCells: []
-        };
+        this.state.logs.push(this.createLogRecord('The battle has began! The first move: ' + (firstMove === 0 ? 'player' : 'enemy')));
         if (firstMove === 1) {
-            enemyMove = this.enemyShot([]);
+            this.enemyMove();
         }
 
         this.setState({
-            step: enemyMove.isEnemyWon ? STEP_FINAL : STEP_BATTLE,
             enemyCells: gameData.cells,
             enemyShips: gameData.ships,
-            enemyLastShot: enemyMove.enemyLastShot,
-            playerWoundedShipCells: enemyMove.playerWoundedShipCells,
+            step: STEP_BATTLE,
+            currentMove: firstMove === 0 ? 'player' : 'enemy',
             logs: this.state.logs
         });
     };
@@ -85,9 +78,12 @@ export default class BattlePage extends Component {
             );
             return;
         }
+        if (this.state.currentMove === 'enemy') {
+            return;
+        }
+
         let step = this.state.step;
         let enemyLastShot = this.state.enemyLastShot;
-        let playerWoundedShipCells = this.state.playerWoundedShipCells;
 
         const enemyCells = this.state.enemyCells;
         const enemyShips = this.state.enemyShips;
@@ -116,12 +112,7 @@ export default class BattlePage extends Component {
         // MISSED
         if (!enemyShip) {
             this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
-            const enemyMove = this.enemyShot(playerWoundedShipCells);
-            enemyLastShot = enemyMove.enemyLastShot;
-            playerWoundedShipCells = enemyMove.playerWoundedShipCells;
-            if (enemyMove.isEnemyWon) {
-                step = STEP_FINAL;
-            }
+            this.enemyMove();
         }
 
         // HIT a enemyShip
@@ -148,57 +139,61 @@ export default class BattlePage extends Component {
             enemyCells: this.state.enemyCells,
             playerLastShot: cell,
             enemyLastShot: enemyLastShot,
-            playerWoundedShipCells: playerWoundedShipCells,
+            currentMove: enemyShip ? 'player' : 'enemy',
             logs: this.state.logs,
             step: step
         });
     };
 
-    enemyShot = (playerWoundedShipCells) => {
+    enemyShot = () => {
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
+        let playerWoundedShipCells = this.state.playerWoundedShipCells;
+        let isEnemyWon = false;
 
         const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerWoundedShipCells, this.state.difficultyLevel);
 
         hitPlayerCell.isHit = true;
         const playerShip = hitPlayerCell.ship;
-        let woundedCells = playerWoundedShipCells;
 
         if (playerShip) {
             playerShip.damage++;
             if (playerShip.damage === playerShip.size) {
-                woundedCells = [];
+                // KILLED
+                playerWoundedShipCells = [];
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (killed)'));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
+                if (getAliveShipsCount(playerShips) === 0) {
+                    Swal.fire(
+                        'Enemy has won!',
+                        'You are loser. Live with this.',
+                        'error'
+                    );
+                    isEnemyWon = true;
+                }
             } else {
-                woundedCells.push(hitPlayerCell);
+                // WOUNDED
+                playerWoundedShipCells.push(hitPlayerCell);
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (wounded)'));
             }
-            if (getAliveShipsCount(playerShips) === 0) {
-                Swal.fire(
-                    'Enemy has won!',
-                    'You are loser. Live with this.',
-                    'error'
-                );
-                return {
-                    isEnemyWon: true,
-                    enemyLastShot: hitPlayerCell,
-                    playerWoundedShipCells: woundedCells
-                };
-            }
-            return this.enemyShot(woundedCells);
+            this.enemyMove();
         }
 
         if (!playerShip) {
             this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (missed)'));
         }
 
-        return {
-            isEnemyWon: false,
+        this.setState({
+            step: isEnemyWon ? STEP_FINAL : this.state.step,
             enemyLastShot: hitPlayerCell,
-            playerWoundedShipCells: woundedCells
-        };
+            currentMove: playerShip ? 'enemy': 'player',
+            playerWoundedShipCells: playerWoundedShipCells,
+        });
     };
+
+    enemyMove = () => {
+        window.setTimeout(() => this.enemyShot(), 500);
+    }
 
     randomizeBattleFieldWithShips = () => {
         const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
@@ -230,8 +225,9 @@ export default class BattlePage extends Component {
             enemyShips: [],
             enemyLastShot: null,
             step: null,
+            currentMove: null,
             isReadyToStart: false,
-            difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            difficultyLevel: this.state ? this.state.difficultyLevel : 1, /* 1 - easy, 2 - medium, 3 - hard */
             showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
             logs: [WELCOME_MESSAGE]
         }
@@ -262,6 +258,7 @@ export default class BattlePage extends Component {
             isPlayer: true,
             stage: this.state.step,
             lastShot: this.state.enemyLastShot,
+            currentMove: this.state.currentMove,
             recommendedShots: {
                 shoots: [],
                 strategy: null
@@ -274,12 +271,13 @@ export default class BattlePage extends Component {
                 shoots: [],
                 strategy: 'hits-are-disabled'
             };
-        console.log("shootHints", shootHints);
+        // console.log("shootHints", shootHints);
         const enemyBattleFieldOpts = {
             isPlayer: false,
             stage: this.state.step,
             lastShot: this.state.playerLastShot,
-            recommendedShots: shootHints
+            recommendedShots: shootHints,
+            currentMove: this.state.currentMove
         };
 
         return (

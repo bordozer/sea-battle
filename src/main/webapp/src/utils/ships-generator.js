@@ -27,7 +27,7 @@ function isFreeForShipCell(cell) {
 function _getVFreeRoomsOfArray(cells, shipSize, filter) {
     const result = [];
 
-    for (let i = 0; i <= cells.length - shipSize; i++) {
+    for (let i = 0; i <= cells.length - shipSize; i++) { // i += shipSize
         const room = cells.slice(i, i + shipSize);
         if (room.length < shipSize) {
             break;

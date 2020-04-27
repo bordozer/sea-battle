@@ -121,10 +121,13 @@ function renderHLine(x, cells, onCellClick, options) {
     return result;
 }
 
-function renderHHeader(cells) {
+function renderHHeader(cells, options) {
     const result = [];
+    const moveCss = ((!options.isPlayer && options.currentMove === 'player') || (options.isPlayer && options.currentMove === 'enemy'))
+        ? 'bg-success' : 'bg-secondary'
+    console.log("options/moveCss", options, moveCss);
     result.push(
-        <div key="v-left" className="col-sm-1 bg-secondary border border-secondary cell-base"/>
+        <div key="v-left" className={"col-sm-1 border border-secondary cell-base " + moveCss}/>
     );
     cells.forEach(cell => {
         result.push(
@@ -134,16 +137,16 @@ function renderHHeader(cells) {
         );
     })
     result.push(
-        <div key="v-right" className="col-sm-1 bg-secondary border border-secondary cell-base"/>
+        <div key="v-right" className={"col-sm-1 bg-secondary border border-secondary cell-base " + moveCss}/>
     );
     return result;
 }
 
-function renderHHeaders(position, cells) {
+function renderHHeaders(position, cells, options) {
     const result = [];
     result.push(
         <div key={'h-' + position} className="row">
-            {renderHHeader(cells[0])}
+            {renderHHeader(cells[0], options)}
         </div>
     );
     return result;
@@ -161,9 +164,9 @@ const BattleCellsRenderer = ({cells, onCellClick, options}) => {
     return (
         <div className="row">
             <div className="col-sm-12">
-                {renderHHeaders('top', cells)}
+                {renderHHeaders('top', cells, options)}
                 {hLines}
-                {renderHHeaders('bottom', cells)}
+                {renderHHeaders('bottom', cells, options)}
             </div>
         </div>
     )
