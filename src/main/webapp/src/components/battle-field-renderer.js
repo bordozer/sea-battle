@@ -13,15 +13,24 @@ function renderVHeader(label) {
 }
 
 function cellCss(cell, options) {
+    const result = [];
+
     const isPlayer = options.isPlayer;
     const isEnemy = !options.isPlayer;
     const stage = options.stage;
+    const lastShot = options.lastShot;
 
-    const result = [];
+    const isLastShoot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
     if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
         result.push('cell-disabled');
         result.push('fa fa-anchor');
+    }
+
+    // show enemy's healthy ships at the end
+    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
+        result.push('cell-ship');
+        result.push('fa fa-smile-o');
     }
 
     // player's healthy ship
@@ -29,12 +38,6 @@ function cellCss(cell, options) {
         result.push('cell-ship');
         result.push('fa fa-anchor');
     }
-    // show enemy's healthy ships at the end
-    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
-        result.push('cell-ship');
-        result.push('fa fa-smile-o');
-    }
-
     // wounded ship
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
         result.push('cell-ship-wounded');
@@ -43,15 +46,13 @@ function cellCss(cell, options) {
     // killed ship
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
         result.push('cell-ship-killed');
-        result.push('fa fa-times');
+        result.push('fa fa-arrows');
     }
+
     // player's of enemy's known ship neighbor cell
     if (!cell.ship && !cell.isHit && cell.isKilledShipNeighborCell) {
         result.push('cell-not-hittable');
     }
-
-    const lastShot = options.lastShot;
-    const isLastShoot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
     // missed shot
     if (!isLastShoot && !cell.ship && cell.isHit) {
@@ -82,7 +83,7 @@ function cellCss(cell, options) {
             result.push('fa fa-adjust');
         }
     }
-    return result.join(' ');
+    return result;
 }
 
 function renderCells(x, cells, onCellClick, options) {
@@ -90,7 +91,7 @@ function renderCells(x, cells, onCellClick, options) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options)}
+                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options).join(' ')}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
