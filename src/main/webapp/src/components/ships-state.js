@@ -16,8 +16,7 @@ function _renderShip(ship, isPlayer) {
     return result;
 }
 
-const ShipStatisticsRenderer = ({ships, isPlayer}) => {
-    // console.log(ships);
+const ShipStateRenderer = ({ships, isPlayer}) => {
     const result = [];
     ships.forEach(ship => {
         result.push(
@@ -36,4 +35,4 @@ const ShipStatisticsRenderer = ({ships, isPlayer}) => {
     )
 }
 
-export default ShipStatisticsRenderer;
+export default ShipStateRenderer;

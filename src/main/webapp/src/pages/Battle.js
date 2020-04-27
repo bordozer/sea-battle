@@ -4,11 +4,13 @@ import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-utils'
+
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
+
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import DifficultyLevelRenderer from 'components/difficulty-level'
-import ShipStatisticsRenderer from 'components/ships-stat'
-import LogsRrenderer from 'components/logs-renderer'
+import ShipsStateRenderer from 'components/ships-state'
+import LogsRenderer from 'components/logs-renderer'
 
 const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
@@ -229,7 +231,7 @@ export default class BattlePage extends Component {
             step: null,
             isReadyToStart: false,
             difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
-            showShootHints: this.state? this.state.showShootHints : true, /* true/false */
+            showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
             logs: [WELCOME_MESSAGE]
         }
     }
@@ -249,8 +251,6 @@ export default class BattlePage extends Component {
     };
 
     onDifficultyLevelChanged = (level) => {
-        // const level = parseInt(e.currentTarget.value);
-        // console.log("level", level);
         this.setState({
             difficultyLevel: level
         })
@@ -258,14 +258,12 @@ export default class BattlePage extends Component {
 
     onShowShootHintsChange = (e) => {
         const isShowHints = e.target.checked;
-        // console.log("onShowShootHintsChange", isShowHints);
         this.setState({
             showShootHints: isShowHints
         })
     };
 
     render() {
-        const isSetupStep = (this.state.step === null) || (this.state.step === STEP_READY_TO_START);
         const playerBattleFieldOpts = {
             isPlayer: true,
             stage: this.state.step,
@@ -302,7 +300,7 @@ export default class BattlePage extends Component {
 
                 <div className="row mt-10">
                     <div className="col-sm-1">
-                        <ShipStatisticsRenderer ships={this.state.playerShips} isPlayer={true}/>
+                        <ShipsStateRenderer ships={this.state.playerShips} isPlayer={true}/>
                     </div>
                     <div className="col-sm-5">
                         <BattleFieldRenderer
@@ -319,7 +317,7 @@ export default class BattlePage extends Component {
                         />
                     </div>
                     <div className="col-sm-1">
-                        <ShipStatisticsRenderer ships={this.state.enemyShips} isPlayer={false}/>
+                        <ShipsStateRenderer ships={this.state.enemyShips} isPlayer={false}/>
                     </div>
                 </div>
 
@@ -358,7 +356,7 @@ export default class BattlePage extends Component {
 
                 <div className="row mt-10">
                     <div className="col-sm-12">
-                        <LogsRrenderer logs={this.state.logs} />
+                        <LogsRenderer logs={this.state.logs}/>
                     </div>
                 </div>
 
