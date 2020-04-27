@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils'
+import {getAliveShipsCount} from 'src/utils/ships-utils'
 import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-generator'
 
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
@@ -37,6 +38,34 @@ export default class BattlePage extends Component {
             "Click Randomize ships button.",
             'info'
         );
+    };
+
+    startBattle = () => {
+        // randomize enemyShips
+        const gameData = this.randomizeBattleFieldWithShips();
+        // this.state.enemyCells = gameData.cells;
+
+        // random - who's first shot
+        const firstMove = Math.floor(Math.random() * Math.floor(2));
+        this.state.logs.push(this.createLogRecord('The battle has began!'));
+        this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
+        let enemyMove = {
+            isEnemyWon: false,
+            enemyLastShot: null,
+            playerWoundedShipCells: []
+        };
+        if (firstMove === 1) {
+            enemyMove = this.enemyShot([]);
+        }
+
+        this.setState({
+            step: enemyMove.isEnemyWon ? STEP_FINAL : STEP_BATTLE,
+            enemyCells: gameData.cells,
+            enemyShips: gameData.ships,
+            enemyLastShot: enemyMove.enemyLastShot,
+            playerWoundedShipCells: enemyMove.playerWoundedShipCells,
+            logs: this.state.logs
+        });
     };
 
     playerShot = (cell) => {
@@ -105,7 +134,7 @@ export default class BattlePage extends Component {
                 this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (wounded)'));
             }
 
-            if (this.isWinShot(enemyShips)) {
+            if (getAliveShipsCount(enemyShips) === 0) {
                 Swal.fire(
                     'You have won!',
                     'You are just a lucky bastard. Tou will have no chance next time.',
@@ -145,7 +174,7 @@ export default class BattlePage extends Component {
                 woundedCells.push(hitPlayerCell);
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (wounded)'));
             }
-            if (this.isWinShot(playerShips)) {
+            if (getAliveShipsCount(playerShips) === 0) {
                 Swal.fire(
                     'Enemy has won!',
                     'You are loser. Live with this.',
@@ -169,34 +198,6 @@ export default class BattlePage extends Component {
             enemyLastShot: hitPlayerCell,
             playerWoundedShipCells: woundedCells
         };
-    };
-
-    startBattle = () => {
-        // randomize enemyShips
-        const gameData = this.randomizeBattleFieldWithShips();
-        // this.state.enemyCells = gameData.cells;
-
-        // random - who's first shot
-        const firstMove = Math.floor(Math.random() * Math.floor(2));
-        this.state.logs.push(this.createLogRecord('The battle has began!'));
-        this.state.logs.push(this.createLogRecord('The first move: ' + (firstMove === 0 ? 'you' : 'enemy')));
-        let enemyMove = {
-            isEnemyWon: false,
-            enemyLastShot: null,
-            playerWoundedShipCells: []
-        };
-        if (firstMove === 1) {
-            enemyMove = this.enemyShot([]);
-        }
-
-        this.setState({
-            step: enemyMove.isEnemyWon ? STEP_FINAL : STEP_BATTLE,
-            enemyCells: gameData.cells,
-            enemyShips: gameData.ships,
-            enemyLastShot: enemyMove.enemyLastShot,
-            playerWoundedShipCells: enemyMove.playerWoundedShipCells,
-            logs: this.state.logs
-        });
     };
 
     randomizeBattleFieldWithShips = () => {
@@ -241,13 +242,6 @@ export default class BattlePage extends Component {
             time: new Date(),
             text: text
         }
-    };
-
-    isWinShot = (ships) => {
-        const liveShips = ships.filter(ship => {
-            return ship.damage < ship.size;
-        });
-        return liveShips.length === 0;
     };
 
     onDifficultyLevelChanged = (level) => {

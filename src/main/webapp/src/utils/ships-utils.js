@@ -9,3 +9,10 @@ export const getBiggestAliveShip = (playerShips) => {
             return ship2.size - ship1.size;
         })[0];
 }
+
+export const getAliveShipsCount = (ships) => {
+    const liveShips = ships.filter(ship => {
+        return ship.damage < ship.size;
+    });
+    return liveShips.length;
+}
