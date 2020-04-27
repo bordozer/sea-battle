@@ -81,9 +81,10 @@ function cellCss(cell, options) {
     }).length > 0;
     if (isRecommendedShot) {
         result.push('cell-recommended-shot');
-        if (strategy === 'commons-room-cells') {
+        if (strategy === 'level3') {
             result.push('fa fa-bullseye');
-        } else if (strategy === 'room-middle-cells') {
+        }
+        if (strategy === 'level2') {
             result.push('fa fa-dot-circle-o');
         }
     }

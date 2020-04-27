@@ -1,16 +1,11 @@
 import React from 'react';
-
-import {getSpaciousRooms} from 'src/utils/ships-generator'
-import {getBiggestAliveShip} from 'src/utils/ships-utils'
-import {isHiddenCell, getRandomHiddenCell} from 'src/utils/cells-utils'
+import {getRandomHiddenCell, getVisibleCellsCount, isHiddenCell} from 'src/utils/cells-utils'
 import AiLevel1 from 'src/utils/ai-level1'
+import AiLevel2 from 'src/utils/ai-level2'
+import AiLevel3 from 'src/utils/ai-level3'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
-const NO_STRATEGY = {
-    shoots: [],
-    strategy: 'no-strategy'
-};
 
 function _shotOnceWoundedShipAgain(cells, woundedCell) {
     // console.log("_shotOnceWoundedShipAgain", woundedCell);
@@ -77,122 +72,61 @@ function finishingOffWoundedShip(cells, playerWoundedShipCells) {
     }));
 }
 
-function getCrossRoomsShoots(hFreeRooms, vFreeRooms) {
-    const map = {};
-    hFreeRooms.forEach(hRoomCells => {
-        hRoomCells.forEach(hRoomCell => {
-            vFreeRooms.forEach(vRoomCells => {
-                vRoomCells.forEach(vRoomCell => {
-                    if (hRoomCell.id === vRoomCell.id) {
-                        map[hRoomCell.id] = {
-                            id: hRoomCell.id,
-                            count: map[hRoomCell.id] ? map[hRoomCell.id].count + 1 : 0,
-                            cell: hRoomCell
-                        }
-                    }
-                });
-            });
-        });
-    });
-    // console.log("map", map);
-    let commonCells = [];
-    let max = 0;
-    Object.keys(map)
-        .forEach(cellId => {
-            if (map[cellId].count > max) {
-                max = map[cellId].count;
-                commonCells = [];
-                commonCells.push(map[cellId].cell);
-            }
-            if (map[cellId].count === max) {
-                commonCells.push(map[cellId].cell);
-            }
-        });
-    return commonCells;
+function level1Shot(cells) {
+    return new AiLevel1().getCells(cells);
+}
+
+function level2Shot(cells, ships) {
+    return new AiLevel2().getCells(cells, ships);
+}
+
+function level3Shot(cells, ships) {
+    return new AiLevel3().getCells(cells, ships);
 }
 
 export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
-    if (difficultyLevel === 1) {
-        return NO_STRATEGY;
-    }
-
-    const biggestAliveShip = getBiggestAliveShip(ships);
-    if (!biggestAliveShip) {
-        return NO_STRATEGY;
-    }
-
-    const shipSize = biggestAliveShip.size;
-    if (shipSize === 1) {
-        return NO_STRATEGY;
-    }
-
-    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        return NO_STRATEGY;
-    }
-
-    const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
-        return !cell.isHit && !cell.isKilledShipNeighborCell
-    });
-    const hFreeRooms = spaciousRooms.hFreeRooms;
-    // console.log("hFreeRooms", hFreeRooms);
-    const vFreeRooms = spaciousRooms.vFreeRooms;
-    // console.log("vFreeRooms", vFreeRooms);
-
-    let commonCells = [];
-    if (difficultyLevel === 3) {
-        commonCells = getCrossRoomsShoots(hFreeRooms, vFreeRooms);
-    }
-    if (commonCells.length > 0) {
-        // console.log("commonCells", commonCells);
+    if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         return {
-            shoots: commonCells,
-            strategy: 'commons-room-cells'
+            shoots: [],
+            strategy: 'no-strategy-for-first-shoots'
         };
     }
 
-    const hvSpaciousRooms = hFreeRooms.concat(vFreeRooms);
-
-    const recommendedRoomShots = hvSpaciousRooms.flatMap(room => {
-        const times = Math.floor(room.length / shipSize);
-        if (times > 1) {
-            const tmp = [];
-            for (let i = shipSize - 1; i < room.length; i += shipSize) {
-                tmp.push(room[i]);
-            }
-            return tmp;
+    if (difficultyLevel === 1) {
+        console.log("Player hints: level1");
+        return {
+            shoots: [],
+            strategy: 'level1'
+        };
+    }
+    if (difficultyLevel === 2) {
+        console.log("Player hints: level2");
+        return {
+            shoots: level2Shot(cells, ships),
+            strategy: 'level2'
+        };
+    }
+    if (difficultyLevel === 3) {
+        console.log("Player hints: level3");
+        let cells = level3Shot(cells, ships);
+        if (cells.length > 0) {
+            return {
+                shoots: cells,
+                strategy: 'level3'
+            };
         }
-        return room[Math.floor(room.length / 2)];
-    });
-    // console.log("recommendedRoomShots", recommendedRoomShots);
+        console.log("Player hints: level3->2");
+        return {
+            shoots: level2Shot(cells),
+            strategy: 'level2'
+        };
+    }
 
-    const result = [];
-    recommendedRoomShots.forEach(cell => {
-        const len = result.filter(c => {
-            return c.x === cell.x && c.y === cell.y
-        }).length;
-        if (len === 0) {
-            result.push(cell);
-        }
-    });
-    // console.log("recommendedRoomShots", result);
     return {
-        shoots: result,
-        strategy: 'room-middle-cells'
+        shoots: [],
+        strategy: 'no-strategy-stub'
     };
 };
-
-function _getUnhittableCellsCount(cells) {
-    let result = 0;
-    for (let i = 0; i < cells.length; i++) {
-        for (let j = 0; j < cells.length; j++) {
-            const cell = cells[i][j];
-            if (cell.isHit || cell.isKilledShipNeighborCell) {
-                result++;
-            }
-        }
-    }
-    return result;
-}
 
 export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLevel) => {
     if (playerWoundedShipCells.length > 0) {
@@ -200,22 +134,32 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
         return finishingOffWoundedShip(cells, playerWoundedShipCells);
     }
 
-    if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        // console.log("First 10 shoots - random");
+    if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
+        console.log("Enemy shoot: first 10 shoots are random");
         return getRandomHiddenCell(cells);
     }
 
+    let cellsForShoot = [];
     if (difficultyLevel === 1) {
-        // console.log("level 1 shoot");
-        return new AiLevel1().getShoot(cells);
+        console.log("Enemy shoot: level1");
+        cellsForShoot = level1Shot(cells);
+    }
+    if (difficultyLevel === 2) {
+        console.log("Enemy shoot: level2");
+        cellsForShoot = level2Shot(cells);
+    }
+    if (difficultyLevel === 3) {
+        console.log("Enemy shoot: level3");
+        cellsForShoot = level3Shot(cells);
+        if (cellsForShoot.length === 0) {
+            console.log("Enemy shoot: level3->2");
+            cellsForShoot = level2Shot(cells);
+        }
+    }
+    if (cellsForShoot.length === 0) {
+        console.log("Enemy shoot: No other ways - random shoot");
+        cellsForShoot = getRandomHiddenCell(cells);
     }
 
-    const recommendedShots = getRecommendedShots(cells, ships, difficultyLevel, 'enemy').shoots;
-    if (recommendedShots.length !== 0) {
-        // console.log("recommendedShots");
-        return randomElement(recommendedShots);
-    }
-
-    // console.log("No other ways - random shoot");
-    return getRandomHiddenCell(cells);
+    return randomElement(cellsForShoot);
 };

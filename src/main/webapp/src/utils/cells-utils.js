@@ -4,11 +4,24 @@ import {randomElement} from 'src/utils/random-utils'
 
 export const getCellsByFilter = (cells, filter) => {
     const result = [];
-    for (let x = 0; x < cells.length; x++) {
-        for (let y = 0; y < cells.length; y++) {
-            const cell = cells[x][y];
+    for (let y = 0; y < cells.length; y++) {
+        for (let x = 0; x < cells.length; x++) {
+            const cell = cells[y][x];
             if (filter(cell)) {
                 result.push(cell);
+            }
+        }
+    }
+    return result;
+}
+
+export const getVisibleCellsCount = (cells) => {
+    let result = 0;
+    for (let y = 0; y < cells.length; y++) {
+        for (let x = 0; x < cells.length; x++) {
+            const cell = cells[y][x];
+            if (!isHiddenCell(cell)) {
+                result++;
             }
         }
     }

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 
-import {getRandomHiddenCell} from 'src/utils/cells-utils'
+import {getRandomHiddenCells} from 'src/utils/cells-utils'
 
-export default class Header extends Component {
+export default class AiLevel1 extends Component {
 
-    getShoot = (cells) => {
-        return getRandomHiddenCell(cells);
+    getCells = (cells) => {
+        return getRandomHiddenCells(cells);
     }
 }

@@ -268,17 +268,18 @@ export default class BattlePage extends Component {
             }
         };
 
-        // console.log("rShots", rShots);
+        const shootHints = this.state.showShootHints && this.state.step != null
+            ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
+            : {
+                shoots: [],
+                strategy: 'hits-are-disabled'
+            };
+        // console.log("shootHints", shootHints);
         const enemyBattleFieldOpts = {
             isPlayer: false,
             stage: this.state.step,
             lastShot: this.state.playerLastShot,
-            recommendedShots: this.state.showShootHints
-                ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
-                : {
-                    shoots: [],
-                    strategy: 'hits-are-disabled'
-                }
+            recommendedShots: shootHints
         };
 
         return (
