@@ -21,26 +21,11 @@ const WELCOME_MESSAGE = {
     type: 'info'
 };
 
-const initialState = {
-    playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-    playerShips: [],
-    playerLastShot: null,
-    playerWoundedShipCells: [],
-    enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-    enemyShips: [],
-    enemyLastShot: null,
-    step: null,
-    isReadyToStart: false,
-    difficultyLevel: 3, /* 1 - easy, 2 - medium, 3 - hard */
-    showShootHints: true,
-    logs: [WELCOME_MESSAGE]
-}
-
 export default class BattlePage extends Component {
 
     constructor(props) {
         super(props)
-        this.state = initialState;
+        this.state = this.getInitialState();
     }
 
     playerCellSetup = (cell) => {
@@ -228,8 +213,25 @@ export default class BattlePage extends Component {
     };
 
     resetBattle = () => {
-        this.setState(initialState);
+        this.setState(this.getInitialState());
     };
+
+    getInitialState = () => {
+        return {
+            playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            playerShips: [],
+            playerLastShot: null,
+            playerWoundedShipCells: [],
+            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            enemyShips: [],
+            enemyLastShot: null,
+            step: null,
+            isReadyToStart: false,
+            difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            showShootHints: this.state? this.state.showShootHints : true, /* true/false */
+            logs: [WELCOME_MESSAGE]
+        }
+    }
 
     createLogRecord = (text) => {
         return {
