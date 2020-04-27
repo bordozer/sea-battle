@@ -13,20 +13,28 @@ function renderVHeader(label) {
 }
 
 function cellCss(cell, options) {
-    const isEnemy = options.isHiddenShips;
-    const isMine = !isEnemy;
+    const isPlayer = options.isPlayer;
+    const isEnemy = !options.isPlayer;
+    const stage = options.stage;
+
     const result = [];
 
-    if (isEnemy && options.isSetupStep) {
+    if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
         result.push('cell-disabled');
-        result.push('fa fa-hourglass-o');
+        result.push('fa fa-anchor');
     }
 
     // player's healthy ship
-    if (isMine && cell.ship && !cell.isHit) {
+    if (isPlayer && cell.ship && !cell.isHit) {
         result.push('cell-ship');
         result.push('fa fa-anchor');
     }
+    // show enemy's healthy ships at the end
+    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
+        result.push('cell-ship');
+        result.push('fa fa-anchor');
+    }
+
     // wounded ship
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
         result.push('cell-ship-wounded');
@@ -78,14 +86,13 @@ function cellCss(cell, options) {
 }
 
 function renderCells(x, cells, onCellClick, options) {
-    const isPlayer = !options.isHiddenShips;
     const result = [];
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
                  className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options)}
                  onClick={onCellClick.bind(this, cell)}
-                 title={cell.xLabel + '' + cell.yLabel + (isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
+                 title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
                 {/*{cell.ship ? 'x' : ''}*/}
             </div>

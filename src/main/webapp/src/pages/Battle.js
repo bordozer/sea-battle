@@ -44,7 +44,7 @@ export default class BattlePage extends Component {
             "Click Randomize ships button.",
             'info'
         );
-    }
+    };
 
     playerShot = (cell) => {
         if ((this.state.step === null) || (this.state.step === STEP_READY_TO_START)) {
@@ -115,7 +115,7 @@ export default class BattlePage extends Component {
             if (this.isWinShot(enemyShips)) {
                 Swal.fire(
                     'You have won!',
-                    'You are just lucky bastard. Next time you will have no chance.',
+                    'You are just a lucky bastard. Tou will have no chance next time.',
                     'success'
                 );
                 step = STEP_FINAL;
@@ -296,12 +296,10 @@ export default class BattlePage extends Component {
     };
 
     render() {
-        // console.log('BattlePage:', this.state);
-        // console.log(this.state.logs);
         const isSetupStep = (this.state.step === null) || (this.state.step === STEP_READY_TO_START);
         const playerBattleFieldOpts = {
-            isHiddenShips: false,
-            isSetupStep: isSetupStep,
+            isPlayer: true,
+            stage: this.state.step,
             lastShot: this.state.enemyLastShot,
             recommendedShots: {
                 shoots: [],
@@ -309,8 +307,8 @@ export default class BattlePage extends Component {
             }
         };
         const enemyBattleFieldOpts = {
-            isHiddenShips: this.state.step !== STEP_FINAL,
-            isSetupStep: isSetupStep,
+            isPlayer: false,
+            stage: this.state.step,
             lastShot: this.state.playerLastShot,
             recommendedShots: this.state.showShootHints
                 ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel, 'player')
