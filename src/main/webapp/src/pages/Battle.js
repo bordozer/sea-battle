@@ -8,6 +8,7 @@ import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 import BattleFieldRenderer from 'components/battle-field-renderer'
 import DifficultyLevelRenderer from 'components/difficulty-level'
 import ShipStatisticsRenderer from 'components/ships-stat'
+import LogsRrenderer from 'components/logs-renderer'
 
 const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
@@ -240,26 +241,6 @@ export default class BattlePage extends Component {
         }
     };
 
-    renderLogs = () => {
-        const result = [];
-        let counter = 0;
-        this.state.logs
-            .sort(function (log1, log2) {
-                return log2.time - log1.time;
-            })
-            .forEach(rec => {
-                result.push(
-                    <div key={'log-row-' + counter} className="row">
-                        <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
-                            {rec.text}
-                        </div>
-                    </div>
-                );
-                counter++;
-            });
-        return result;
-    };
-
     isWinShot = (ships) => {
         const liveShips = ships.filter(ship => {
             return ship.damage < ship.size;
@@ -377,7 +358,7 @@ export default class BattlePage extends Component {
 
                 <div className="row mt-10">
                     <div className="col-sm-12">
-                        {this.renderLogs()}
+                        <LogsRrenderer logs={this.state.logs} />
                     </div>
                 </div>
 
