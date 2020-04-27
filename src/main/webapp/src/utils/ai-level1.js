@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-import {getRandomHiddenCells} from 'src/utils/cells-utils'
-import {randomElement} from 'src/utils/random-utils'
+import {getRandomHiddenCell} from 'src/utils/cells-utils'
 
-export const getShot = () => {
-    randomElement(getRandomHiddenCells(cells));
+export default class Header extends Component {
+
+    getShoot = (cells) => {
+        return getRandomHiddenCell(cells);
+    }
 }

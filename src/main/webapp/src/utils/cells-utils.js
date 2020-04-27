@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {randomElement} from 'src/utils/random-utils'
+
 export const getCellsByFilter = (cells, filter) => {
     const result = [];
     for (let x = 0; x < cells.length; x++) {
@@ -19,4 +21,8 @@ export const isHiddenCell = (cell) => {
 
 export const getRandomHiddenCells = (cells) => {
     return getCellsByFilter(cells, isHiddenCell);
+}
+
+export const getRandomHiddenCell = (cells) => {
+    return randomElement(getCellsByFilter(cells, isHiddenCell));
 }

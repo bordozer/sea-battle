@@ -2,8 +2,8 @@ import React from 'react';
 
 import {getSpaciousRooms} from 'src/utils/ships-generator'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
-import {isHiddenCell, getRandomHiddenCells} from 'src/utils/cells-utils'
-import {aiLevel1Shot} from 'src/utils/ai-level1'
+import {isHiddenCell, getRandomHiddenCell} from 'src/utils/cells-utils'
+import AiLevel1 from 'src/utils/ai-level1'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
@@ -201,11 +201,13 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
     }
 
     if (_getUnhittableCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        return randomElement(getRandomHiddenCells(cells));
+        // console.log("First 10 shoots - random");
+        return getRandomHiddenCell(cells);
     }
 
     if (difficultyLevel === 1) {
-        return aiLevel1Shot(cells);
+        // console.log("level 1 shoot");
+        return new AiLevel1().getShoot(cells);
     }
 
     const recommendedShots = getRecommendedShots(cells, ships, difficultyLevel, 'enemy').shoots;
@@ -213,6 +215,7 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
         // console.log("recommendedShots");
         return randomElement(recommendedShots);
     }
-    // console.log("random shot 1");
-    return randomElement(getRandomHiddenCells(cells));
+
+    // console.log("No other ways - random shoot");
+    return getRandomHiddenCell(cells);
 };
