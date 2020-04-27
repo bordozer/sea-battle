@@ -2,10 +2,14 @@ import React from 'react';
 
 import _ from 'underscore'
 
-function renderVHeader(label) {
+function getBorderCss(options) {
+    return ((!options.isPlayer && options.currentMove === 'player') || (options.isPlayer && options.currentMove === 'enemy')) ? 'bg-success' : 'bg-secondary';
+}
+function renderVHeader(label, options) {
+    const moveCss = getBorderCss(options);
     const result = [];
     result.push(
-        <div key={'hh-' + label} className="col-sm-1 text-center align-middle text-light bg-secondary border border-secondary cell-base">
+        <div key={'hh-' + label} className={"col-sm-1 text-center align-middle text-light bg-secondary border border-secondary cell-base " + moveCss}>
             {label}
         </div>
     );
@@ -109,7 +113,7 @@ function renderCells(x, cells, onCellClick, options) {
 }
 
 function renderHLine(x, cells, onCellClick, options) {
-    const vHeader = renderVHeader(cells[0].yLabel);
+    const vHeader = renderVHeader(cells[0].yLabel, options);
     const result = [];
     result.push(
         <div key={'line-' + x} className="row">
@@ -123,15 +127,14 @@ function renderHLine(x, cells, onCellClick, options) {
 
 function renderHHeader(cells, options) {
     const result = [];
-    const moveCss = ((!options.isPlayer && options.currentMove === 'player') || (options.isPlayer && options.currentMove === 'enemy'))
-        ? 'bg-success' : 'bg-secondary'
-    console.log("options/moveCss", options, moveCss);
+    const moveCss = getBorderCss(options);
+    // console.log("options/moveCss", options, moveCss);
     result.push(
         <div key="v-left" className={"col-sm-1 border border-secondary cell-base " + moveCss}/>
     );
     cells.forEach(cell => {
         result.push(
-            <div key={'v-' + cell.x} className="col-sm-1 text-center text-light bg-secondary cell-base">
+            <div key={'v-' + cell.x} className={"col-sm-1 text-center text-light bg-secondary cell-base " + moveCss}>
                 {cell.xLabel}
             </div>
         );
