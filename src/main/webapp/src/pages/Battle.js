@@ -9,34 +9,39 @@ import BattleFieldRenderer from 'components/battle-field-renderer'
 import DifficultyLevelRenderer from 'components/difficulty-level'
 import ShipStatisticsRenderer from 'components/ships-stat'
 
-const WELCOME_MESSAGE = {
-    time: new Date(),
-    text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
-    type: 'info'
-};
-
 const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
 const STEP_FINAL = 'STEP_FINAL';
 
 const BATTLE_FIELD_SIZE = 10;
 
+const WELCOME_MESSAGE = {
+    time: new Date(),
+    text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
+    type: 'info'
+};
+
+const initialState = {
+    playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+    playerShips: [],
+    playerLastShot: null,
+    playerWoundedShipCells: [],
+    enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+    enemyShips: [],
+    enemyLastShot: null,
+    step: null,
+    isReadyToStart: false,
+    difficultyLevel: 3, /* 1 - easy, 2 - medium, 3 - hard */
+    showShootHints: true,
+    logs: [WELCOME_MESSAGE]
+}
+
 export default class BattlePage extends Component {
 
-    state = {
-        playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-        playerShips: [],
-        playerLastShot: null,
-        playerWoundedShipCells: [],
-        enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-        enemyShips: [],
-        enemyLastShot: null,
-        step: null,
-        isReadyToStart: false,
-        difficultyLevel: 3, /* 1, 2, 3*/
-        showShootHints: true,
-        logs: [WELCOME_MESSAGE]
-    };
+    constructor(props) {
+        super(props)
+        this.state = initialState;
+    }
 
     playerCellSetup = (cell) => {
         Swal.fire(
@@ -220,29 +225,10 @@ export default class BattlePage extends Component {
             step: STEP_READY_TO_START,
             logs: this.state.logs
         });
-        // TODO: delete
-        /*console.log("=======================================================");
-        const rooms = getSpaciousRooms(gameData.cells, 4, function(cell) {
-            return !cell.ship && !cell.isShipNeighbor;
-        });
-        console.log("getSpaciousRooms", rooms);*/
     };
 
     resetBattle = () => {
-        this.setState({
-            playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            playerShips: [],
-            playerLastShot: null,
-            playerWoundedShipCells: [],
-            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            enemyShips: [],
-            enemyLastShot: null,
-            step: null,
-            isReadyToStart: false,
-            difficultyLevel: this.state.difficultyLevel,
-            showShootHints: this.state.showShootHints,
-            logs: [WELCOME_MESSAGE]
-        });
+        this.setState(initialState);
     };
 
     createLogRecord = (text) => {
