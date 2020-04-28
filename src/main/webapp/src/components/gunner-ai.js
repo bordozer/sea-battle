@@ -84,7 +84,7 @@ function level3Shot(cells, ships) {
     return new AiLevel3().getCells(cells, ships);
 }
 
-export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
+export const getRecommendedShots = (cells, ships, difficultyLevel) => {
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         return {
             shoots: [],
@@ -93,31 +93,31 @@ export const getRecommendedShots = (cells, ships, difficultyLevel, who) => {
     }
 
     if (difficultyLevel === 1) {
-        console.log("Player hints: level1");
+        // console.log("Player hints: level1");
         return {
             shoots: [],
             strategy: 'level1'
         };
     }
     if (difficultyLevel === 2) {
-        console.log("Player hints: level2");
+        // console.log("Player hints: level2");
         return {
             shoots: level2Shot(cells, ships),
             strategy: 'level2'
         };
     }
     if (difficultyLevel === 3) {
-        console.log("Player hints: level3");
-        let cells = level3Shot(cells, ships);
-        if (cells.length > 0) {
+        // console.log("Player hints: level3");
+        let shoots = level3Shot(cells, ships);
+        if (shoots.length > 0) {
             return {
-                shoots: cells,
+                shoots: shoots,
                 strategy: 'level3'
             };
         }
-        console.log("Player hints: level3->2");
+        // console.log("Player hints: level3->2");
         return {
-            shoots: level2Shot(cells, ships),
+            shoots: level2Shot(shoots, ships),
             strategy: 'level2'
         };
     }
@@ -135,29 +135,29 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
     }
 
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
-        console.log("Enemy shoot: first 10 shoots are random");
+        // console.log("Enemy shoot: first 10 shoots are random");
         return getRandomHiddenCell(cells);
     }
 
     let cellsForShoot = [];
     if (difficultyLevel === 1) {
-        console.log("Enemy shoot: level1");
+        // console.log("Enemy shoot: level1");
         cellsForShoot = level1Shot(cells);
     }
     if (difficultyLevel === 2) {
-        console.log("Enemy shoot: level2");
+        // console.log("Enemy shoot: level2");
         cellsForShoot = level2Shot(cells, ships);
     }
     if (difficultyLevel === 3) {
-        console.log("Enemy shoot: level3");
+        // console.log("Enemy shoot: level3");
         cellsForShoot = level3Shot(cells, ships);
         if (cellsForShoot.length === 0) {
-            console.log("Enemy shoot: level3->2");
+            // console.log("Enemy shoot: level3->2");
             cellsForShoot = level2Shot(cells, ships);
         }
     }
     if (cellsForShoot.length === 0) {
-        console.log("Enemy shoot: No other ways - random shoot");
+        // console.log("Enemy shoot: No other ways - random shoot");
         cellsForShoot = getRandomHiddenCell(cells);
     }
 
