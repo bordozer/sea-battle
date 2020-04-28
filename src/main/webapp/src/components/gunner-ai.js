@@ -96,7 +96,10 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
     const biggestAliveShip = getBiggestAliveShip(ships);
     const shipSize = biggestAliveShip.size;
     if (shipSize === 1) {
-        return [];
+        return {
+            shoots: [],
+            strategy: 'single-ship-no-strategy'
+        };
     }
 
     if (difficultyLevel === 1) {
