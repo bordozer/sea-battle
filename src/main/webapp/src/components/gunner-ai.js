@@ -93,6 +93,12 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
         };
     }
 
+    const biggestAliveShip = getBiggestAliveShip(ships);
+    const shipSize = biggestAliveShip.size;
+    if (shipSize === 1) {
+        return [];
+    }
+
     if (difficultyLevel === 1) {
         // console.log("Player hints: level1");
         return {
