@@ -268,7 +268,7 @@ export default class BattlePage extends Component {
             }
         };
 
-        const shootHints = this.state.showShootHints && this.state.step != null
+        const shootHints = this.state.showShootHints && this.state.step === STEP_BATTLE
             ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel)
             : {
                 shoots: [],
