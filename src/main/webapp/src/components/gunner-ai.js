@@ -1,5 +1,6 @@
 import React from 'react';
 import {getRandomHiddenCell, getVisibleCellsCount, isHiddenCell} from 'src/utils/cells-utils'
+import {getBiggestAliveShip} from 'src/utils/ships-utils'
 import AiLevel1 from 'src/utils/ai-level1'
 import AiLevel2 from 'src/utils/ai-level2'
 import AiLevel3 from 'src/utils/ai-level3'
@@ -139,6 +140,12 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
         return getRandomHiddenCell(cells);
     }
 
+    const biggestAliveShip = getBiggestAliveShip(ships);
+    const shipSize = biggestAliveShip.size;
+    if (shipSize === 1) {
+        return getRandomHiddenCell(cells);
+    }
+
     let cellsForShoot = [];
     if (difficultyLevel === 1) {
         // console.log("Enemy shoot: level1");
@@ -147,6 +154,7 @@ export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLev
     if (difficultyLevel === 2) {
         // console.log("Enemy shoot: level2");
         cellsForShoot = level2Shot(cells, ships);
+        // console.log("level2 cellsForShoot", cellsForShoot);
     }
     if (difficultyLevel === 3) {
         // console.log("Enemy shoot: level3");

@@ -5,16 +5,9 @@ import {getSpaciousRooms} from 'src/utils/ships-generator'
 export default class AiLevel2 extends Component {
 
     getCells = (cells, ships) => {
-        const biggestAliveShip = getBiggestAliveShip(ships);
-        if (biggestAliveShip.size === 1) {
-            return [];
-        }
-        const shipSize = biggestAliveShip.size;
-        if (shipSize === 1) {
-            return [];
-        }
+        const biggestShipSize = getBiggestAliveShip(ships).size;
 
-        const spaciousRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        const spaciousRooms = getSpaciousRooms(cells, biggestShipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
         const hShipRooms = spaciousRooms.hFreeRooms;
@@ -25,10 +18,10 @@ export default class AiLevel2 extends Component {
         const shipRooms = hShipRooms.concat(vShipRooms);
 
         const roomsMiddleCells = shipRooms.flatMap(room => {
-            const times = Math.floor(room.length / shipSize);
+            const times = Math.floor(room.length / biggestShipSize);
             if (times > 1) {
                 const tmp = [];
-                for (let i = shipSize - 1; i < room.length; i += shipSize) {
+                for (let i = biggestShipSize - 1; i < room.length; i += biggestShipSize) {
                     tmp.push(room[i]);
                 }
                 return tmp;

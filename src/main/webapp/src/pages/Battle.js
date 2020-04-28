@@ -176,7 +176,9 @@ export default class BattlePage extends Component {
                 playerWoundedShipCells.push(hitPlayerCell);
                 this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (wounded)'));
             }
-            this.enemyMove();
+            if (!isEnemyWon) {
+                this.enemyMove();
+            }
         }
 
         if (!playerShip) {
@@ -227,7 +229,7 @@ export default class BattlePage extends Component {
             step: null,
             currentMove: null,
             isReadyToStart: false,
-            difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            difficultyLevel: this.state ? this.state.difficultyLevel : 2, /* 1 - easy, 2 - medium, 3 - hard */
             showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
             logs: [WELCOME_MESSAGE]
         }

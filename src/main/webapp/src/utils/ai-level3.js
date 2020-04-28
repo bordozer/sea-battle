@@ -40,16 +40,9 @@ function getCrossRoomsShoots(hFreeRooms, vFreeRooms) {
 export default class AiLevel3 extends Component {
 
     getCells = (cells, ships) => {
-        const biggestAliveShip = getBiggestAliveShip(ships);
-        if (biggestAliveShip.size === 1) {
-            return [];
-        }
-        const shipSize = biggestAliveShip.size;
-        if (shipSize === 1) {
-            return [];
-        }
+        const biggestShipSize = getBiggestAliveShip(ships).size;
 
-        const shipRooms = getSpaciousRooms(cells, shipSize, function (cell) {
+        const shipRooms = getSpaciousRooms(cells, biggestShipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
         const hShipRooms = shipRooms.hFreeRooms;
