@@ -117,17 +117,18 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
         };
     }
     if (difficultyLevel === 3) {
-        // console.log("Player hints: level3");
         let shoots = level3Shot(cells, ships);
+        // console.log("Player hints: level3", shoots);
         if (shoots.length > 0) {
             return {
                 shoots: shoots,
                 strategy: 'level3'
             };
         }
-        // console.log("Player hints: level3->2");
+        const shoots2 = level2Shot(cells, ships);
+        // console.log("Player hints: level3->2", shoots2);
         return {
-            shoots: level2Shot(shoots, ships),
+            shoots: shoots2,
             strategy: 'level2'
         };
     }
