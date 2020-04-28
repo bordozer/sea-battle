@@ -5,7 +5,7 @@ import AiLevel2 from 'src/utils/ai-level2'
 import AiLevel3 from 'src/utils/ai-level3'
 import {randomElement} from 'src/utils/random-utils'
 
-const FIRST_RANDOM_SHOOTS_COUNT = 1; //10; // TODO
+const FIRST_RANDOM_SHOOTS_COUNT = 10;
 
 function _shotOnceWoundedShipAgain(cells, woundedCell) {
     // console.log("_shotOnceWoundedShipAgain", woundedCell);

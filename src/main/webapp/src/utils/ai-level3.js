@@ -62,5 +62,6 @@ export default class AiLevel3 extends Component {
             // console.log("vhCommonCells", vhCommonCells);
             return vhCommonCells;
         }
+        return [];
     }
 }
