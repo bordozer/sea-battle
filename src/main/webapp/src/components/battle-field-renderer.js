@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'underscore'
 
 function getBorderCss(options) {
-    return ((!options.isPlayer && options.currentMove === 'player') || (options.isPlayer && options.currentMove === 'enemy')) ? 'bg-success' : 'bg-secondary';
+    return options.highlightBattleArea ? 'bg-success' : 'bg-secondary';
 }
 function renderVHeader(label, options) {
     const moveCss = getBorderCss(options);

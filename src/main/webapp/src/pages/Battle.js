@@ -259,6 +259,7 @@ export default class BattlePage extends Component {
             stage: this.state.step,
             lastShot: this.state.enemyLastShot,
             currentMove: this.state.currentMove,
+            highlightBattleArea: this.state.step === STEP_BATTLE && this.state.currentMove === 'enemy',
             recommendedShots: {
                 shoots: [],
                 strategy: null
@@ -277,7 +278,8 @@ export default class BattlePage extends Component {
             stage: this.state.step,
             lastShot: this.state.playerLastShot,
             recommendedShots: shootHints,
-            currentMove: this.state.currentMove
+            highlightBattleArea: this.state.step === STEP_BATTLE && this.state.currentMove === 'player',
+            currentMove: this.state.currentMove,
         };
 
         return (
@@ -297,14 +299,14 @@ export default class BattlePage extends Component {
                     <div className="col-sm-1">
                         <ShipsStateRenderer ships={this.state.playerShips} isPlayer={true}/>
                     </div>
-                    <div className="col-sm-5">
+                    <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
                             cells={this.state.playerCells}
                             options={playerBattleFieldOpts}
                             onCellClick={this.playerCellSetup}
                         />
                     </div>
-                    <div className="col-sm-5">
+                    <div className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={enemyBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
                             cells={this.state.enemyCells}
                             options={enemyBattleFieldOpts}

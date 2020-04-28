@@ -10,6 +10,7 @@ body {
 .mt-10 {
     margin-top: 10px !important;
 }
+
 .mb-10 {
     margin-bottom: 10px !important;
 }
@@ -17,6 +18,7 @@ body {
 .cell-text {
     padding-top: 12px;
 }
+
 .cell-base {
     color: silver;
     background-color: azure;
@@ -26,31 +28,39 @@ body {
     min-width: 30px;
     height: 40px;
 }
+
 .cell-ship {
     color: yellow;
     background-color: cadetblue;
     box-shadow: 2px 2px grey;
 }
+
 .cell-ship-wounded {
     color: white;
     background-color: coral;
 }
+
 .cell-ship-killed {
     color: white;
     background-color: crimson;
 }
+
 .cell-missed-hit {
     color: darkseagreen;
 }
+
 .cell-disabled {
     background-color: ghostwhite;
 }
+
 .cell-not-hittable {
     background-color: #dfefef;
 }
+
 .cell-recommended-shot {
     color: #c1e8e8;
 }
+
 .stat-cell {
     width: 16px;
     height: 16px;
@@ -58,9 +68,16 @@ body {
     float: left;
     margin: 1px;
 }
+
 .stat-cell-ship {
     background-color: cadetblue;
 }
+
 .stat-cell-ship-killed {
     background-color: crimson;
+}
+
+.disabledArea {
+    pointer-events: none;
+    opacity: 0.80;
 }
