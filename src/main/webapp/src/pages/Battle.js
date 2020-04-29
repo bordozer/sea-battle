@@ -333,13 +333,13 @@ export default class BattlePage extends Component {
                     </div>
                     <div className="col-sm-4 text-center btn-lg">
                         <button
-                            className="bg-primary"
+                            className="bg-primary button-rounded"
                             onClick={this.startBattle}
                             disabled={this.state.step !== STEP_READY_TO_START}>
                             Start
                         </button>
                         <button
-                            className="bg-primary"
+                            className="bg-primary button-rounded"
                             onClick={this.onNewGameClick}>
                             New game
                         </button>

@@ -81,3 +81,7 @@ body {
     pointer-events: none;
     opacity: 0.70;
 }
+
+.button-rounded {
+    border-radius: 7px;
+}
