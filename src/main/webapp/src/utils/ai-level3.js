@@ -3,26 +3,29 @@ import React, {Component} from 'react';
 import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
 
-function populateCommonRoomsCells(map, rooms1, rooms2) {
-    rooms1.forEach(room1 => {
-        room1.roomCells.forEach(room1Cell => {
-            rooms2.forEach(room2 => {
-                if (room1.roomId === room2.roomId) {
-                    return;
+function populateCommonRoomsCells(rooms) {
+
+    const hiddenCells = rooms.flatMap(room => room.roomCells);
+    console.log("hiddenCells", hiddenCells);
+
+    const map = {};
+    hiddenCells.forEach(cell => {
+        let count = 0;
+        rooms.forEach(room => {
+            room.roomCells.forEach(roomCell => {
+                if (roomCell.id === cell.id) {
+                    count++;
                 }
-                room2.roomCells.forEach(room2Cell => {
-                    const cellId = room1Cell.id;
-                    if (cellId === room2Cell.id) {
-                        map[cellId] = {
-                            id: cellId,
-                            count: map[cellId] ? map[cellId].count + 1 : 0,
-                            cell: room1Cell
-                        };
-                    }
-                });
-            });
+            })
         });
-    });
+        map[cell.id] = {
+            id: cell.id,
+            count: count,
+            cell: cell
+        }
+        count = 0;
+    })
+    return map;
 }
 
 function getCells(map) {
@@ -55,10 +58,7 @@ export default class AiLevel3 extends Component {
         const vShipRooms = shipRooms.vFreeRooms;
         // console.log("vShipRooms", vShipRooms);
 
-        const map = {};
-        populateCommonRoomsCells(map, hShipRooms, vShipRooms);
-        populateCommonRoomsCells(map, hShipRooms, hShipRooms);
-        populateCommonRoomsCells(map, vShipRooms, vShipRooms);
+        const map = populateCommonRoomsCells(hShipRooms.concat(vShipRooms));
         const cellsForShoot = getCells(map);
         console.log("map", map);
         console.log("cellsForShoot", cellsForShoot);
