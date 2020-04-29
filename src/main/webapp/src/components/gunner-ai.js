@@ -75,10 +75,10 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
     };
 };
 
-export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLevel) => {
-    if (playerWoundedShipCells.length > 0) {
-        // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
-        return new AiDamagedShip().getCells(cells, playerWoundedShipCells);
+export const getEnemyShot = (cells, ships, playerDamagedShipCells, difficultyLevel) => {
+    if (playerDamagedShipCells.length > 0) {
+        // console.log("WOUNDED", playerDamagedShipCells.length, 'cells');
+        return new AiDamagedShip().getCells(cells, playerDamagedShipCells);
     }
 
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
