@@ -13,7 +13,7 @@ export default class ShipRoomsCollector extends Component {
         };
     }
 
-    _getVFreeRoomsOfArray = (cells, shipSize, filter) => {
+    _collectArrayRooms = (cells, shipSize, filter) => {
         const result = [];
 
         for (let i = 0; i <= cells.length - shipSize; i++) {
@@ -52,7 +52,7 @@ export default class ShipRoomsCollector extends Component {
                 const columnCells = freeCellsMap[column];
                 // console.log('line', column, 'columnCells', columnCells);
 
-                const freeRooms = this._getVFreeRoomsOfArray(columnCells, shipSize, function (room, j) {
+                const freeRooms = this._collectArrayRooms(columnCells, shipSize, function (room, j) {
                     return room[j].y + 1 !== room[j + 1].y;
                 });
                 // console.log('line', column, 'v freeRooms', freeRooms);
@@ -77,7 +77,7 @@ export default class ShipRoomsCollector extends Component {
                 const lineCells = freeCellsMap[column];
                 // console.log('line', column, 'lineCells', lineCells);
 
-                const freeRooms = this._getVFreeRoomsOfArray(lineCells, shipSize, function (room, j) {
+                const freeRooms = this._collectArrayRooms(lineCells, shipSize, function (room, j) {
                     return room[j].x + 1 !== room[j + 1].x;
                 });
                 // console.log('line', column, 'h freeRooms', freeRooms);
