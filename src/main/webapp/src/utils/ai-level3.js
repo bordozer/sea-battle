@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {getSpaciousRooms} from 'src/utils/ships-generator'
+import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
 
 function populateCommonRoomsCells(map, rooms1, rooms2) {
@@ -44,7 +44,7 @@ export default class AiLevel3 extends Component {
     getCells = (cells, ships) => {
         const biggestShipSize = getBiggestAliveShip(ships).size;
 
-        const shipRooms = getSpaciousRooms(cells, biggestShipSize, function (cell) {
+        const shipRooms = new ShipRoomsCollector().collectRooms(cells, biggestShipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
         const hShipRooms = shipRooms.hFreeRooms;
