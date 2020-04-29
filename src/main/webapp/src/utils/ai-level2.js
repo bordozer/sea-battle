@@ -19,7 +19,8 @@ export default class AiLevel2 extends Component {
         const shipRooms = hShipRooms.concat(vShipRooms);
         // console.log("shipRooms", shipRooms);
 
-        const roomsMiddleCells = shipRooms.flatMap(roomCell => {
+        const roomsMiddleCells = shipRooms.flatMap(room => {
+            const roomCell = room.roomCells;
             const times = Math.floor(roomCell.length / biggestShipSize);
             if (times > 1) {
                 const tmp = [];

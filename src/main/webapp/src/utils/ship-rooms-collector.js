@@ -13,9 +13,8 @@ export default class ShipRoomsCollector extends Component {
         };
     }
 
-    _collectArrayRooms = (cells, shipSize, filter) => {
+    _collectArrayRooms = (cells, shipSize, prefix, filter) => {
         const result = [];
-
         for (let i = 0; i <= cells.length - shipSize; i++) {
             const room = cells.slice(i, i + shipSize);
             if (room.length < shipSize) {
@@ -29,7 +28,10 @@ export default class ShipRoomsCollector extends Component {
                 }
             }
             if (isRoom) {
-                result.push(room);
+                result.push({
+                    roomId: prefix + '_' + room[0].id + '_' + room[room.length - 1].id,
+                    roomCells: room
+                });
                 i += this.state.step - 1;
             }
         }
@@ -49,16 +51,16 @@ export default class ShipRoomsCollector extends Component {
 
         Object.keys(freeCellsMap)
             .forEach(column => {
-                const columnCells = freeCellsMap[column];
-                // console.log('line', column, 'columnCells', columnCells);
+                const arrayCells = freeCellsMap[column];
+                // console.log('line', column, 'arrayCells', arrayCells);
 
-                const freeRooms = this._collectArrayRooms(columnCells, shipSize, function (room, j) {
+                const rooms = this._collectArrayRooms(arrayCells, shipSize, 'V', function (room, j) {
                     return room[j].y + 1 !== room[j + 1].y;
                 });
-                // console.log('line', column, 'v freeRooms', freeRooms);
+                // console.log('line', column, 'v rooms', rooms);
 
-                if (freeRooms.length > 0) {
-                    result = result.concat(freeRooms);
+                if (rooms.length > 0) {
+                    result = result.concat(rooms);
                 }
             });
         return result;
@@ -74,16 +76,16 @@ export default class ShipRoomsCollector extends Component {
 
         Object.keys(freeCellsMap)
             .forEach(column => {
-                const lineCells = freeCellsMap[column];
-                // console.log('line', column, 'lineCells', lineCells);
+                const arrayCells = freeCellsMap[column];
+                // console.log('line', column, 'arrayCells', arrayCells);
 
-                const freeRooms = this._collectArrayRooms(lineCells, shipSize, function (room, j) {
+                const rooms = this._collectArrayRooms(arrayCells, shipSize, 'H', function (room, j) {
                     return room[j].x + 1 !== room[j + 1].x;
                 });
-                // console.log('line', column, 'h freeRooms', freeRooms);
+                // console.log('line', column, 'h rooms', rooms);
 
-                if (freeRooms.length > 0) {
-                    result = result.concat(freeRooms);
+                if (rooms.length > 0) {
+                    result = result.concat(rooms);
                 }
             });
         return result;
@@ -91,9 +93,9 @@ export default class ShipRoomsCollector extends Component {
 
     collectRooms = (cells, shipSize, filter) => {
         const hFreeRooms = this._getHFreeRooms(cells, shipSize, filter);
-        // console.log("hFreeRooms", hFreeRooms);
+        console.log("hFreeRooms", hFreeRooms);
         const vFreeRooms = this._getVFreeRooms(cells, shipSize, filter);
-        // console.log("vFreeRooms", vFreeRooms);
+        console.log("vFreeRooms", vFreeRooms);
         const freeRooms = hFreeRooms.concat(vFreeRooms);
         return {
             hFreeRooms: hFreeRooms,

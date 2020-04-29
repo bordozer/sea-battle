@@ -74,10 +74,10 @@ export const generateShips = (cells) => {
         const hvSpaciousRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
         const shipRoom = randomElement(hvSpaciousRooms);
 
-        shipRoom.forEach(cell => {
+        shipRoom.roomCells.forEach(cell => {
             cell.ship = ship;
         });
-        shipRoom.forEach(cell => {
+        shipRoom.roomCells.forEach(cell => {
             _setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
         });
     });

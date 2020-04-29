@@ -4,14 +4,18 @@ import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
 
 function populateCommonRoomsCells(map, rooms1, rooms2) {
-    rooms1.forEach(room1Cells => {
-        room1Cells.forEach(room1Cell => {
-            rooms2.forEach(room2Cells => {
-                room2Cells.forEach(room2Cell => {
-                    if (room1Cell.id === room2Cell.id) {
-                        map[room1Cell.id] = {
-                            id: room1Cell.id,
-                            count: map[room1Cell.id] ? map[room1Cell.id].count + 1 : 0,
+    rooms1.forEach(room1 => {
+        room1.roomCells.forEach(room1Cell => {
+            rooms2.forEach(room2 => {
+                if (room1.roomId === room2.roomId) {
+                    return;
+                }
+                room2.roomCells.forEach(room2Cell => {
+                    const cellId = room1Cell.id;
+                    if (cellId === room2Cell.id) {
+                        map[cellId] = {
+                            id: cellId,
+                            count: map[cellId] ? map[cellId].count + 1 : 0,
                             cell: room1Cell
                         };
                     }
@@ -22,7 +26,6 @@ function populateCommonRoomsCells(map, rooms1, rooms2) {
 }
 
 function getCells(map) {
-    // console.log("map", map);
     let commonCells = [];
     let max = 0;
     Object.keys(map)
