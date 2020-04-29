@@ -30,12 +30,12 @@ function getCells(map) {
     let max = 0;
     Object.keys(map)
         .forEach(cellId => {
+            if (map[cellId].count === max) {
+                commonCells.push(map[cellId].cell);
+            }
             if (map[cellId].count > max) {
                 max = map[cellId].count;
                 commonCells = [];
-                commonCells.push(map[cellId].cell);
-            }
-            if (map[cellId].count === max) {
                 commonCells.push(map[cellId].cell);
             }
         });
