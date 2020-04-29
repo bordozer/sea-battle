@@ -29,7 +29,8 @@ export default class ShipRoomsCollector extends Component {
             }
             if (isRoom) {
                 result.push({
-                    roomId: prefix + '_' + room[0].id + '_' + room[room.length - 1].id,
+                    // roomId: prefix + '_' + room[0].id + '_' + room[room.length - 1].id,
+                    roomId: prefix + '_' + room.map(cell => cell.id).join('-'),
                     roomCells: room
                 });
                 i += this.state.step - 1;

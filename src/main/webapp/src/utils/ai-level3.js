@@ -51,9 +51,9 @@ export default class AiLevel3 extends Component {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
         const hShipRooms = shipRooms.hFreeRooms;
-        console.log("hShipRooms", hShipRooms);
+        // console.log("hShipRooms", hShipRooms);
         const vShipRooms = shipRooms.vFreeRooms;
-        console.log("vShipRooms", vShipRooms);
+        // console.log("vShipRooms", vShipRooms);
 
         const map = {};
         populateCommonRoomsCells(map, hShipRooms, vShipRooms);
