@@ -1,77 +1,13 @@
 import React from 'react';
-import {getRandomHiddenCell, getVisibleCellsCount, isHiddenCell} from 'src/utils/cells-utils'
+import {getRandomHiddenCell, getVisibleCellsCount} from 'src/utils/cells-utils'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
+import AiDamagedShip from 'src/utils/ai-damaged-ship'
 import AiLevel1 from 'src/utils/ai-level1'
 import AiLevel2 from 'src/utils/ai-level2'
 import AiLevel3 from 'src/utils/ai-level3'
 import {randomElement} from 'src/utils/random-utils'
 
 const FIRST_RANDOM_SHOOTS_COUNT = 10;
-
-function _shotOnceWoundedShipAgain(cells, woundedCell) {
-    // console.log("_shotOnceWoundedShipAgain", woundedCell);
-    const neighborCells = [];
-
-    if (cells[woundedCell.y - 1] && cells[woundedCell.y][woundedCell.x]) {
-        neighborCells.push(cells[woundedCell.y - 1][woundedCell.x]);
-    }
-    if (cells[woundedCell.y + 1] && cells[woundedCell.y][woundedCell.x]) {
-        neighborCells.push(cells[woundedCell.y + 1][woundedCell.x]);
-    }
-    if (cells[woundedCell.y] && cells[woundedCell.y][woundedCell.x - 1]) {
-        neighborCells.push(cells[woundedCell.y][woundedCell.x - 1]);
-    }
-    if (cells[woundedCell.y] && cells[woundedCell.y][woundedCell.x + 1]) {
-        neighborCells.push(cells[woundedCell.y][woundedCell.x + 1]);
-    }
-
-    const hittableNeighborCells = neighborCells.filter(cell => {
-        return isHiddenCell(cell);
-    });
-    return randomElement(hittableNeighborCells);
-}
-
-function finishingOffWoundedShip(cells, playerWoundedShipCells) {
-    if (playerWoundedShipCells.length === 1) {
-        return _shotOnceWoundedShipAgain(cells, playerWoundedShipCells[0]);
-    }
-
-    // console.log("finishingOffWoundedShip", playerWoundedShipCells.length, 'cells');
-    let firstWoundedCell = playerWoundedShipCells[0];
-    let lastWoundedCell = playerWoundedShipCells[playerWoundedShipCells.length - 1];
-    const isVerticalShip = firstWoundedCell.x === lastWoundedCell.x;
-    if (isVerticalShip) {
-        const sorted = playerWoundedShipCells.sort(function (cell1, cell2) {
-            return cell1.y - cell2.y;
-        });
-        firstWoundedCell = sorted[0];
-        lastWoundedCell = sorted[sorted.length - 1];
-        const targets = [];
-        if (cells[firstWoundedCell.y - 1]) {
-            targets.push(cells[firstWoundedCell.y - 1][firstWoundedCell.x]);
-        }
-        if (cells[lastWoundedCell.y + 1]) {
-            targets.push(cells[lastWoundedCell.y + 1][lastWoundedCell.x]);
-        }
-        return randomElement(targets.filter(cell => {
-            return isHiddenCell(cell);
-        }));
-    }
-
-    // horizontal ship
-    const sorted = playerWoundedShipCells.sort(function (cell1, cell2) {
-        return cell1.x - cell2.x;
-    });
-    firstWoundedCell = sorted[0];
-    lastWoundedCell = sorted[sorted.length - 1];
-    const targets = [
-        cells[firstWoundedCell.y][firstWoundedCell.x - 1],
-        cells[lastWoundedCell.y][lastWoundedCell.x + 1]
-    ];
-    return randomElement(targets.filter(cell => {
-        return isHiddenCell(cell);
-    }));
-}
 
 function level1Shot(cells) {
     return new AiLevel1().getCells(cells);
@@ -142,7 +78,7 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
 export const getEnemyShot = (cells, ships, playerWoundedShipCells, difficultyLevel) => {
     if (playerWoundedShipCells.length > 0) {
         // console.log("WOUNDED", playerWoundedShipCells.length, 'cells');
-        return finishingOffWoundedShip(cells, playerWoundedShipCells);
+        return new AiDamagedShip().getCells(cells, playerWoundedShipCells);
     }
 
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
