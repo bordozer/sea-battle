@@ -3,23 +3,25 @@ import React, {Component} from 'react';
 import {getSpaciousRooms} from 'src/utils/ships-generator'
 import {getBiggestAliveShip} from 'src/utils/ships-utils'
 
-function getCrossRoomsShoots(hFreeRooms, vFreeRooms) {
-    const map = {};
-    hFreeRooms.forEach(hRoomCells => {
-        hRoomCells.forEach(hRoomCell => {
-            vFreeRooms.forEach(vRoomCells => {
-                vRoomCells.forEach(vRoomCell => {
-                    if (hRoomCell.id === vRoomCell.id) {
-                        map[hRoomCell.id] = {
-                            id: hRoomCell.id,
-                            count: map[hRoomCell.id] ? map[hRoomCell.id].count + 1 : 0,
-                            cell: hRoomCell
-                        }
+function populateCommonRoomsCells(map, rooms1, rooms2) {
+    rooms1.forEach(room1Cells => {
+        room1Cells.forEach(room1Cell => {
+            rooms2.forEach(room2Cells => {
+                room2Cells.forEach(room2Cell => {
+                    if (room1Cell.id === room2Cell.id) {
+                        map[room1Cell.id] = {
+                            id: room1Cell.id,
+                            count: map[room1Cell.id] ? map[room1Cell.id].count + 1 : 0,
+                            cell: room1Cell
+                        };
                     }
                 });
             });
         });
     });
+}
+
+function getCells(map) {
     // console.log("map", map);
     let commonCells = [];
     let max = 0;
@@ -50,10 +52,14 @@ export default class AiLevel3 extends Component {
         const vShipRooms = shipRooms.vFreeRooms;
         // console.log("vShipRooms", vShipRooms);
 
-        const vhCommonCells = getCrossRoomsShoots(hShipRooms, vShipRooms);
-        if (vhCommonCells.length > 0) {
-            // console.log("vhCommonCells", vhCommonCells);
-            return vhCommonCells;
+        const map = {};
+        populateCommonRoomsCells(map, hShipRooms, vShipRooms);
+        populateCommonRoomsCells(map, hShipRooms, hShipRooms);
+        populateCommonRoomsCells(map, vShipRooms, vShipRooms);
+        const commonCells = getCells(map);
+        if (commonCells.length > 0) {
+            // console.log("commonCells", commonCells);
+            return commonCells;
         }
         return [];
     }
