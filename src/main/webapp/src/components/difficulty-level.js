@@ -6,13 +6,13 @@ const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onS
         <div>
             <div className="row mt-10">
                 <div className="col-sm-3 text-center small">
-                    Show hints
+                    <span className="text-muted">HINTS</span>
                 </div>
                 <div className="col-sm-3 text-center small">
-                    <span className="text-muted">EASY</span>
+                    <span className="text-success">EASY</span>
                 </div>
                 <div className="col-sm-3 text-center small">
-                    <span className="text-success">MEDIUM</span>
+                    <span className="text-warning">MEDIUM</span>
                 </div>
                 <div className="col-sm-3 text-center small">
                     <span className="text-danger">HARD</span>
