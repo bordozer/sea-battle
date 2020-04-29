@@ -200,7 +200,9 @@ export default class BattlePage extends Component {
         return generateShips(cells);
     };
 
-    randomizePlayersShips = () => {
+    onNewGameClick = () => {
+        this.setState(this.getInitialState());
+
         this.state.logs.push(this.createLogRecord("Randomize player's ships"));
         const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
@@ -209,10 +211,6 @@ export default class BattlePage extends Component {
             step: STEP_READY_TO_START,
             logs: this.state.logs
         });
-    };
-
-    resetBattle = () => {
-        this.setState(this.getInitialState());
     };
 
     getInitialState = () => {
@@ -252,6 +250,10 @@ export default class BattlePage extends Component {
             showShootHints: isShowHints
         })
     };
+
+    componentDidMount() {
+        window.addEventListener('load', this.onNewGameClick);
+    }
 
     render() {
         const playerBattleFieldOpts = {
@@ -334,18 +336,12 @@ export default class BattlePage extends Component {
                             className="bg-primary"
                             onClick={this.startBattle}
                             disabled={this.state.step !== STEP_READY_TO_START}>
-                            Start battle
+                            Start
                         </button>
                         <button
                             className="bg-primary"
-                            onClick={this.randomizePlayersShips}
-                            disabled={(this.state.step === STEP_BATTLE) || (this.state.step === STEP_FINAL)}>
-                            Randomize ships
-                        </button>
-                        <button
-                            className="bg-primary"
-                            onClick={this.resetBattle}>
-                            Reset
+                            onClick={this.onNewGameClick}>
+                            New game
                         </button>
                     </div>
                     <div className="col-sm-4"/>
