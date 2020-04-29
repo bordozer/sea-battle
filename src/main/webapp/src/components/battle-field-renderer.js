@@ -58,7 +58,7 @@ function cellCss(cell, options) {
     // killed ship
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
         result.push('cell-ship-killed');
-        result.push('fa fa-arrows');
+        result.push('fa fa-times');
     }
 
     // player's of enemy's known ship neighbor cell
