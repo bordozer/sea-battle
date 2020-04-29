@@ -33,11 +33,7 @@ export default class BattlePage extends Component {
     }
 
     playerCellSetup = (cell) => {
-        Swal.fire(
-            'Manual ship setup is not supported yet',
-            "Click Randomize ships button.",
-            'info'
-        );
+
     };
 
     startBattle = () => {
@@ -81,6 +77,7 @@ export default class BattlePage extends Component {
         if (this.state.currentMove === 'enemy') {
             return;
         }
+        console.log("-= PLAYER SHOOT =-");
 
         let step = this.state.step;
         let enemyLastShot = this.state.enemyLastShot;
@@ -146,6 +143,7 @@ export default class BattlePage extends Component {
     };
 
     enemyShot = () => {
+        console.log("-= ENEMY SHOOT =-");
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
         let playerWoundedShipCells = this.state.playerWoundedShipCells;

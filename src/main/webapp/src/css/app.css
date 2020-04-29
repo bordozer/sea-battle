@@ -79,5 +79,5 @@ body {
 
 .disabledArea {
     pointer-events: none;
-    opacity: 0.80;
+    opacity: 0.70;
 }

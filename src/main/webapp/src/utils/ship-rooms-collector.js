@@ -30,7 +30,7 @@ export default class ShipRoomsCollector extends Component {
             }
             if (isRoom) {
                 result.push(room);
-                i += this.state.step;
+                i += this.state.step - 1;
             }
         }
         // debugger;
