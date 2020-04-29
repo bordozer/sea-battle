@@ -81,6 +81,14 @@ function _getHFreeRooms(cells, shipSize, filter) {
 
 export default class ShipRoomsCollector extends Component {
 
+    constructor(props) {
+        super(props);
+        // Don't call this.setState() here!
+        this.state = {
+            step: props
+        };
+    }
+
     collectRooms = (cells, shipSize, filter) => {
         const hFreeRooms = _getHFreeRooms(cells, shipSize, filter);
         // console.log("hFreeRooms", hFreeRooms);

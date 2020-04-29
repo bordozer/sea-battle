@@ -70,7 +70,7 @@ export const generateShips = (cells) => {
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
 
-        const spaciousRooms = new ShipRoomsCollector().collectRooms(cells, shipSize, isFreeForShipCell);
+        const spaciousRooms = new ShipRoomsCollector(1).collectRooms(cells, shipSize, isFreeForShipCell);
         const hvSpaciousRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
         const shipRoom = randomElement(hvSpaciousRooms);
 

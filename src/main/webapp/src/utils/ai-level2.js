@@ -8,7 +8,7 @@ export default class AiLevel2 extends Component {
     getCells = (cells, ships) => {
         const biggestShipSize = getBiggestAliveShip(ships).size;
 
-        const spaciousRooms = new ShipRoomsCollector().collectRooms(cells, biggestShipSize, function (cell) {
+        const spaciousRooms = new ShipRoomsCollector(biggestShipSize).collectRooms(cells, biggestShipSize, function (cell) {
             return !cell.isHit && !cell.isKilledShipNeighborCell
         });
         const hShipRooms = spaciousRooms.hFreeRooms;
