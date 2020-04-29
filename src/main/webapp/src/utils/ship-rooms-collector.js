@@ -16,7 +16,7 @@ export default class ShipRoomsCollector extends Component {
     _getVFreeRoomsOfArray = (cells, shipSize, filter) => {
         const result = [];
 
-        for (let i = 0; i <= cells.length - shipSize; i += this.state.step) {
+        for (let i = 0; i <= cells.length - shipSize; i++) {
             const room = cells.slice(i, i + shipSize);
             if (room.length < shipSize) {
                 break;
@@ -30,6 +30,7 @@ export default class ShipRoomsCollector extends Component {
             }
             if (isRoom) {
                 result.push(room);
+                i += this.state.step;
             }
         }
         // debugger;
