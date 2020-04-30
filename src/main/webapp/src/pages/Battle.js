@@ -43,7 +43,7 @@ export default class BattlePage extends Component {
 
         // random - who's first shot
         const firstMove = Math.floor(Math.random() * Math.floor(2));
-        this.state.logs.push(this.createLogRecord('The battle has began! The first move: ' + (firstMove === 0 ? 'player' : 'enemy')));
+        this.state.logs.push(this.createLogRecord('The battle has began! The first move: ' + (firstMove === 0 ? 'player' : 'enemy') + ". Kill'em all under Jolly Roger!"));
         if (firstMove === 1) {
             this.enemyMove();
         }
@@ -58,22 +58,6 @@ export default class BattlePage extends Component {
     };
 
     playerShot = (cell) => {
-        if ((this.state.step === null) || (this.state.step === STEP_READY_TO_START)) {
-            Swal.fire(
-                'The battle is not started yet',
-                'Setup your ships and click START button.',
-                'info'
-            );
-            return;
-        }
-        if (this.state.step === STEP_FINAL) {
-            Swal.fire(
-                'The battle is over now',
-                'This battle is over. But you can start another one.',
-                'info'
-            );
-            return;
-        }
         if (this.state.currentMove === 'enemy') {
             return;
         }
@@ -125,7 +109,7 @@ export default class BattlePage extends Component {
             if (getAliveShipsCount(enemyShips) === 0) {
                 Swal.fire(
                     'You have won!',
-                    'You are just a lucky bastard. Tou will have no chance next time.',
+                    'You are just a lucky guy. Tou will have no chance next time.',
                     'success'
                 );
                 step = STEP_FINAL;
