@@ -9,7 +9,7 @@ function renderVHeader(label, options) {
     const moveCss = getBorderCss(options);
     const result = [];
     result.push(
-        <div key={'hh-' + label} className={"col-sm-1 text-center align-middle text-light bg-secondary border border-secondary cell-base " + moveCss}>
+        <div key={'hh-' + label} className={"col-sm-1 text-center align-middle text-light bg-secondary border border-secondary cell-base battle-field-border " + moveCss}>
             {label}
         </div>
     );
@@ -134,7 +134,7 @@ function renderHHeader(cells, options) {
     );
     cells.forEach(cell => {
         result.push(
-            <div key={'v-' + cell.x} className={"col-sm-1 text-center text-light bg-secondary cell-base " + moveCss}>
+            <div key={'v-' + cell.x} className={"col-sm-1 text-center text-light bg-secondary cell-base battle-field-border " + moveCss}>
                 {cell.xLabel}
             </div>
         );

@@ -18,6 +18,9 @@ body {
 .cell-text {
     padding-top: 12px;
 }
+.battle-field-border {
+    padding-top: 6px;
+}
 
 .cell-base {
     color: silver;
