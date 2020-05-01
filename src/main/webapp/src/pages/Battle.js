@@ -108,8 +108,8 @@ export default class BattlePage extends Component {
 
             if (getAliveShipsCount(enemyShips) === 0) {
                 Swal.fire(
-                    'You have won!',
-                    'You are just a lucky guy. Tou will have no chance next time.',
+                    'You have won',
+                    "You're just lucky. You will have no chance next time",
                     'success'
                 );
                 step = STEP_FINAL;
