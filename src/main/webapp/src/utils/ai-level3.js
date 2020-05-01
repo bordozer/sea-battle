@@ -6,7 +6,7 @@ import {getBiggestAliveShip} from 'src/utils/ships-utils'
 function populateCommonRoomsCells(rooms) {
 
     const hiddenCells = rooms.flatMap(room => room.roomCells);
-    console.log("hiddenCells", hiddenCells);
+    // console.log("hiddenCells", hiddenCells);
 
     const map = {};
     hiddenCells.forEach(cell => {
@@ -60,8 +60,8 @@ export default class AiLevel3 extends Component {
 
         const map = populateCommonRoomsCells(hShipRooms.concat(vShipRooms));
         const cellsForShoot = getCells(map);
-        console.log("map", map);
-        console.log("cellsForShoot", cellsForShoot);
+        // console.log("map", map);
+        // console.log("cellsForShoot", cellsForShoot);
         return cellsForShoot;
     }
 }

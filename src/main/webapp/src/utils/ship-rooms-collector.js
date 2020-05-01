@@ -94,9 +94,9 @@ export default class ShipRoomsCollector extends Component {
 
     collectRooms = (cells, shipSize, filter) => {
         const hFreeRooms = this._getHFreeRooms(cells, shipSize, filter);
-        console.log("hFreeRooms", hFreeRooms);
+        // console.log("hFreeRooms", hFreeRooms);
         const vFreeRooms = this._getVFreeRooms(cells, shipSize, filter);
-        console.log("vFreeRooms", vFreeRooms);
+        // console.log("vFreeRooms", vFreeRooms);
         const freeRooms = hFreeRooms.concat(vFreeRooms);
         return {
             hFreeRooms: hFreeRooms,
