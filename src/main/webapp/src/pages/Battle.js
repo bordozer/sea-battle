@@ -106,6 +106,7 @@ export default class BattlePage extends Component {
                     "You're just lucky. You will have no chance next time",
                     'success'
                 );
+                this.state.logs.push(this.createLogRecord('Player won'));
                 step = STEP_FINAL;
             }
         }
@@ -154,6 +155,8 @@ export default class BattlePage extends Component {
             }
             if (!isEnemyWon) {
                 this.enemyMove();
+            } else {
+                this.state.logs.push(this.createLogRecord('Enemy won'));
             }
         }
 
@@ -181,13 +184,12 @@ export default class BattlePage extends Component {
     onNewGameClick = () => {
         this.setState(this.getInitialState());
 
-        this.state.logs.push(this.createLogRecord("New game is initialized. Click START button when ready."));
         const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
             playerCells: gameData.cells,
             playerShips: gameData.ships,
             step: STEP_READY_TO_START,
-            logs: this.state.logs
+            logs: [this.createLogRecord("New game is initialized. Click START button when ready.")]
         });
     };
 
