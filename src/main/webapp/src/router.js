@@ -23,7 +23,7 @@ export default function AppRouter() {
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
                             to="/"
-                            label="Battle"
+                            label="Sea Battle"
                         />
                     </div>
                     <div className="col-sm-4 text-center">

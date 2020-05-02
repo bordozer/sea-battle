@@ -30,6 +30,11 @@ const ShipStateRenderer = ({ships, isPlayer}) => {
 
     return (
         <div>
+            <div className="row mt-10">
+                <div className="col-sm-12 text-center">
+                    {isPlayer ? 'Player' : 'Enemy'}
+                </div>
+            </div>
             {result}
         </div>
     )
