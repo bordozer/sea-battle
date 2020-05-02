@@ -94,7 +94,7 @@ export default class BattlePage extends Component {
         if (enemyShip) {
             enemyShip.damage++;
             if (enemyShip.damage === enemyShip.size) {
-                this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - killed'));
+                this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - killed (' + enemyShip.name + ')'));
                 markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
             } else {
                 this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - damaged'));
@@ -137,7 +137,7 @@ export default class BattlePage extends Component {
             if (playerShip.damage === playerShip.size) {
                 // KILLED
                 playerWoundedShipCells = [];
-                this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - killed'));
+                this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - killed (' + playerShip.name + ')'));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
                 if (getAliveShipsCount(playerShips) === 0) {
                     Swal.fire(
