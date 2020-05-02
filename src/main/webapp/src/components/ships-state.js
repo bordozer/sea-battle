@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getBiggestAliveShip} from 'src/utils/ships-utils'
+import {getBiggestShip} from 'src/utils/ships-utils'
 
 function _renderShip(ship, size, isPlayer) {
     const result = [];
@@ -24,8 +24,7 @@ const ShipStateRenderer = ({ships, isPlayer}) => {
     if (!ships || ships.length === 0) {
         return "";
     }
-    const biggestShip = getBiggestAliveShip(ships);
-    console.log("biggestShip", biggestShip);
+    const biggestShip = getBiggestShip(ships);
     const result = [];
     ships.forEach(ship => {
         result.push(
