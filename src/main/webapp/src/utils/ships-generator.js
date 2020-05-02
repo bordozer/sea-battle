@@ -6,16 +6,17 @@ import {randomElement} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
-        {id: 11, name: 'Ship 1.1', size: 1, cells: [], damage: 0},
-        {id: 12, name: 'Ship 1.2', size: 1, cells: [], damage: 0},
-        {id: 13, name: 'Ship 1.3', size: 1, cells: [], damage: 0},
-        {id: 14, name: 'Ship 1.4', size: 1, cells: [], damage: 0},
-        {id: 21, name: 'Ship 2.1', size: 2, cells: [], damage: 0},
-        {id: 22, name: 'Ship 2.2', size: 2, cells: [], damage: 0},
-        {id: 31, name: 'Ship 2.3', size: 2, cells: [], damage: 0},
-        {id: 32, name: 'Ship 3.1', size: 3, cells: [], damage: 0},
-        {id: 33, name: 'Ship 3.2', size: 3, cells: [], damage: 0},
-        {id: 41, name: 'Ship 4.1', size: 4, cells: [], damage: 0}
+        {id: 11, name: 'Patrol Boat 1', size: 1, cells: [], damage: 0},
+        {id: 12, name: 'Patrol Boat 2', size: 1, cells: [], damage: 0},
+        {id: 13, name: 'Patrol Boat 3', size: 1, cells: [], damage: 0},
+        {id: 14, name: 'Patrol Boat 4', size: 1, cells: [], damage: 0},
+        {id: 21, name: 'Destroyer 1', size: 2, cells: [], damage: 0},
+        {id: 22, name: 'Destroyer 2', size: 2, cells: [], damage: 0},
+        {id: 31, name: 'Destroyer 3', size: 2, cells: [], damage: 0},
+        {id: 32, name: 'Cruiser 1', size: 3, cells: [], damage: 0},
+        {id: 33, name: 'Cruiser 2', size: 3, cells: [], damage: 0},
+        {id: 41, name: 'Battleship', size: 4, cells: [], damage: 0},
+        // {id: 51, name: 'Carrier', size: 5, cells: [], damage: 0}
     ]
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const getBiggestAliveShip = (playerShips) => {
-    return playerShips
+export const getBiggestAliveShip = (ships) => {
+    return ships
         .filter(ship => {
             return ship.damage < ship.size;
         })
