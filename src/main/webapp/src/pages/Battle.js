@@ -19,12 +19,6 @@ const STEP_FINAL = 'STEP_FINAL';
 
 const BATTLE_FIELD_SIZE = 10;
 
-const WELCOME_MESSAGE = {
-    time: new Date(),
-    text: "Ready for a new fight? Setup your ships on left square (or use Randomize button) then press Start. Click on right square when your move",
-    type: 'info'
-};
-
 export default class BattlePage extends Component {
 
     constructor(props) {
@@ -187,7 +181,7 @@ export default class BattlePage extends Component {
     onNewGameClick = () => {
         this.setState(this.getInitialState());
 
-        this.state.logs.push(this.createLogRecord("Randomize player's ships"));
+        this.state.logs.push(this.createLogRecord("New game is initialized. Click START button when ready."));
         const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
             playerCells: gameData.cells,
@@ -211,7 +205,7 @@ export default class BattlePage extends Component {
             isReadyToStart: false,
             difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
             showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
-            logs: [WELCOME_MESSAGE]
+            logs: []
         }
     }
 
