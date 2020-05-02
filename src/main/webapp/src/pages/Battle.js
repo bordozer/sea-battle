@@ -61,7 +61,7 @@ export default class BattlePage extends Component {
         if (this.state.currentMove === 'enemy') {
             return;
         }
-        console.log("-= PLAYER SHOOT =-");
+        // console.log("-= PLAYER SHOOT =-");
 
         let step = this.state.step;
         let enemyLastShot = this.state.enemyLastShot;
@@ -72,14 +72,14 @@ export default class BattlePage extends Component {
         const enemyCell = enemyCells[cell.y][cell.x];
 
         if (enemyCell.isHit) {
-            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + ':' + cell.yLabel + ' has already been hit. Chose another one.'));
+            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' has already been hit. Chose another one.'));
             this.setState({
                 logs: this.state.logs
             });
             return;
         }
         if (enemyCell.isKilledShipNeighborCell) {
-            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + ':' + cell.yLabel + ' is a neighbor of killed ship. Chose another one.'));
+            this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' is a neighbor of killed ship. Chose another one.'));
             this.setState({
                 logs: this.state.logs
             });
@@ -92,7 +92,7 @@ export default class BattlePage extends Component {
 
         // MISSED
         if (!enemyShip) {
-            this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (missed)'));
+            this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - missed'));
             this.enemyMove();
         }
 
@@ -100,10 +100,10 @@ export default class BattlePage extends Component {
         if (enemyShip) {
             enemyShip.damage++;
             if (enemyShip.damage === enemyShip.size) {
-                this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (killed)'));
+                this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - killed'));
                 markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
             } else {
-                this.state.logs.push(this.createLogRecord("Player's shot: " + cell.xLabel + ':' + cell.yLabel + ' (wounded)'));
+                this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - damaged'));
             }
 
             if (getAliveShipsCount(enemyShips) === 0) {
@@ -127,7 +127,7 @@ export default class BattlePage extends Component {
     };
 
     enemyShot = () => {
-        console.log("-= ENEMY SHOOT =-");
+        // console.log("-= ENEMY SHOOT =-");
         const playerCells = this.state.playerCells;
         const playerShips = this.state.playerShips;
         let playerWoundedShipCells = this.state.playerWoundedShipCells;
@@ -143,7 +143,7 @@ export default class BattlePage extends Component {
             if (playerShip.damage === playerShip.size) {
                 // KILLED
                 playerWoundedShipCells = [];
-                this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (killed)'));
+                this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - killed'));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
                 if (getAliveShipsCount(playerShips) === 0) {
                     Swal.fire(
@@ -156,7 +156,7 @@ export default class BattlePage extends Component {
             } else {
                 // WOUNDED
                 playerWoundedShipCells.push(hitPlayerCell);
-                this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (wounded)'));
+                this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - damaged'));
             }
             if (!isEnemyWon) {
                 this.enemyMove();
@@ -164,7 +164,7 @@ export default class BattlePage extends Component {
         }
 
         if (!playerShip) {
-            this.state.logs.push(this.createLogRecord("Enemy's shot: " + hitPlayerCell.xLabel + ':' + hitPlayerCell.yLabel + ' (missed)'));
+            this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - missed'));
         }
 
         this.setState({
