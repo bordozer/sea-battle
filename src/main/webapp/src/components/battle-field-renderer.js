@@ -77,6 +77,9 @@ function cellCss(cell, options) {
         result.push('text-primary');
         result.push('fa fa-crosshairs');
     }
+    if (isLastShoot && !cell.ship) {
+        result.push('cell-not-hittable');
+    }
 
     const recommendedShots = options.recommendedShots.shoots;
     const strategy = options.recommendedShots.strategy;
