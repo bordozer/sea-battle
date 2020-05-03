@@ -253,8 +253,8 @@ export default class BattlePage extends Component {
             }
         };
 
-        const shootHints =  this.state.showShootHints && this.state.step === STEP_BATTLE && this.state.enemyWoundedShipCells.length === 0
-            ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel)
+        const shootHints =  this.state.showShootHints && this.state.step === STEP_BATTLE
+            ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.enemyWoundedShipCells, this.state.difficultyLevel)
             : {
                 shoots: [],
                 strategy: 'hits-are-disabled'

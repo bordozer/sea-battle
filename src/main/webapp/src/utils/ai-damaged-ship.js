@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 import {isHiddenCell} from 'src/utils/cells-utils'
-import {randomElement} from 'src/utils/random-utils'
 
 function _shotOnceDamagedShipAgain(cells, damagedCell) {
     // console.log("_shotOnceDamagedShipAgain", damagedCell);
@@ -20,10 +19,9 @@ function _shotOnceDamagedShipAgain(cells, damagedCell) {
         neighborCells.push(cells[damagedCell.y][damagedCell.x + 1]);
     }
 
-    const hittableNeighborCells = neighborCells.filter(cell => {
+    return neighborCells.filter(cell => {
         return isHiddenCell(cell);
     });
-    return randomElement(hittableNeighborCells);
 }
 
 export default class AiDamagedShip extends Component {
@@ -49,9 +47,9 @@ export default class AiDamagedShip extends Component {
             if (cells[lastDamagedCell.y + 1]) {
                 targets.push(cells[lastDamagedCell.y + 1][lastDamagedCell.x]);
             }
-            return randomElement(targets.filter(cell => {
+            return targets.filter(cell => {
                 return isHiddenCell(cell);
-            }));
+            });
         }
 
         // horizontal ship
@@ -64,8 +62,8 @@ export default class AiDamagedShip extends Component {
             cells[firstDamagedCell.y][firstDamagedCell.x - 1],
             cells[lastDamagedCell.y][lastDamagedCell.x + 1]
         ];
-        return randomElement(targets.filter(cell => {
+        return targets.filter(cell => {
             return isHiddenCell(cell);
-        }));
+        });
     }
 }

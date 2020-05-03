@@ -21,11 +21,19 @@ function level3Shot(cells, ships) {
     return new AiLevel3().getCells(cells, ships);
 }
 
-export const getRecommendedShots = (cells, ships, difficultyLevel) => {
+export const getRecommendedShots = (cells, ships, enemyDamagedShipCells, difficultyLevel) => {
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         return {
             shoots: [],
             strategy: 'no-strategy-for-first-shoots'
+        };
+    }
+
+    if (enemyDamagedShipCells.length > 0) {
+        // console.log("enemyDamagedShipCells", enemyDamagedShipCells);
+        return {
+            shoots: new AiDamagedShip().getCells(cells, enemyDamagedShipCells),
+            strategy: 'level3'
         };
     }
 
@@ -78,7 +86,7 @@ export const getRecommendedShots = (cells, ships, difficultyLevel) => {
 export const getEnemyShot = (cells, ships, playerDamagedShipCells, difficultyLevel) => {
     if (playerDamagedShipCells.length > 0) {
         // console.log("WOUNDED", playerDamagedShipCells.length, 'cells');
-        return new AiDamagedShip().getCells(cells, playerDamagedShipCells);
+        return randomElement(new AiDamagedShip().getCells(cells, playerDamagedShipCells));
     }
 
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
