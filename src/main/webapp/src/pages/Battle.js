@@ -82,6 +82,7 @@ export default class BattlePage extends Component {
 
         enemyCell.isHit = true;
 
+        let enemyWoundedShipCells = this.state.enemyWoundedShipCells;
         const enemyShip = enemyCell.ship;
 
         // MISSED
@@ -96,8 +97,10 @@ export default class BattlePage extends Component {
             if (enemyShip.damage === enemyShip.size) {
                 this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - killed ' + '#'.repeat(enemyShip.size)));
                 markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
+                enemyWoundedShipCells = [];
             } else {
                 this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - damaged'));
+                enemyWoundedShipCells.push(enemyCell);
             }
 
             if (getAliveShipsCount(enemyShips) === 0) {
@@ -115,6 +118,7 @@ export default class BattlePage extends Component {
             enemyCells: this.state.enemyCells,
             playerLastShot: cell,
             enemyLastShot: enemyLastShot,
+            enemyWoundedShipCells: enemyWoundedShipCells,
             currentMove: enemyShip ? 'player' : 'enemy',
             logs: this.state.logs,
             step: step
@@ -202,6 +206,7 @@ export default class BattlePage extends Component {
             enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
             enemyShips: [],
             enemyLastShot: null,
+            enemyWoundedShipCells: [],
             step: null,
             currentMove: null,
             isReadyToStart: false,
@@ -248,7 +253,7 @@ export default class BattlePage extends Component {
             }
         };
 
-        const shootHints = this.state.showShootHints && this.state.step === STEP_BATTLE
+        const shootHints =  this.state.showShootHints && this.state.step === STEP_BATTLE && this.state.enemyWoundedShipCells.length === 0
             ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.difficultyLevel)
             : {
                 shoots: [],
