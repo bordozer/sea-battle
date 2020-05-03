@@ -30,6 +30,14 @@ export const getRecommendedShots = (cells, ships, enemyDamagedShipCells, difficu
         };
     }
 
+    if (difficultyLevel === 1) {
+        // console.log("Player hints: level1");
+        return {
+            shoots: [],
+            strategy: 'level1'
+        };
+    }
+
     if (getVisibleCellsCount(cells) < FIRST_RANDOM_SHOOTS_COUNT) {
         return {
             shoots: [],
@@ -46,13 +54,6 @@ export const getRecommendedShots = (cells, ships, enemyDamagedShipCells, difficu
         };
     }
 
-    if (difficultyLevel === 1) {
-        // console.log("Player hints: level1");
-        return {
-            shoots: [],
-            strategy: 'level1'
-        };
-    }
     if (difficultyLevel === 2) {
         // console.log("Player hints: level2");
         return {
