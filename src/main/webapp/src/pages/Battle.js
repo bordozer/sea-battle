@@ -329,7 +329,7 @@ export default class BattlePage extends Component {
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.player.ships} isPlayer={true}/>
+                        <ShipsStateRenderer ships={this.state.player.ships} isPlayer={true} winner={this.state.gameplay.winner}/>
                     </div>
                     <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
@@ -346,7 +346,7 @@ export default class BattlePage extends Component {
                         />
                     </div>
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.enemy.ships} isPlayer={false}/>
+                        <ShipsStateRenderer ships={this.state.enemy.ships} isPlayer={false} winner={this.state.gameplay.winner}/>
                     </div>
                 </div>
 

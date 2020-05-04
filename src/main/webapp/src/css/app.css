@@ -89,3 +89,7 @@ body {
     border-radius: 7px;
     width: 150px;
 }
+
+.looser{
+    text-decoration: line-through;
+}

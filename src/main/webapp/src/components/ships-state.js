@@ -20,7 +20,7 @@ function _renderShip(ship, size, isPlayer) {
     return result;
 }
 
-const ShipStateRenderer = ({ships, isPlayer}) => {
+const ShipStateRenderer = ({ships, isPlayer, winner}) => {
     if (!ships || ships.length === 0) {
         return "";
     }
@@ -36,10 +36,12 @@ const ShipStateRenderer = ({ships, isPlayer}) => {
         )
     });
 
+    const isLooser = (winner && ((isPlayer && winner === 'enemy') || (!isPlayer && winner === 'player')));
+
     return (
         <div>
             <div className="row mt-10">
-                <div className="col-sm-12 text-center">
+                <div className={"col-sm-12 text-center" + (isLooser ? ' looser text-warning' : '')}>
                     {isPlayer ? 'Player' : 'Enemy'}
                 </div>
             </div>
