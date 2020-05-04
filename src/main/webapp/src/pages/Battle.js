@@ -23,7 +23,7 @@ export default class BattlePage extends Component {
 
     constructor(props) {
         super(props)
-        this.state = this.getInitialState();
+        this.state = this.getInitialState(null);
     }
 
     playerCellSetup = (cell) => {
@@ -31,58 +31,60 @@ export default class BattlePage extends Component {
     };
 
     startBattle = () => {
-        // randomize enemyShips
-        const gameData = this.randomizeBattleFieldWithShips();
-        // this.state.enemyCells = gameData.cells;
-
-        // random - who's first shot
+        // random - who's first shot. 0 - player, 1 - enemy
         const firstMove = Math.floor(Math.random() * Math.floor(2));
-        this.state.logs.push(this.createLogRecord('The battle has began! The first move: ' + (firstMove === 0 ? 'player' : 'enemy') + ". Kill'em all under Jolly Roger!"));
+        const logs = [this.createLogRecord('The battle has began! The first move: ' + (firstMove === 0 ? 'player' : 'enemy'))];
         if (firstMove === 1) {
             this.enemyMove();
         }
 
+        const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
-            enemyCells: gameData.cells,
-            enemyShips: gameData.ships,
-            step: STEP_BATTLE,
-            currentMove: firstMove === 0 ? 'player' : 'enemy',
-            logs: this.state.logs
-        });
+            enemy: {
+                cells: gameData.cells,
+                ships: gameData.ships,
+                lastShoot: null,
+                damagedShipCells: []
+            },
+            gameplay: {
+                step: STEP_BATTLE,
+                currentMove: firstMove === 0 ? 'player' : 'enemy',
+                winner: null
+            },
+            logs: logs
+        }, this.logState);
     };
 
     playerShot = (cell) => {
-        if (this.state.currentMove === 'enemy') {
+        if (this.state.gameplay.currentMove === 'enemy') {
             return;
         }
         // console.log("-= PLAYER SHOOT =-");
 
-        let step = this.state.step;
-        let enemyLastShot = this.state.enemyLastShot;
+        const enemyCells = this.state.enemy.cells;
+        const enemyShips = this.state.enemy.ships;
 
-        const enemyCells = this.state.enemyCells;
-        const enemyShips = this.state.enemyShips;
-
+        let isPlayerWin = false;
         const enemyCell = enemyCells[cell.y][cell.x];
 
         if (enemyCell.isHit) {
             this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' has already been hit. Chose another one.'));
             this.setState({
                 logs: this.state.logs
-            });
+            }, this.logState);
             return;
         }
         if (enemyCell.isKilledShipNeighborCell) {
             this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' is a neighbor of killed ship. Chose another one.'));
             this.setState({
                 logs: this.state.logs
-            });
+            }, this.logState);
             return;
         }
 
         enemyCell.isHit = true;
 
-        let enemyWoundedShipCells = this.state.enemyWoundedShipCells;
+        let enemyDamagedShipCells = this.state.enemy.damagedShipCells;
         const enemyShip = enemyCell.ship;
 
         // MISSED
@@ -97,42 +99,54 @@ export default class BattlePage extends Component {
             if (enemyShip.damage === enemyShip.size) {
                 this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - killed ' + '#'.repeat(enemyShip.size)));
                 markAllShipNeighborCellsAsKilled(enemyShip, enemyCells);
-                enemyWoundedShipCells = [];
+                enemyDamagedShipCells = [];
             } else {
                 this.state.logs.push(this.createLogRecord("Player: " + cell.xLabel + cell.yLabel + ' - damaged'));
-                enemyWoundedShipCells.push(enemyCell);
+                enemyDamagedShipCells.push(enemyCell);
             }
 
-            if (getAliveShipsCount(enemyShips) === 0) {
+            isPlayerWin = getAliveShipsCount(enemyShips) === 0;
+            if (isPlayerWin) {
                 Swal.fire(
                     'You have won',
                     "You're just lucky. You will have no chance next time",
                     'success'
                 );
                 this.state.logs.push(this.createLogRecord('Player won'));
-                step = STEP_FINAL;
             }
         }
 
         this.setState({
-            enemyCells: this.state.enemyCells,
-            playerLastShot: cell,
-            enemyLastShot: enemyLastShot,
-            enemyWoundedShipCells: enemyWoundedShipCells,
-            currentMove: enemyShip ? 'player' : 'enemy',
-            logs: this.state.logs,
-            step: step
-        });
+            player: {
+                cells: this.state.player.cells,
+                ships: this.state.player.ships,
+                lastShoot: cell,
+                damagedShipCells: this.state.player.damagedShipCells
+            },
+            enemy: {
+                cells: this.state.enemy.cells,
+                ships: this.state.enemy.ships,
+                lastShoot: this.state.enemy.lastShoot,
+                damagedShipCells: enemyDamagedShipCells
+            },
+            gameplay: {
+                step: isPlayerWin ? STEP_FINAL : this.state.gameplay.step,
+                currentMove: isPlayerWin ? null : (enemyShip ? 'player' : 'enemy'),
+                winner: isPlayerWin ? 'player': null
+            }
+        }, this.logState);
     };
 
     enemyShot = () => {
         // console.log("-= ENEMY SHOOT =-");
-        const playerCells = this.state.playerCells;
-        const playerShips = this.state.playerShips;
-        let playerWoundedShipCells = this.state.playerWoundedShipCells;
-        let isEnemyWon = false;
+        const playerCells = this.state.player.cells;
+        const playerShips = this.state.player.ships;
+        // console.log("this.state.player", this.state.player);
 
-        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerWoundedShipCells, this.state.difficultyLevel);
+        let playerDamagedShipCells = this.state.player.damagedShipCells;
+        let isEnemyWin = false;
+
+        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerDamagedShipCells, this.state.config.difficultyLevel);
 
         hitPlayerCell.isHit = true;
         const playerShip = hitPlayerCell.ship;
@@ -141,23 +155,23 @@ export default class BattlePage extends Component {
             playerShip.damage++;
             if (playerShip.damage === playerShip.size) {
                 // KILLED
-                playerWoundedShipCells = [];
+                playerDamagedShipCells = [];
                 this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - killed ' + '#'.repeat(playerShip.size)));
                 markAllShipNeighborCellsAsKilled(playerShip, playerCells);
-                if (getAliveShipsCount(playerShips) === 0) {
+                isEnemyWin = getAliveShipsCount(playerShips) === 0;
+                if (isEnemyWin) {
                     Swal.fire(
                         'Enemy has won!',
                         'You are loser. Live with this.',
                         'error'
                     );
-                    isEnemyWon = true;
                 }
             } else {
                 // WOUNDED
-                playerWoundedShipCells.push(hitPlayerCell);
+                playerDamagedShipCells.push(hitPlayerCell);
                 this.state.logs.push(this.createLogRecord("Enemy: " + hitPlayerCell.xLabel + hitPlayerCell.yLabel + ' - damaged'));
             }
-            if (!isEnemyWon) {
+            if (!isEnemyWin) {
                 this.enemyMove();
             } else {
                 this.state.logs.push(this.createLogRecord('Enemy won'));
@@ -169,11 +183,24 @@ export default class BattlePage extends Component {
         }
 
         this.setState({
-            step: isEnemyWon ? STEP_FINAL : this.state.step,
-            enemyLastShot: hitPlayerCell,
-            currentMove: playerShip ? 'enemy': 'player',
-            playerWoundedShipCells: playerWoundedShipCells,
-        });
+            player: {
+                cells: this.state.player.cells,
+                ships: this.state.player.ships,
+                lastShoot: this.state.player.lastShoot,
+                damagedShipCells: playerDamagedShipCells,
+            },
+            enemy: {
+                cells: this.state.enemy.cells,
+                ships: this.state.enemy.ships,
+                lastShoot: hitPlayerCell,
+                damagedShipCells: this.state.enemy.damagedShipCells
+            },
+            gameplay: {
+                step: isEnemyWin ? STEP_FINAL : this.state.gameplay.step,
+                currentMove: isEnemyWin ? null : (playerShip ? 'enemy' : 'player'),
+                winner: isEnemyWin ? 'enemy' : null
+            }
+        }, this.logState);
     };
 
     enemyMove = () => {
@@ -186,33 +213,48 @@ export default class BattlePage extends Component {
     };
 
     onNewGameClick = () => {
-        this.setState(this.getInitialState());
-
-        const gameData = this.randomizeBattleFieldWithShips();
-        this.setState({
-            playerCells: gameData.cells,
-            playerShips: gameData.ships,
-            step: STEP_READY_TO_START,
-            logs: [this.createLogRecord("New game is initialized. Click START button when ready.")]
-        });
+        this.setState((state) => {
+            return this.getInitialState(state)
+        }, this.logState);
     };
 
-    getInitialState = () => {
+    getInitialState = (state) => {
+        const gameData = this.randomizeBattleFieldWithShips();
         return {
-            playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            playerShips: [],
-            playerLastShot: null,
-            playerWoundedShipCells: [],
-            enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            enemyShips: [],
-            enemyLastShot: null,
-            enemyWoundedShipCells: [],
-            step: null,
-            currentMove: null,
-            isReadyToStart: false,
-            difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
-            showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
-            logs: []
+            player: {
+                cells: gameData.cells,
+                ships: gameData.ships,
+                lastShoot: null,
+                damagedShipCells: []
+            },
+            enemy: {
+                cells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+                ships: [],
+                lastShoot: null,
+                damagedShipCells: []
+            },
+            config: {
+                showShootHints: state ? state.config.showShootHints : true,
+                difficultyLevel: state ? state.config.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            },
+            gameplay: {
+                step: STEP_READY_TO_START,
+                currentMove: null,
+                winner: null
+            },
+            // playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            // playerShips: [],
+            // playerLastShot: null,
+            // playerWoundedShipCells: [],
+            // enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
+            // enemyShips: [],
+            // enemyLastShot: null,
+            // enemyWoundedShipCells: [],
+            // step: null,
+            // currentMove: null,
+            // difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            // showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
+            logs: [this.createLogRecord("New game is initialized. Click START button when ready.")]
         }
     }
 
@@ -225,36 +267,50 @@ export default class BattlePage extends Component {
 
     onDifficultyLevelChanged = (level) => {
         this.setState({
-            difficultyLevel: level
-        })
+            config: {
+                showShootHints: this.state.config.showShootHints,
+                difficultyLevel: level
+            }
+        }, this.logState)
     };
 
     onShowShootHintsChange = (e) => {
         const isShowHints = e.target.checked;
         this.setState({
-            showShootHints: isShowHints
-        })
+            config: {
+                showShootHints: isShowHints,
+                difficultyLevel: this.state.config.difficultyLevel
+            }
+        }, this.logState)
     };
 
     componentDidMount() {
         window.addEventListener('load', this.onNewGameClick);
     }
 
+    logState() {
+        console.log("this.state", this.state);
+    }
+
     render() {
+        const step = this.state.gameplay.step;
+        const currentMove = this.state.gameplay.currentMove;
+        const difficulty = this.state.config.difficultyLevel;
+
         const playerBattleFieldOpts = {
             isPlayer: true,
-            stage: this.state.step,
-            lastShot: this.state.enemyLastShot,
-            currentMove: this.state.currentMove,
-            highlightBattleArea: this.state.step === STEP_BATTLE && this.state.currentMove === 'enemy',
+            stage: step,
+            lastShot: this.state.enemy.lastShoot,
+            currentMove: currentMove,
+            highlightBattleArea: step === STEP_BATTLE && currentMove === 'enemy',
             recommendedShots: {
                 shoots: [],
                 strategy: null
             }
         };
 
-        const shootHints =  this.state.showShootHints && this.state.step === STEP_BATTLE
-            ? getRecommendedShots(this.state.enemyCells, this.state.enemyShips, this.state.enemyWoundedShipCells, this.state.difficultyLevel)
+        const shootHints =  this.state.config.showShootHints && step === STEP_BATTLE
+            ? getRecommendedShots(this.state.enemy.cells, this.state.enemy.ships, this.state.enemy.damagedShipCells, difficulty)
             : {
                 shoots: [],
                 strategy: 'hits-are-disabled'
@@ -262,35 +318,35 @@ export default class BattlePage extends Component {
         // console.log("shootHints", shootHints);
         const enemyBattleFieldOpts = {
             isPlayer: false,
-            stage: this.state.step,
-            lastShot: this.state.playerLastShot,
+            stage: step,
+            lastShot: this.state.player.lastShoot,
             recommendedShots: shootHints,
-            highlightBattleArea: this.state.step === STEP_BATTLE && this.state.currentMove === 'player',
-            currentMove: this.state.currentMove,
+            highlightBattleArea: step === STEP_BATTLE && currentMove === 'player',
+            currentMove: currentMove,
         };
 
         return (
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.playerShips} isPlayer={true}/>
+                        <ShipsStateRenderer ships={this.state.player.ships} isPlayer={true}/>
                     </div>
                     <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
-                            cells={this.state.playerCells}
+                            cells={this.state.player.cells}
                             options={playerBattleFieldOpts}
                             onCellClick={this.playerCellSetup}
                         />
                     </div>
                     <div className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={enemyBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
-                            cells={this.state.enemyCells}
+                            cells={this.state.enemy.cells}
                             options={enemyBattleFieldOpts}
                             onCellClick={this.playerShot}
                         />
                     </div>
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.enemyShips} isPlayer={false}/>
+                        <ShipsStateRenderer ships={this.state.enemy.ships} isPlayer={false}/>
                     </div>
                 </div>
 
@@ -298,8 +354,8 @@ export default class BattlePage extends Component {
                     <div className="col-sm-4">
 
                         <DifficultyLevelRenderer
-                            level={this.state.difficultyLevel}
-                            showShootHints={this.state.showShootHints}
+                            level={difficulty}
+                            showShootHints={this.state.config.showShootHints}
                             onDifficultyChange={this.onDifficultyLevelChanged}
                             onShowShootHintsChange={this.onShowShootHintsChange}
                         />
@@ -314,7 +370,7 @@ export default class BattlePage extends Component {
                         <button
                             className="bg-primary button-rounded"
                             onClick={this.startBattle}
-                            disabled={this.state.step !== STEP_READY_TO_START}>
+                            disabled={this.state.gameplay.step !== STEP_READY_TO_START}>
                             Start
                         </button>
                     </div>
