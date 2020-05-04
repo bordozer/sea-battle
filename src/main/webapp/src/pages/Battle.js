@@ -52,7 +52,7 @@ export default class BattlePage extends Component {
                 winner: null
             },
             logs: logs
-        }, this.logState);
+        });
     };
 
     playerShot = (cell) => {
@@ -71,14 +71,14 @@ export default class BattlePage extends Component {
             this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' has already been hit. Chose another one.'));
             this.setState({
                 logs: this.state.logs
-            }, this.logState);
+            });
             return;
         }
         if (enemyCell.isKilledShipNeighborCell) {
             this.state.logs.push(this.createLogRecord("Cell " + cell.xLabel + cell.yLabel + ' is a neighbor of killed ship. Chose another one.'));
             this.setState({
                 logs: this.state.logs
-            }, this.logState);
+            });
             return;
         }
 
@@ -134,7 +134,7 @@ export default class BattlePage extends Component {
                 currentMove: isPlayerWin ? null : (enemyShip ? 'player' : 'enemy'),
                 winner: isPlayerWin ? 'player': null
             }
-        }, this.logState);
+        });
     };
 
     enemyShot = () => {
@@ -200,7 +200,7 @@ export default class BattlePage extends Component {
                 currentMove: isEnemyWin ? null : (playerShip ? 'enemy' : 'player'),
                 winner: isEnemyWin ? 'enemy' : null
             }
-        }, this.logState);
+        });
     };
 
     enemyMove = () => {
@@ -215,7 +215,7 @@ export default class BattlePage extends Component {
     onNewGameClick = () => {
         this.setState((state) => {
             return this.getInitialState(state)
-        }, this.logState);
+        });
     };
 
     getInitialState = (state) => {
@@ -271,7 +271,7 @@ export default class BattlePage extends Component {
                 showShootHints: this.state.config.showShootHints,
                 difficultyLevel: level
             }
-        }, this.logState)
+        })
     };
 
     onShowShootHintsChange = (e) => {
@@ -281,15 +281,15 @@ export default class BattlePage extends Component {
                 showShootHints: isShowHints,
                 difficultyLevel: this.state.config.difficultyLevel
             }
-        }, this.logState)
+        })
     };
 
     componentDidMount() {
         window.addEventListener('load', this.onNewGameClick);
     }
 
-    logState() {
-        console.log("this.state", this.state);
+    componentDidUpdate() {
+        // console.log("this.state", this.state);
     }
 
     render() {
