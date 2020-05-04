@@ -9,7 +9,7 @@ import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-g
 import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
 
 import BattleFieldRenderer from 'components/battle-field-renderer'
-import DifficultyLevelRenderer from 'components/difficulty-level'
+import GameConfigRenderer from 'components/game-config-renderer'
 import ShipsStateRenderer from 'components/ships-state'
 import LogsRenderer from 'components/logs-renderer'
 
@@ -146,7 +146,7 @@ export default class BattlePage extends Component {
         let playerDamagedShipCells = this.state.player.damagedShipCells;
         let isEnemyWin = false;
 
-        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerDamagedShipCells, this.state.config.difficultyLevel);
+        const hitPlayerCell = getEnemyShot(playerCells, playerShips, playerDamagedShipCells, this.state.config.difficulty);
 
         hitPlayerCell.isHit = true;
         const playerShip = hitPlayerCell.ship;
@@ -235,25 +235,13 @@ export default class BattlePage extends Component {
             },
             config: {
                 showShootHints: state ? state.config.showShootHints : true,
-                difficultyLevel: state ? state.config.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
+                difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
                 step: STEP_READY_TO_START,
                 currentMove: null,
                 winner: null
             },
-            // playerCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            // playerShips: [],
-            // playerLastShot: null,
-            // playerWoundedShipCells: [],
-            // enemyCells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-            // enemyShips: [],
-            // enemyLastShot: null,
-            // enemyWoundedShipCells: [],
-            // step: null,
-            // currentMove: null,
-            // difficultyLevel: this.state ? this.state.difficultyLevel : 3, /* 1 - easy, 2 - medium, 3 - hard */
-            // showShootHints: this.state ? this.state.showShootHints : true, /* true/false */
             logs: [this.createLogRecord("New game is initialized. Click START button when ready.")]
         }
     }
@@ -265,11 +253,11 @@ export default class BattlePage extends Component {
         }
     };
 
-    onDifficultyLevelChanged = (level) => {
+    onDifficultyChanged = (difficulty) => {
         this.setState({
             config: {
                 showShootHints: this.state.config.showShootHints,
-                difficultyLevel: level
+                difficulty: difficulty
             }
         })
     };
@@ -279,7 +267,7 @@ export default class BattlePage extends Component {
         this.setState({
             config: {
                 showShootHints: isShowHints,
-                difficultyLevel: this.state.config.difficultyLevel
+                difficulty: this.state.config.difficulty
             }
         })
     };
@@ -295,7 +283,7 @@ export default class BattlePage extends Component {
     render() {
         const step = this.state.gameplay.step;
         const currentMove = this.state.gameplay.currentMove;
-        const difficulty = this.state.config.difficultyLevel;
+        const difficulty = this.state.config.difficulty;
 
         const playerBattleFieldOpts = {
             isPlayer: true,
@@ -353,10 +341,10 @@ export default class BattlePage extends Component {
                 <div className="row mt-10">
                     <div className="col-sm-4">
 
-                        <DifficultyLevelRenderer
-                            level={difficulty}
+                        <GameConfigRenderer
+                            difficulty={difficulty}
                             showShootHints={this.state.config.showShootHints}
-                            onDifficultyChange={this.onDifficultyLevelChanged}
+                            onDifficultyChange={this.onDifficultyChanged}
                             onShowShootHintsChange={this.onShowShootHintsChange}
                         />
 

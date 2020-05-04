@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onShowShootHintsChange}) => {
+const GameConfigRenderer = ({difficulty, showShootHints, onDifficultyChange, onShowShootHintsChange}) => {
 
     return (
         <div>
@@ -35,7 +35,7 @@ const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onS
                            name="difficulty"
                            className="form-control"
                            value='1'
-                           checked={level === 1}
+                           checked={difficulty === 1}
                            onChange={onDifficultyChange.bind(this, 1)}/>
                 </div>
                 <div className="col-sm-3 text-center">
@@ -43,7 +43,7 @@ const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onS
                            name="difficulty"
                            className="form-control"
                            value='2'
-                           checked={level === 2}
+                           checked={difficulty === 2}
                            onChange={onDifficultyChange.bind(this, 2)}/>
                 </div>
                 <div className="col-sm-3 text-center">
@@ -51,7 +51,7 @@ const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onS
                            name="difficulty"
                            className="form-control"
                            value='3'
-                           checked={level === 3}
+                           checked={difficulty === 3}
                            onChange={onDifficultyChange.bind(this, 3)}/>
                 </div>
             </div>
@@ -59,4 +59,4 @@ const DifficultyLevelRenderer = ({level, showShootHints, onDifficultyChange, onS
     )
 };
 
-export default DifficultyLevelRenderer;
+export default GameConfigRenderer;
