@@ -59,9 +59,9 @@ export default class AiLevel3 extends Component {
         // console.log("vShipRooms", vShipRooms);
 
         const map = populateCommonRoomsCells(hShipRooms.concat(vShipRooms));
-        const cellsForShoot = getCells(map);
+        const cellsForShot = getCells(map);
         // console.log("map", map);
-        // console.log("cellsForShoot", cellsForShoot);
-        return cellsForShoot;
+        // console.log("cellsForShot", cellsForShot);
+        return cellsForShot;
     }
 }

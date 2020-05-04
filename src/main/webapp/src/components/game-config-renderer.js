@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GameConfigRenderer = ({difficulty, showShootHints, onDifficultyChange, onShowShootHintsChange}) => {
+const GameConfigRenderer = ({difficulty, showShotHints, onDifficultyChange, onShowShotHintsChange}) => {
 
     return (
         <div>
@@ -23,11 +23,11 @@ const GameConfigRenderer = ({difficulty, showShootHints, onDifficultyChange, onS
 
                 <div className="col-sm-3 small" >
                     <input type="checkbox"
-                           name="showShootHints"
+                           name="showShotHints"
                            className="form-control"
-                           checked={showShootHints}
+                           checked={showShotHints}
                            value="true"
-                           onChange={onShowShootHintsChange}/>
+                           onChange={onShowShotHintsChange}/>
                 </div>
 
                 <div className="col-sm-3 text-center">

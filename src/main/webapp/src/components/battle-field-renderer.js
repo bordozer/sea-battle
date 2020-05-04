@@ -24,7 +24,7 @@ function cellCss(cell, options) {
     const stage = options.stage;
     const lastShot = options.lastShot;
 
-    const isLastShoot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
+    const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
     if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
         result.push('cell-disabled');
@@ -67,21 +67,21 @@ function cellCss(cell, options) {
     }
 
     // missed shot
-    if (!isLastShoot && !cell.ship && cell.isHit) {
+    if (!isLastShot && !cell.ship && cell.isHit) {
         result.push('cell-missed-hit');
         result.push('cell-not-hittable');
         // result.push('fa fa-crosshairs');
         result.push('fa fa-circle-o');
     }
-    if (isLastShoot) {
+    if (isLastShot) {
         result.push('text-primary');
         result.push('fa fa-crosshairs');
     }
-    if (isLastShoot && !cell.ship) {
+    if (isLastShot && !cell.ship) {
         result.push('cell-not-hittable');
     }
 
-    const recommendedShots = options.recommendedShots.shoots;
+    const recommendedShots = options.recommendedShots.shots;
     const strategy = options.recommendedShots.strategy;
     const isRecommendedShot = recommendedShots.filter(c => {
         return c.x === cell.x && c.y === cell.y;

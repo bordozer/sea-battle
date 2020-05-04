@@ -43,7 +43,7 @@ export default class BattlePage extends Component {
             enemy: {
                 cells: gameData.cells,
                 ships: gameData.ships,
-                lastShoot: null,
+                lastShot: null,
                 damagedShipCells: []
             },
             gameplay: {
@@ -59,7 +59,6 @@ export default class BattlePage extends Component {
         if (this.state.gameplay.currentMove === 'enemy') {
             return;
         }
-        // console.log("-= PLAYER SHOOT =-");
 
         const enemyCells = this.state.enemy.cells;
         const enemyShips = this.state.enemy.ships;
@@ -120,13 +119,13 @@ export default class BattlePage extends Component {
             player: {
                 cells: this.state.player.cells,
                 ships: this.state.player.ships,
-                lastShoot: cell,
+                lastShot: cell,
                 damagedShipCells: this.state.player.damagedShipCells
             },
             enemy: {
                 cells: this.state.enemy.cells,
                 ships: this.state.enemy.ships,
-                lastShoot: this.state.enemy.lastShoot,
+                lastShot: this.state.enemy.lastShot,
                 damagedShipCells: enemyDamagedShipCells
             },
             gameplay: {
@@ -138,7 +137,6 @@ export default class BattlePage extends Component {
     };
 
     enemyShot = () => {
-        // console.log("-= ENEMY SHOOT =-");
         const playerCells = this.state.player.cells;
         const playerShips = this.state.player.ships;
         // console.log("this.state.player", this.state.player);
@@ -186,13 +184,13 @@ export default class BattlePage extends Component {
             player: {
                 cells: this.state.player.cells,
                 ships: this.state.player.ships,
-                lastShoot: this.state.player.lastShoot,
+                lastShot: this.state.player.lastShot,
                 damagedShipCells: playerDamagedShipCells,
             },
             enemy: {
                 cells: this.state.enemy.cells,
                 ships: this.state.enemy.ships,
-                lastShoot: hitPlayerCell,
+                lastShot: hitPlayerCell,
                 damagedShipCells: this.state.enemy.damagedShipCells
             },
             gameplay: {
@@ -224,17 +222,17 @@ export default class BattlePage extends Component {
             player: {
                 cells: gameData.cells,
                 ships: gameData.ships,
-                lastShoot: null,
+                lastShot: null,
                 damagedShipCells: []
             },
             enemy: {
                 cells: initBattleFieldCells(BATTLE_FIELD_SIZE),
                 ships: [],
-                lastShoot: null,
+                lastShot: null,
                 damagedShipCells: []
             },
             config: {
-                showShootHints: state ? state.config.showShootHints : true,
+                showShotHints: state ? state.config.showShotHints : true,
                 difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
@@ -253,20 +251,20 @@ export default class BattlePage extends Component {
         }
     };
 
-    onDifficultyChanged = (difficulty) => {
+    onDifficultyChange = (difficulty) => {
         this.setState({
             config: {
-                showShootHints: this.state.config.showShootHints,
+                showShotHints: this.state.config.showShotHints,
                 difficulty: difficulty
             }
         })
     };
 
-    onShowShootHintsChange = (e) => {
+    onShowShotHintsChange = (e) => {
         const isShowHints = e.target.checked;
         this.setState({
             config: {
-                showShootHints: isShowHints,
+                showShotHints: isShowHints,
                 difficulty: this.state.config.difficulty
             }
         })
@@ -288,27 +286,27 @@ export default class BattlePage extends Component {
         const playerBattleFieldOpts = {
             isPlayer: true,
             stage: step,
-            lastShot: this.state.enemy.lastShoot,
+            lastShot: this.state.enemy.lastShot,
             currentMove: currentMove,
             highlightBattleArea: step === STEP_BATTLE && currentMove === 'enemy',
             recommendedShots: {
-                shoots: [],
+                shots: [],
                 strategy: null
             }
         };
 
-        const shootHints =  this.state.config.showShootHints && step === STEP_BATTLE
+        const shotHints =  this.state.config.showShotHints && step === STEP_BATTLE
             ? getRecommendedShots(this.state.enemy.cells, this.state.enemy.ships, this.state.enemy.damagedShipCells, difficulty)
             : {
-                shoots: [],
+                shots: [],
                 strategy: 'hits-are-disabled'
             };
-        // console.log("shootHints", shootHints);
+        // console.log("shotHints", shotHints);
         const enemyBattleFieldOpts = {
             isPlayer: false,
             stage: step,
-            lastShot: this.state.player.lastShoot,
-            recommendedShots: shootHints,
+            lastShot: this.state.player.lastShot,
+            recommendedShots: shotHints,
             highlightBattleArea: step === STEP_BATTLE && currentMove === 'player',
             currentMove: currentMove,
         };
@@ -343,9 +341,9 @@ export default class BattlePage extends Component {
 
                         <GameConfigRenderer
                             difficulty={difficulty}
-                            showShootHints={this.state.config.showShootHints}
-                            onDifficultyChange={this.onDifficultyChanged}
-                            onShowShootHintsChange={this.onShowShootHintsChange}
+                            showShotHints={this.state.config.showShotHints}
+                            onDifficultyChange={this.onDifficultyChange}
+                            onShowShotHintsChange={this.onShowShotHintsChange}
                         />
 
                     </div>
