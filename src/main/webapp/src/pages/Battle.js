@@ -271,7 +271,7 @@ export default class BattlePage extends Component {
     };
 
     componentDidMount() {
-        window.addEventListener('load', this.onNewGameClick);
+
     }
 
     componentDidUpdate() {
