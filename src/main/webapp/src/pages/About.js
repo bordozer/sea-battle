@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 
+import aboutImage from '../images/about.png';
+
 export default class AboutPage extends Component {
+
+    componentDidMount() {
+        const homeImg = document.getElementById('about-img');
+        homeImg.src = aboutImage;
+    }
 
     render() {
         return (
@@ -12,8 +19,8 @@ export default class AboutPage extends Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-2"/>
-                    <div className="col-sm-8">
+                    <div className="col-sm-1"/>
+                    <div className="col-sm-10">
 
                         <p>
                             My first ReactJS application. <br/>
@@ -32,8 +39,12 @@ export default class AboutPage extends Component {
                             </small>
                         </p>
 
+                        <p className="text-center">
+                            <img id='about-img' alt="Help" width='1000px'/>
+                        </p>
+
                     </div>
-                    <div className="col-sm-2"/>
+                    <div className="col-sm-1"/>
                 </div>
             </div>
         );
