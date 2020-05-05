@@ -23,7 +23,7 @@ export default function AppRouter() {
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
                             to="/"
-                            label="Sea Battle"
+                            label="Battleship game"
                         />
                     </div>
                     <div className="col-sm-4 text-center">
@@ -61,15 +61,13 @@ function OldSchoolMenuLink({label, to, activeOnlyWhenExact}) {
 
     return (
         <div>
-            <h4>
-                <Link
-                    to={to}
-                    style={{textDecoration: 'none'}}
-                    className={match ? "active text-danger" : "text-dark"}
-                >
-                    {label}
-                </Link>
-            </h4>
+            <Link
+                to={to}
+                style={{textDecoration: 'none'}}
+                className={match ? "active text-danger" : "text-dark"}
+            >
+                {label}
+            </Link>
         </div>
     );
 }
