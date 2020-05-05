@@ -1,9 +1,8 @@
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Switch, useRouteMatch} from "react-router-dom";
 
-import MainPage from 'src/pages/MainPage'
 import BattlePage from 'src/pages/Battle'
-import ScoresPage from 'src/pages/Scores'
+import AboutPage from 'src/pages/About'
 
 export default function AppRouter() {
 
@@ -12,25 +11,18 @@ export default function AppRouter() {
             <div>
 
                 <div className="row bg-light">
-                    <div className="col-sm-4 text-center">
-                        <OldSchoolMenuLink
-                            activeOnlyWhenExact={true}
-                            to="/home"
-                            label="Main page"
-                        />
-                    </div>
-                    <div className="col-sm-4 text-center">
+                    <div className="col-sm-6 text-center">
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
                             to="/"
                             label="Battleship game"
                         />
                     </div>
-                    <div className="col-sm-4 text-center">
+                    <div className="col-sm-6 text-center">
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
-                            to="/scores"
-                            label="Scores"
+                            to="/about"
+                            label="About"
                         />
                     </div>
                 </div>
@@ -38,14 +30,11 @@ export default function AppRouter() {
                 {}
 
                 <Switch>
-                    <Route exact path="/home">
-                        <MainPage/>
-                    </Route>
                     <Route exact path="/">
                         <BattlePage/>
                     </Route>
-                    <Route exact path="/scores">
-                        <ScoresPage/>
+                    <Route exact path="/about">
+                        <AboutPage/>
                     </Route>
                 </Switch>
             </div>
