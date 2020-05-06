@@ -2,7 +2,7 @@ import React from 'react';
 
 import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
 import {getCellsByFilter} from 'src/utils/cells-utils'
-import {randomElement} from 'src/utils/random-utils'
+import {randomElement, randomInt} from 'src/utils/random-utils'
 
 function _initShips() {
     return [
@@ -31,6 +31,25 @@ function _setNeighborCellsProperty(cells, cell, property) {
     cellWithNeighbors.forEach(neighborCell => {
         neighborCell[property] = true;
     })
+}
+
+function _getRandomShipRoom(cells, shipSize) {
+    if (shipSize === 1) {
+        return {
+            roomCells: [randomElement(getCellsByFilter(cells, isFreeForShipCell))]
+        };
+    }
+    const spaciousRooms = new ShipRoomsCollector(1).collectRooms(cells, shipSize, isFreeForShipCell);
+    // TODO: place a ship at the border but demands AI correction
+    if (randomInt(100) < 70) {
+        return randomElement([
+            spaciousRooms.hFreeRooms[0],
+            spaciousRooms.hFreeRooms[spaciousRooms.hFreeRooms.length - 1],
+            spaciousRooms.vFreeRooms[0],
+            spaciousRooms.vFreeRooms[spaciousRooms.vFreeRooms.length - 1]
+        ]);
+    }
+    return randomElement(spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms));
 }
 
 export const getCellWithNeighbors = (cells, shipCell) => {
@@ -72,16 +91,7 @@ export const generateShips = (cells) => {
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
 
-        let shipRoom;
-        if (shipSize > 1) {
-            const spaciousRooms = new ShipRoomsCollector(1).collectRooms(cells, shipSize, isFreeForShipCell);
-            const shipRooms = spaciousRooms.hFreeRooms.concat(spaciousRooms.vFreeRooms);
-            shipRoom = randomElement(shipRooms);
-        } else {
-            shipRoom = {
-                roomCells: [randomElement(getCellsByFilter(cells, isFreeForShipCell))]
-            };
-        }
+        const shipRoom = _getRandomShipRoom(cells, shipSize);
 
         shipRoom.roomCells.forEach(cell => {
             cell.ship = ship;
