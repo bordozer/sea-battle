@@ -40,7 +40,7 @@ function _getRandomShipRoom(cells, shipSize) {
         };
     }
     const spaciousRooms = new ShipRoomsCollector(1).collectRooms(cells, shipSize, isFreeForShipCell);
-    // TODO: place a ship at the border but demands AI correction
+    // TODO: place a ship at the border. demands AI correction
     if (randomInt(100) < 70) {
         return randomElement([
             spaciousRooms.hFreeRooms[0],
