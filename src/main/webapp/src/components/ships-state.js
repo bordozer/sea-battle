@@ -20,7 +20,7 @@ function _renderShip(ship, size, isPlayer) {
     return result;
 }
 
-const ShipStateRenderer = ({ships, isPlayer, winner}) => {
+const ShipStateRenderer = ({ships, isPlayer, winner, points}) => {
     if (!ships || ships.length === 0) {
         return "";
     }
@@ -45,7 +45,14 @@ const ShipStateRenderer = ({ships, isPlayer, winner}) => {
                     {isPlayer ? 'Player' : 'Enemy'}
                 </div>
             </div>
+
             {result}
+
+            <div className="row mt-10">
+                <div className="col-sm-12 text-center">
+                    <h1>{points}</h1>
+                </div>
+            </div>
         </div>
     )
 }

@@ -44,7 +44,8 @@ export default class BattlePage extends Component {
                 cells: gameData.cells,
                 ships: gameData.ships,
                 lastShot: null,
-                damagedShipCells: []
+                damagedShipCells: [],
+                points: this.state.enemy.points
             },
             gameplay: {
                 step: STEP_BATTLE,
@@ -120,13 +121,15 @@ export default class BattlePage extends Component {
                 cells: this.state.player.cells,
                 ships: this.state.player.ships,
                 lastShot: cell,
-                damagedShipCells: this.state.player.damagedShipCells
+                damagedShipCells: this.state.player.damagedShipCells,
+                points: isPlayerWin ? this.state.player.points + 1 : this.state.player.points
             },
             enemy: {
                 cells: this.state.enemy.cells,
                 ships: this.state.enemy.ships,
                 lastShot: this.state.enemy.lastShot,
-                damagedShipCells: enemyDamagedShipCells
+                damagedShipCells: enemyDamagedShipCells,
+                points: this.state.enemy.points
             },
             gameplay: {
                 step: isPlayerWin ? STEP_FINAL : this.state.gameplay.step,
@@ -186,12 +189,14 @@ export default class BattlePage extends Component {
                 ships: this.state.player.ships,
                 lastShot: this.state.player.lastShot,
                 damagedShipCells: playerDamagedShipCells,
+                points: this.state.player.points
             },
             enemy: {
                 cells: this.state.enemy.cells,
                 ships: this.state.enemy.ships,
                 lastShot: hitPlayerCell,
-                damagedShipCells: this.state.enemy.damagedShipCells
+                damagedShipCells: this.state.enemy.damagedShipCells,
+                points: isEnemyWin ? this.state.enemy.points + 1 : this.state.enemy.points
             },
             gameplay: {
                 step: isEnemyWin ? STEP_FINAL : this.state.gameplay.step,
@@ -223,13 +228,15 @@ export default class BattlePage extends Component {
                 cells: gameData.cells,
                 ships: gameData.ships,
                 lastShot: null,
-                damagedShipCells: []
+                damagedShipCells: [],
+                points: state ? state.player.points : 0
             },
             enemy: {
                 cells: initBattleFieldCells(BATTLE_FIELD_SIZE),
                 ships: [],
                 lastShot: null,
-                damagedShipCells: []
+                damagedShipCells: [],
+                points: state ? state.enemy.points : 0
             },
             config: {
                 showShotHints: state ? state.config.showShotHints : true,
@@ -315,7 +322,12 @@ export default class BattlePage extends Component {
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.player.ships} isPlayer={true} winner={this.state.gameplay.winner}/>
+                        <ShipsStateRenderer
+                            ships={this.state.player.ships}
+                            isPlayer={true}
+                            winner={this.state.gameplay.winner}
+                            points={this.state.player.points}
+                        />
                     </div>
                     <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
@@ -332,7 +344,12 @@ export default class BattlePage extends Component {
                         />
                     </div>
                     <div className="col-sm-1">
-                        <ShipsStateRenderer ships={this.state.enemy.ships} isPlayer={false} winner={this.state.gameplay.winner}/>
+                        <ShipsStateRenderer
+                            ships={this.state.enemy.ships}
+                            isPlayer={false}
+                            winner={this.state.gameplay.winner}
+                            points={this.state.enemy.points}
+                        />
                     </div>
                 </div>
 
