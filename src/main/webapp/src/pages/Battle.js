@@ -40,13 +40,6 @@ export default class BattlePage extends Component {
 
         const gameData = this.randomizeBattleFieldWithShips();
         this.setState({
-            enemy: {
-                cells: gameData.cells,
-                ships: gameData.ships,
-                lastShot: null,
-                damagedShipCells: [],
-                points: this.state.enemy.points
-            },
             gameplay: {
                 step: STEP_BATTLE,
                 currentMove: firstMove === 0 ? 'player' : 'enemy',
@@ -222,18 +215,19 @@ export default class BattlePage extends Component {
     };
 
     getInitialState = (state) => {
-        const gameData = this.randomizeBattleFieldWithShips();
+        const playerData = this.randomizeBattleFieldWithShips();
+        const enemyData = this.randomizeBattleFieldWithShips();
         return {
             player: {
-                cells: gameData.cells,
-                ships: gameData.ships,
+                cells: playerData.cells,
+                ships: playerData.ships,
                 lastShot: null,
                 damagedShipCells: [],
                 points: state ? state.player.points : 0
             },
             enemy: {
-                cells: initBattleFieldCells(BATTLE_FIELD_SIZE),
-                ships: [],
+                cells: enemyData.cells,
+                ships: enemyData.ships,
                 lastShot: null,
                 damagedShipCells: [],
                 points: state ? state.enemy.points : 0
