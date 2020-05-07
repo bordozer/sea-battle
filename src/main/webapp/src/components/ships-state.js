@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 import React from 'react';
 
 import {getBiggestShip} from 'src/utils/ships-utils';

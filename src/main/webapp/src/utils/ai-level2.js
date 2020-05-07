@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 import React, {Component} from 'react';
 
 import ShipRoomsCollector from 'src/utils/ship-rooms-collector';

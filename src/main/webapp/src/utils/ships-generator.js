@@ -1,5 +1,4 @@
-/*jshint esversion: 6 */
-import React from 'react';
+/* jshint esversion: 6 */
 
 import ShipRoomsCollector from 'src/utils/ship-rooms-collector';
 import {getCellsByFilter} from 'src/utils/cells-utils';

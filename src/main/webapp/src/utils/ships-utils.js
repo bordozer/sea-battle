@@ -1,6 +1,4 @@
-/*jshint esversion: 6 */
-
-import React from 'react';
+/* jshint esversion: 6 */
 
 export const getBiggestAliveShip = (ships) => {
     return ships

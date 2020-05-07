@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 import React from 'react';
 import {getRandomHiddenCell, getVisibleCellsCount} from 'src/utils/cells-utils';
 import {getBiggestAliveShip} from 'src/utils/ships-utils';
