@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const fs = require("fs");
 const path = require("path");
 
@@ -13,7 +14,7 @@ function getFilesFromDir(dir, fileTypes) {
                 walkDir(curFile);
             }
         }
-    };
+    }
     walkDir(dir);
     return filesToReturn;
 }

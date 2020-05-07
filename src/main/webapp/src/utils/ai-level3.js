@@ -1,7 +1,8 @@
+/*jshint esversion: 6 */
 import React, {Component} from 'react';
 
-import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
-import {getBiggestAliveShip} from 'src/utils/ships-utils'
+import ShipRoomsCollector from 'src/utils/ship-rooms-collector';
+import {getBiggestAliveShip} from 'src/utils/ships-utils';
 
 function populateCommonRoomsCells(rooms) {
 
@@ -16,15 +17,15 @@ function populateCommonRoomsCells(rooms) {
                 if (roomCell.id === cell.id) {
                     count++;
                 }
-            })
+            });
         });
         map[cell.id] = {
             id: cell.id,
             count: count,
             cell: cell
-        }
+        };
         count = 0;
-    })
+    });
     return map;
 }
 
@@ -51,7 +52,7 @@ export default class AiLevel3 extends Component {
         const biggestShipSize = getBiggestAliveShip(ships).size;
 
         const shipRooms = new ShipRoomsCollector(1).collectRooms(cells, biggestShipSize, function (cell) {
-            return !cell.isHit && !cell.isKilledShipNeighborCell
+            return !cell.isHit && !cell.isKilledShipNeighborCell;
         });
         const hShipRooms = shipRooms.hFreeRooms;
         // console.log("hShipRooms", hShipRooms);
@@ -59,9 +60,6 @@ export default class AiLevel3 extends Component {
         // console.log("vShipRooms", vShipRooms);
 
         const map = populateCommonRoomsCells(hShipRooms.concat(vShipRooms));
-        const cellsForShot = getCells(map);
-        // console.log("map", map);
-        // console.log("cellsForShot", cellsForShot);
-        return cellsForShot;
+        return getCells(map);
     }
 }

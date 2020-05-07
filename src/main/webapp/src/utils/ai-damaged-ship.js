@@ -1,6 +1,7 @@
+/*jshint esversion: 6 */
 import React, {Component} from 'react';
 
-import {isHiddenCell} from 'src/utils/cells-utils'
+import {isHiddenCell} from 'src/utils/cells-utils';
 
 function _shotOnceDamagedShipAgain(cells, damagedCell) {
     // console.log("_shotOnceDamagedShipAgain", damagedCell);

@@ -1,11 +1,12 @@
+/*jshint esversion: 6 */
 import React from 'react';
-import {getRandomHiddenCell, getVisibleCellsCount} from 'src/utils/cells-utils'
-import {getBiggestAliveShip} from 'src/utils/ships-utils'
-import AiDamagedShip from 'src/utils/ai-damaged-ship'
-import AiLevel1 from 'src/utils/ai-level1'
-import AiLevel2 from 'src/utils/ai-level2'
-import AiLevel3 from 'src/utils/ai-level3'
-import {randomElement} from 'src/utils/random-utils'
+import {getRandomHiddenCell, getVisibleCellsCount} from 'src/utils/cells-utils';
+import {getBiggestAliveShip} from 'src/utils/ships-utils';
+import AiDamagedShip from 'src/utils/ai-damaged-ship';
+import AiLevel1 from 'src/utils/ai-level1';
+import AiLevel2 from 'src/utils/ai-level2';
+import AiLevel3 from 'src/utils/ai-level3';
+import {randomElement} from 'src/utils/random-utils';
 
 const FIRST_RANDOM_SHOTS_COUNT = 10;
 

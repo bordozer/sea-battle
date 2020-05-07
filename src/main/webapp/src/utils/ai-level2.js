@@ -1,7 +1,8 @@
+/*jshint esversion: 6 */
 import React, {Component} from 'react';
 
-import ShipRoomsCollector from 'src/utils/ship-rooms-collector'
-import {getBiggestAliveShip} from 'src/utils/ships-utils'
+import ShipRoomsCollector from 'src/utils/ship-rooms-collector';
+import {getBiggestAliveShip} from 'src/utils/ships-utils';
 
 export default class AiLevel2 extends Component {
 
@@ -9,7 +10,7 @@ export default class AiLevel2 extends Component {
         const biggestShipSize = getBiggestAliveShip(ships).size;
 
         const spaciousRooms = new ShipRoomsCollector(biggestShipSize).collectRooms(cells, biggestShipSize, function (cell) {
-            return !cell.isHit && !cell.isKilledShipNeighborCell
+            return !cell.isHit && !cell.isKilledShipNeighborCell;
         });
         const hShipRooms = spaciousRooms.hFreeRooms;
         // console.log("hShipRooms", hShipRooms);
@@ -37,7 +38,7 @@ export default class AiLevel2 extends Component {
         const result = [];
         roomsMiddleCells.forEach(cell => {
             const len = result.filter(c => {
-                return c.x === cell.x && c.y === cell.y
+                return c.x === cell.x && c.y === cell.y;
             }).length;
             if (len === 0) {
                 result.push(cell);

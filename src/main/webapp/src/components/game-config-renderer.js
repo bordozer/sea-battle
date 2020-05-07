@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 import React from 'react';
 
 const GameConfigRenderer = ({difficulty, showShotHints, onDifficultyChange, onShowShotHintsChange}) => {

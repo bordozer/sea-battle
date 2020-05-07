@@ -1,8 +1,9 @@
+/*jshint esversion: 6 */
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Switch, useRouteMatch} from "react-router-dom";
 
-import BattlePage from 'src/pages/Battle'
-import AboutPage from 'src/pages/About'
+import BattlePage from 'src/pages/Battle';
+import AboutPage from 'src/pages/About';
 
 export default function AppRouter() {
 

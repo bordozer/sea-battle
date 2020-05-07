@@ -1,6 +1,7 @@
+/*jshint esversion: 6 */
 import React from 'react';
 
-import _ from 'underscore'
+import _ from 'underscore';
 
 function getBorderCss(options) {
     return options.highlightBattleArea ? 'bg-success' : 'bg-secondary';

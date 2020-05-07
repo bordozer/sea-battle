@@ -1,6 +1,7 @@
+/*jshint esversion: 6 */
 import React, {Component} from 'react';
 
-import {getCellsByFilter} from 'src/utils/cells-utils'
+import {getCellsByFilter} from 'src/utils/cells-utils';
 import _ from "underscore";
 
 export default class ShipRoomsCollector extends Component {
@@ -101,6 +102,6 @@ export default class ShipRoomsCollector extends Component {
         return {
             hFreeRooms: hFreeRooms,
             vFreeRooms: vFreeRooms
-        }
+        };
     }
 }

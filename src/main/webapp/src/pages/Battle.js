@@ -1,17 +1,18 @@
+/*jshint esversion: 6 */
 import React, {Component} from 'react';
 
 import Swal from "sweetalert2";
 
-import {initBattleFieldCells} from 'src/utils/battle-field-utils'
-import {getAliveShipsCount} from 'src/utils/ships-utils'
-import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-generator'
+import {initBattleFieldCells} from 'src/utils/battle-field-utils';
+import {getAliveShipsCount} from 'src/utils/ships-utils';
+import {generateShips, markAllShipNeighborCellsAsKilled} from 'src/utils/ships-generator';
 
-import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai'
+import {getEnemyShot, getRecommendedShots} from 'components/gunner-ai';
 
-import BattleFieldRenderer from 'components/battle-field-renderer'
-import GameConfigRenderer from 'components/game-config-renderer'
-import ShipsStateRenderer from 'components/ships-state'
-import LogsRenderer from 'components/logs-renderer'
+import BattleFieldRenderer from 'components/battle-field-renderer';
+import GameConfigRenderer from 'components/game-config-renderer';
+import ShipsStateRenderer from 'components/ships-state';
+import LogsRenderer from 'components/logs-renderer';
 
 const STEP_READY_TO_START = 'STEP_READY_TO_START';
 const STEP_BATTLE = 'STEP_BATTLE';
@@ -22,13 +23,13 @@ const BATTLE_FIELD_SIZE = 10;
 export default class BattlePage extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = this.getInitialState(null);
     }
 
     playerCellSetup = (cell) => {
 
-    };
+    }
 
     startBattle = () => {
         // random - who's first shot. 0 - player, 1 - enemy
@@ -47,7 +48,7 @@ export default class BattlePage extends Component {
             },
             logs: logs
         });
-    };
+    }
 
     playerShot = (cell) => {
         if (this.state.gameplay.currentMove === 'enemy') {
@@ -127,10 +128,10 @@ export default class BattlePage extends Component {
             gameplay: {
                 step: isPlayerWin ? STEP_FINAL : this.state.gameplay.step,
                 currentMove: isPlayerWin ? null : (enemyShip ? 'player' : 'enemy'),
-                winner: isPlayerWin ? 'player': null
+                winner: isPlayerWin ? 'player' : null
             }
         });
-    };
+    }
 
     enemyShot = () => {
         const playerCells = this.state.player.cells;
@@ -197,7 +198,7 @@ export default class BattlePage extends Component {
                 winner: isEnemyWin ? 'enemy' : null
             }
         });
-    };
+    }
 
     enemyMove = () => {
         window.setTimeout(() => this.enemyShot(), 500);
@@ -206,13 +207,13 @@ export default class BattlePage extends Component {
     randomizeBattleFieldWithShips = () => {
         const cells = initBattleFieldCells(BATTLE_FIELD_SIZE);
         return generateShips(cells);
-    };
+    }
 
     onNewGameClick = () => {
         this.setState((state) => {
-            return this.getInitialState(state)
+            return this.getInitialState(state);
         });
-    };
+    }
 
     getInitialState = (state) => {
         const playerData = this.randomizeBattleFieldWithShips();
@@ -242,15 +243,15 @@ export default class BattlePage extends Component {
                 winner: null
             },
             logs: [this.createLogRecord("New game is initialized. Click START button when ready.")]
-        }
+        };
     }
 
     createLogRecord = (text) => {
         return {
             time: new Date(),
             text: text
-        }
-    };
+        };
+    }
 
     onDifficultyChange = (difficulty) => {
         this.setState({
@@ -258,18 +259,18 @@ export default class BattlePage extends Component {
                 showShotHints: this.state.config.showShotHints,
                 difficulty: difficulty
             }
-        })
-    };
+        });
+    }
 
-    onShowShotHintsChange = (e) => {
+    onShowShotHintsChange(e) {
         const isShowHints = e.target.checked;
         this.setState({
             config: {
                 showShotHints: isShowHints,
                 difficulty: this.state.config.difficulty
             }
-        })
-    };
+        });
+    }
 
     componentDidMount() {
 
@@ -296,7 +297,7 @@ export default class BattlePage extends Component {
             }
         };
 
-        const shotHints =  this.state.config.showShotHints && step === STEP_BATTLE
+        const shotHints = this.state.config.showShotHints && step === STEP_BATTLE
             ? getRecommendedShots(this.state.enemy.cells, this.state.enemy.ships, this.state.enemy.damagedShipCells, difficulty)
             : {
                 shots: [],
@@ -323,14 +324,16 @@ export default class BattlePage extends Component {
                             points={this.state.player.points}
                         />
                     </div>
-                    <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={playerBattleFieldOpts.highlightBattleArea}>
+                    <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
+                         disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
                             cells={this.state.player.cells}
                             options={playerBattleFieldOpts}
                             onCellClick={this.playerCellSetup}
                         />
                     </div>
-                    <div className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')} disabled={enemyBattleFieldOpts.highlightBattleArea}>
+                    <div className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
+                         disabled={enemyBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
                             cells={this.state.enemy.cells}
                             options={enemyBattleFieldOpts}
@@ -381,6 +384,6 @@ export default class BattlePage extends Component {
                 </div>
 
             </div>
-        );
+        )
     }
 }

@@ -1,6 +1,7 @@
+/*jshint esversion: 6 */
 import React from 'react';
 
-import {randomElement} from 'src/utils/random-utils'
+import {randomElement} from 'src/utils/random-utils';
 
 export const getCellsByFilter = (cells, filter) => {
     const result = [];
@@ -13,7 +14,7 @@ export const getCellsByFilter = (cells, filter) => {
         }
     }
     return result;
-}
+};
 
 export const getVisibleCellsCount = (cells) => {
     let result = 0;
@@ -26,16 +27,16 @@ export const getVisibleCellsCount = (cells) => {
         }
     }
     return result;
-}
+};
 
 export const isHiddenCell = (cell) => {
     return cell && !cell.isHit && !cell.isKilledShipNeighborCell;
-}
+};
 
 export const getRandomHiddenCells = (cells) => {
     return getCellsByFilter(cells, isHiddenCell);
-}
+};
 
 export const getRandomHiddenCell = (cells) => {
     return randomElement(getCellsByFilter(cells, isHiddenCell));
-}
+};
