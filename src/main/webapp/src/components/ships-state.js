@@ -11,7 +11,7 @@ function _renderShip(ship, size, isPlayer) {
         result.push(
             <div
                 key={'ship-stat-line-cell-' + ship.id + '-' + i + '-' + (isPlayer ? '-player' : '-enemy')}
-                className={'stat-cell' + (isShip ? ' stat-cell-ship' : '') + (isShip && isKilled ? ' stat-cell-ship-killed' : '') + (isPlayer ? ' pull-right' : '')}
+                className={'stat-cell' + (isShip ? ' stat-cell-ship' : '') + (isShip && isKilled ? ' stat-cell-ship-killed' : '') + (isPlayer ? ' float-right' : '')}
                 title={ship.name}
             >
                 &nbsp;

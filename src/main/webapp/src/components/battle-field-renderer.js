@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnchor, faTimes, faCrosshairs, faBullseye, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
+import { faAnchor, faTimes, faCrosshairs, faBullseye, faSkull, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
 import { faSmile, faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons';
 import _ from 'underscore';
 
@@ -97,7 +97,7 @@ function getIcon(cell, options) {
     }
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
         return (
-            <FontAwesomeIcon icon={faTimes} />
+            <FontAwesomeIcon icon={faSkull} />
         );
     }
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
@@ -141,7 +141,7 @@ function renderCells(x, cells, onCellClick, options) {
     cells.forEach(cell => {
         result.push(
             <div key={x + '_' + cell.x + '-' + cell.y}
-                 className={"col-sm-1 text-center align-middle cell-base cell-text " + cellCss(cell, options).join(' ')}
+                 className={"col-sm-1 cell-base " + cellCss(cell, options).join(' ')}
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
