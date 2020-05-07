@@ -1,11 +1,13 @@
 /* jshint esversion: 6 */
 import React from 'react';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAnchor, faSmileO, faTimes, faCircle, faCrosshairs, faBullseye, faDotCircle } from '@fortawesome/free-solid-svg-icons'
 import _ from 'underscore';
 
 function getBorderCss(options) {
     return options.highlightBattleArea ? 'bg-success' : 'bg-secondary';
 }
+
 function renderVHeader(label, options) {
     const moveCss = getBorderCss(options);
     const result = [];
@@ -29,37 +31,29 @@ function cellCss(cell, options) {
 
     if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
         result.push('cell-disabled');
-        result.push('fa fa-anchor');
+        // result.push('fa fa-anchor');
     }
-
-    /*if (cell.ship && !cell.isHit) {
-        result.push('cell-ship');
-        // result.push('fa fa-smile-o');
-    }
-    if (cell.isShipNeighbor) {
-        result.push('fa fa-bug');
-    }*/
 
     // show enemy's healthy ships at the end
     if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
         result.push('cell-ship');
-        result.push('fa fa-smile-o');
+        // result.push('fa fa-smile-o');
     }
 
     // player's healthy ship
     if (isPlayer && cell.ship && !cell.isHit) {
         result.push('cell-ship');
-        result.push('fa fa-anchor');
+        // result.push('fa fa-anchor');
     }
     // wounded ship
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
         result.push('cell-ship-wounded');
-        result.push('fa fa-times');
+        // result.push('fa fa-times');
     }
     // killed ship
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
         result.push('cell-ship-killed');
-        result.push('fa fa-times');
+        // result.push('fa fa-times');
     }
 
     // player's of enemy's known ship neighbor cell
@@ -71,32 +65,81 @@ function cellCss(cell, options) {
     if (!isLastShot && !cell.ship && cell.isHit) {
         result.push('cell-missed-hit');
         result.push('cell-not-hittable');
-        // result.push('fa fa-crosshairs');
-        result.push('fa fa-circle-o');
+        // result.push('fa fa-circle-o');
     }
     if (isLastShot) {
         result.push('text-primary');
-        result.push('fa fa-crosshairs');
+        // result.push('fa fa-crosshairs');
     }
     if (isLastShot && !cell.ship) {
         result.push('cell-not-hittable');
     }
 
+    return result;
+}
+
+function getIcon(cell, options) {
+    const isPlayer = options.isPlayer;
+    const isEnemy = !options.isPlayer;
+    const stage = options.stage;
+
+    const lastShot = options.lastShot;
+    const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
+
+    if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
+        return (
+            <FontAwesomeIcon icon={faAnchor} />
+        );
+    }
+    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
+        return (
+            <FontAwesomeIcon icon={faSmileO} />
+        );
+    }
+    if (isPlayer && cell.ship && !cell.isHit) {
+        return (
+            <FontAwesomeIcon icon={faAnchor} />
+        );
+    }
+    if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
+        return (
+            <FontAwesomeIcon icon={faTimes} />
+        );
+    }
+    if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
+        return (
+            <FontAwesomeIcon icon={faTimes} />
+        );
+    }
+    if (!isLastShot && !cell.ship && cell.isHit) {
+        return (
+            <FontAwesomeIcon icon={faCircle} />
+        );
+    }
+    if (isLastShot) {
+        return (
+            <FontAwesomeIcon icon={faCrosshairs} />
+        );
+    }
     const recommendedShots = options.recommendedShots.shots;
     const strategy = options.recommendedShots.strategy;
     const isRecommendedShot = recommendedShots.filter(c => {
         return c.x === cell.x && c.y === cell.y;
     }).length > 0;
     if (isRecommendedShot) {
-        result.push('cell-recommended-shot');
-        if (strategy === 'level3') {
-            result.push('fa fa-bullseye');
-        }
         if (strategy === 'level2') {
-            result.push('fa fa-dot-circle-o');
+            return (
+                <FontAwesomeIcon icon={faDotCircle} />
+            );
+        }
+        if (strategy === 'level3') {
+            return (
+                <FontAwesomeIcon icon={faBullseye} />
+            );
         }
     }
-    return result;
+
+    return ('');
 }
 
 function renderCells(x, cells, onCellClick, options) {
@@ -108,6 +151,7 @@ function renderCells(x, cells, onCellClick, options) {
                  onClick={onCellClick.bind(this, cell)}
                  title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
+                {getIcon(cell, options)}
                 {/*{cell.ship ? 'x' : ''}*/}
                 {/*{cell.isShipNeighbor ? 'n' : ''}*/}
             </div>

@@ -16,14 +16,16 @@ body {
 }
 
 .cell-text {
-    padding-top: 12px;
+    padding-top: 5px;
+    padding-left: -10px;
 }
+
 .battle-field-border {
     padding-top: 6px;
 }
 
 .cell-base {
-    color: silver;
+    color: #e5e0e0;
     background-color: azure;
     font-size: 20px;
     border: 1px solid silver;
@@ -60,9 +62,9 @@ body {
     background-color: #dfefef;
 }
 
-.cell-recommended-shot {
+/*.cell-recommended-shot {
     color: #c1e8e8;
-}
+}*/
 
 .stat-cell {
     width: 16px;

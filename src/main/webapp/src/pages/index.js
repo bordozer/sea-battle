@@ -3,7 +3,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import AppRouter from 'src/router';
-require("font-awesome-webpack");
 
 import 'src/commons-headers';
 

@@ -29,9 +29,6 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "2.5.0",
     "file-loader": "^6.0.0",
-    "font-awesome": "^4.7.0",
-    "font-awesome-loader": "^1.0.2",
-    "font-awesome-webpack": "git+https://github.com/jarecsni/font-awesome-webpack.git#440af2a2efe7ba1779d039556f04538e57bad4bb",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.2.0",
     "jquery": "^3.5.0",
@@ -46,6 +43,9 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
