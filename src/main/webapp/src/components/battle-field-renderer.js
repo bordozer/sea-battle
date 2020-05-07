@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnchor, faTimes, faCrosshairs, faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faAnchor, faTimes, faCrosshairs, faBullseye, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
 import { faSmile, faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons';
 import _ from 'underscore';
 
@@ -32,29 +32,24 @@ function cellCss(cell, options) {
 
     if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
         result.push('cell-disabled');
-        // result.push('fa fa-anchor');
     }
 
     // show enemy's healthy ships at the end
     if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
         result.push('cell-ship');
-        // result.push('fa fa-smile-o');
     }
 
     // player's healthy ship
     if (isPlayer && cell.ship && !cell.isHit) {
         result.push('cell-ship');
-        // result.push('fa fa-anchor');
     }
     // wounded ship
     if (cell.ship && cell.isHit && cell.ship.damage < cell.ship.size) {
         result.push('cell-ship-wounded');
-        // result.push('fa fa-times');
     }
     // killed ship
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
         result.push('cell-ship-killed');
-        // result.push('fa fa-times');
     }
 
     // player's of enemy's known ship neighbor cell
@@ -66,11 +61,9 @@ function cellCss(cell, options) {
     if (!isLastShot && !cell.ship && cell.isHit) {
         result.push('cell-missed-hit');
         result.push('cell-not-hittable');
-        // result.push('fa fa-circle-o');
     }
     if (isLastShot) {
         result.push('cell-last-shot');
-        // result.push('fa fa-crosshairs');
     }
     if (isLastShot && !cell.ship) {
         result.push('cell-not-hittable');
@@ -109,7 +102,7 @@ function getIcon(cell, options) {
     }
     if (cell.ship && cell.isHit && cell.ship.damage === cell.ship.size) {
         return (
-            <FontAwesomeIcon icon={faTimes} />
+            <FontAwesomeIcon icon={faSkullCrossbones} />
         );
     }
     if (!isLastShot && !cell.ship && cell.isHit) {
