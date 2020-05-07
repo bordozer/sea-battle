@@ -15,11 +15,6 @@ body {
     margin-bottom: 10px !important;
 }
 
-.cell-text {
-    padding-top: 5px;
-    padding-left: -10px;
-}
-
 .battle-field-border {
     padding-top: 6px;
 }
@@ -32,6 +27,11 @@ body {
     border-radius: 4px;
     min-width: 30px;
     height: 40px;
+}
+
+.cell-text {
+    padding-top: 10px;
+    font-size: 14px;
 }
 
 .cell-ship {
@@ -54,6 +54,12 @@ body {
     color: darkseagreen;
 }
 
+.cell-last-shot {
+    color: #0b0ba7;
+    padding-top: 8px;
+    font-size: 18px;
+}
+
 .cell-disabled {
     background-color: ghostwhite;
 }
@@ -61,10 +67,6 @@ body {
 .cell-not-hittable {
     background-color: #dfefef;
 }
-
-/*.cell-recommended-shot {
-    color: #c1e8e8;
-}*/
 
 .stat-cell {
     width: 16px;

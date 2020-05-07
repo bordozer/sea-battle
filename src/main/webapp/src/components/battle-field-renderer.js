@@ -1,7 +1,8 @@
 /* jshint esversion: 6 */
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAnchor, faSmileO, faTimes, faCircle, faCrosshairs, faBullseye, faDotCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAnchor, faTimes, faCrosshairs, faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faSmile, faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons';
 import _ from 'underscore';
 
 function getBorderCss(options) {
@@ -68,7 +69,7 @@ function cellCss(cell, options) {
         // result.push('fa fa-circle-o');
     }
     if (isLastShot) {
-        result.push('text-primary');
+        result.push('cell-last-shot');
         // result.push('fa fa-crosshairs');
     }
     if (isLastShot && !cell.ship) {
@@ -93,7 +94,7 @@ function getIcon(cell, options) {
     }
     if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
         return (
-            <FontAwesomeIcon icon={faSmileO} />
+            <FontAwesomeIcon icon={faSmile} />
         );
     }
     if (isPlayer && cell.ship && !cell.isHit) {
