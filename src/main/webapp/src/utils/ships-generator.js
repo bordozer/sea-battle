@@ -4,7 +4,7 @@ import ShipRoomsCollector from 'src/utils/ship-rooms-collector';
 import {getCellsByFilter} from 'src/utils/cells-utils';
 import {randomElement, randomInt} from 'src/utils/random-utils';
 
-function _initShips() {
+function initShips() {
     return [
         {id: 11, name: 'Aquila (patrol boat)', size: 1, cells: [], damage: 0},
         {id: 12, name: 'Tornado (patrol boat)', size: 1, cells: [], damage: 0},
@@ -24,7 +24,7 @@ function isFreeForShipCell(cell) {
     return !cell.ship && !cell.isShipNeighbor;
 }
 
-function _setNeighborCellsProperty(cells, cell, property) {
+function setNeighborCellsProperty(cells, cell, property) {
     const cellWithNeighbors = getCellWithNeighbors(cells, cell);
     // console.log("cell", cell);
     // console.log("cellWithNeighbors", cellWithNeighbors);
@@ -81,12 +81,12 @@ export const markAllShipNeighborCellsAsKilled = (ship, cells) => {
     }
 
     killedShipCells.forEach(cell => {
-        _setNeighborCellsProperty(cells, cell, 'isKilledShipNeighborCell');
+        setNeighborCellsProperty(cells, cell, 'isKilledShipNeighborCell');
     });
 };
 
 export const generateShips = (cells) => {
-    const ships = _initShips();
+    const ships = initShips();
 
     ships.reverse().forEach(ship => {
         const shipSize = ship.size;
@@ -97,7 +97,7 @@ export const generateShips = (cells) => {
             cell.ship = ship;
         });
         shipRoom.roomCells.forEach(cell => {
-            _setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
+            setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
         });
     });
     return {

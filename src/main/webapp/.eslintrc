@@ -3,6 +3,7 @@
   "extends": ["airbnb"],
   "rules": {
     "indent": [4, "tab"],
-    "object-curly-spacing": [2, "never"]
+    "object-curly-spacing": [2, "never"],
+    "arrow-body-style": ["error", "never"]
   }
 }
