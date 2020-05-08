@@ -262,7 +262,7 @@ export default class BattlePage extends Component {
         });
     }
 
-    onShowShotHintsChange(e) {
+    onShowShotHintsChange = (e) => {
         const isShowHints = e.target.checked;
         this.setState({
             config: {
