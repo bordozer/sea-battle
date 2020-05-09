@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 
-const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+const X_AXE = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K'];
 
 export const initBattleFieldCells = (size) => {
     const cells = [];
