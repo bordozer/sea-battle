@@ -111,6 +111,9 @@ module.exports = (env, options) => {
                 }
             }
         },
+        performance: {
+            hints: false
+        },
         devServer: {
             contentBase: path.join(__dirname, 'dist'),
             compress: true,
